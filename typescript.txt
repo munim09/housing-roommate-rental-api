@@ -1,0 +1,205 @@
+https://www.nvmnode.com/guide/download.html
+
+https://gist.github.com/chranderson/b0a02781c232f170db634b40c97ff455
+
+install nvm
+
+nvm install 24.11.0
+
+dir /x C:\Users
+
+set NVM_HOME=C:\Users\SHAHID~1\AppData\Roaming\nvm
+
+
+
+npm install -g typescript
+
+
+tsc test.ts
+
+tsc --init
+ 
+ 
+====================================
+node with typescript
+
+npm init -y 
+
+
+npm i -D typescript
+
+
+npx tsc --init
+
+
+After configuring tsconfig.json
+
+npm install -D @types/node
+
+
+npm i tsx
+
+
+.env -> npm i dotenv
+
+ 
+====================================
+
+Express
+----------------------------------
+npm init --y
+
+npm i -D typescript
+
+npx tsc --init
+
+npm install express
+
+npm i --save-dev @types/express
+
+npm install -D @types/express
+
+
+npm i -D tsx
+ 
+.env -> npm i dotenv
+
+npm i bcryptjs
+
+npm install -D @types/bcrypt
+
+npm i jsonwebtoken
+
+
+npm i --save-dev @types/jsonwebtoken
+
+
+****npx neonctl@latest init
+
+npm i pg
+
+npm i --save-dev @types/pg
+
+*** npm i @neondatabase/serverless (DB connection using neon instead of PG)
+
+
+$ npm install cookie-parser
+
+npm i --save-dev @types/cookie-parser
+
+npm i cors (CORS (Cross-Origin Resource Sharing) is an HTTP-header based mechanism that allows a server to explicitly declare which outside domains (origins) are permitted to load its resources in a web browser.)
+npm i --save-dev @types/cors
+
+
+npm install http-status-codes --save
+
+
+=============================================== 
+Neon DB:
+------------------
+
+npx neonctl@latest init
+
+ 
+
+
+ 
+====================================
+
+npm i -g vercel
+
+vercel login
+
+npm run build
+
+vercel --prod
+
+
+
+****
+package.json
+
+{
+    "name": "express",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "dev": "tsx watch ./src/server.ts",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "tsc"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+  
+    "devDependencies": {
+        "@types/cookie-parser": "^1.4.10",
+        "@types/cors": "^2.8.19",
+        "@types/express": "^5.0.6",
+        "@types/jsonwebtoken": "^9.0.10",
+        "@types/pg": "^8.20.0",
+        "tsx": "^4.21.0",
+        "typescript": "^6.0.3"
+    },
+    "dependencies": {
+        "bcryptjs": "^3.0.3",
+        "cookie-parser": "^1.4.7",
+        "cors": "^2.8.6",
+        "dotenv": "^17.4.2",
+        "express": "^5.2.1",
+        "jsonwebtoken": "^9.0.3",
+        "pg": "^8.20.0"
+    }
+}
+
+
+****************************************************
+tsconfig.json
+
+{
+    // Visit https://aka.ms/tsconfig to read more about this file
+    "compilerOptions": {
+        // File Layout
+        "rootDir": "./src",
+        "outDir": "./dist",
+
+        // Environment Settings
+        // See also https://aka.ms/tsconfig/module
+        "module": "esnext",
+        "target": "esnext",
+        // "moduleResolution": "bundler",
+        "types": [],
+        // For nodejs:
+        // "lib": ["esnext"],
+        // "types": ["node"],
+        // and npm install -D @types/node
+
+        // Other Outputs
+        // "sourceMap": true,
+        // "declaration": true,
+        // "declarationMap": true,
+
+        // Stricter Typechecking Options
+        "noUncheckedIndexedAccess": true,
+        "exactOptionalPropertyTypes": true,
+
+        // Style Options
+        // "noImplicitReturns": true,
+        // "noImplicitOverride": true,
+        // "noUnusedLocals": true,
+        // "noUnusedParameters": true,
+        // "noFallthroughCasesInSwitch": true,
+        // "noPropertyAccessFromIndexSignature": true,
+
+        // Recommended Options
+        "strict": true,
+        // "jsx": "react-jsx",
+        "verbatimModuleSyntax": true,
+        "isolatedModules": true,
+        "noUncheckedSideEffectImports": true,
+        "moduleDetection": "force",
+        "skipLibCheck": true
+    }
+}
+

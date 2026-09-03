@@ -1,0 +1,111 @@
+npx create-next-app@latest . 
+
+
+UI library: shadcn
+
+
+npm install -g pnpm
+
+pnpm dlx shadcn@latest init --preset b0 --base radix --template next
+
+pnpm dlx shadcn@latest add card
+pnpm dlx shadcn@latest add input label
+
+
+pnpm dlx shadcn@latest add sonner      
+pnpm dlx shadcn@latest add dropdown-menu
+
+pnpm dlx shadcn@latest add sidebar
+
+
+npm run dev
+
+===== OLD =====
+
+
+npx create-next-app@14
+
+
+E:\react\nextjs\project\docucraft>npx create-next-app@14
+√ What is your project named? ... .
+√ Would you like to use TypeScript? ... No / 
+√ Would you like to use ESLint? ...  / Yes
+√ Would you like to use Tailwind CSS? ...  / Yes
+√ Would you like to use `src/` directory? ... No / 
+√ Would you like to use App Router? (recommended) ...  / Yes
+√ Would you like to customize the default import alias (@/*)? » No / 
+
+npm run dev
+
+
+npm i mongoose
+==============================
+git init
+git add .
+git commit -m "First commit"
+git branch -M main
+
+git remote add vercel YOUR_PERSONAL_ACCOUNT_REPOSITORY_HTTPS_URL    ####munim09 github
+git remote add lws_code LWS_CLASSROOM_REPOSITORY_HTTPS_URL				####learn-with-sumit github
+
+git branch -M main
+
+git push vercel main			####munim09 github
+git push origin main			####munim09 github
+
+
+git push code main				####learn-with-sumit github
+
+
+must have .env files in github submitted code.
+==============================
+locale and internationalization
+
+npm install @formatjs/intl-localematcher negotiator
+
+-----------------------------------------------------
+
+npm install -D @tailwindcss/typography
+
+npm install mongoose
+
+npm install lucide-react
+
+npm install --save react-toastify 
+
+npm install pdfkit
+
+npm install imagekit
+
+
+npm install nodemailer    
+
+npm install jsonwebtoken
+
+npm install --save-dev @types/jsonwebtoken
+
+npm install 
+
+npm run dev 
+
+
+npm install resend ****
+
+
+-----------------------------------------------------
+
+
+npm install resend  //email
+
+npm install plaiceholder   @plaiceholder/next sharp
+
+npm install sharp --ignore-engines
+
+
+npm install @google/genai
+
+npm install @google/genai zod zod-to-json-schema
+
+==============================
+
+==============================

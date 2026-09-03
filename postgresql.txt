@@ -1,0 +1,36 @@
+port: 5432
+DB: postgres
+Schema: postgres
+pw:12345
+
+psql
+
+
+\l
+
+\! cls
+
+\conninfo
+\dt
+
+\du
+
+\?
+
+Q-> quit
+
+\c template1
+
+\c postgres
+
+
+
+set environment variable: C:\Program Files\PostgreSQL\17\bin
+
+cmd>psql -U postgres
+cmd>psql -U postgres -d postgres
+
+
+beekeeper studio
+
+

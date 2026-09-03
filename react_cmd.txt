@@ -1,0 +1,75 @@
+npm create vite@latest my-project  # "." when cmd is opened in the project directory
+cd my-project
+
+
+
+
+
+==========================================
+For tailwind:
+-------------------------------------
+npm install tailwindcss @tailwindcss/vite
+
+
+In vite.config.js:
+-------------------------------------
+import tailwindcss from "@tailwindcss/vite";
+import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [react(), tailwindcss()],
+});
+
+
+In index.css:
+--------------------------------------
+@import "tailwindcss";
+
+@theme {
+  --color-mint-500: oklch(0.72 0.11 178);
+  --color-mint-600: oklch(0.75 0.11 178);
+}
+==========================================
+
+git init
+git add .
+git commit -m "First commit"
+git branch -M main
+
+git remote add vercel YOUR_PERSONAL_ACCOUNT_REPOSITORY_HTTPS_URL    ####munim09 github
+git remote add code LWS_CLASSROOM_REPOSITORY_HTTPS_URL				####learn-with-sumit github
+
+git branch -M main
+
+git push vercel main			####munim09 github
+
+git push code main				####learn-with-sumit github
+==========================================
+
+
+git clone https://github.com/munim09/movie-magic-cart.git
+cd project
+git checkout -m Main
+npm i
+npm install --save react-toastify   # for toast message
+
+npm install react-markdown
+
+
+npm run dev
+
+
+==================================
+Screen Shot of Full Webpage
+
+1. Using a Web Browser
+Google Chrome / Edge / Firefox:
+Open the webpage you want to capture.
+Press Ctrl + Shift + I (Windows) or Cmd + Option + I (Mac) to open Developer Tools.
+Press Ctrl + Shift + P (Windows) or Cmd + Shift + P (Mac) to open the Command Menu.
+Type “screenshot” and select:
+Capture full size screenshot (captures the entire page, not just visible area).
+The screenshot will download automatically as a PNG.
+==================================

@@ -1,0 +1,29 @@
+1. Project requirement analysis
+2. User(Admin, superadmin, Patient, Doctor etc) flow
+3. Admin /Superadmin flow
+4. Public user flow
+5. UI/UX or Wireframe analysis
+6. Databasse design & ERD
+7. Project setup
+8. Feature development
+9. 
+
+
+Feature: 
+1. Authetication & authorization
+2. Gooogle authentication
+3. Automated email sending
+4. Changed password, forgot password
+5. OTP, password change link in email
+6. Redis (caching, OTP)
+7. Payment (Stripe, OTP)
+8. Invoice PDF generation
+9. File upload (Image, PDF)
+10. Cloudinary, Multer for file upload
+11. Core business logics
+12. Query builder
+13. Global error handling
+14. Zod - data sanitization/validation
+15. AI and RAG implementation
+16. Docker, AWS, Nginx - cloude
+17. 

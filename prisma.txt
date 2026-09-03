@@ -1,0 +1,173 @@
+model
+shema
+migration
+relation
+client
+generator
+datasource
+seeding
+
+
+
+https://www.prisma.io/docs/prisma-orm/quickstart/prisma-postgres
+
+
+   Connection String:
+│
+│    postgres://ddb8c673dc7b0115be1c6f3798b66b657e5750b0249490a4e5b2a4b39b6ad312:sk_RmIfVERDtUm9cBpHJBbGI@db.prisma.io:5432/postgres?sslmode=require
+│
+│
+◆  Claim Your Database
+│
+│    Keep your database for free:
+│
+│    https://create-db.prisma.io/claim?projectID=proj_cmqjcyu0j07mq03l779jk6z5u&utm_source=create-db&utm_medium=cli
+
+
+
+
+postgres://5f6519df22a736890be9aa53f448a3a2a41db242c0947d86c938e2f4494da79e:sk_Rhl4X3OyMC-E0_yjgm0yG@pooled.db.prisma.io:5432/postgres?sslmode=require
+
+
+https://console.prisma.io/studio/yvnzdbp4ya19pcg3ss4ickbz/cmqjd37vn0dg8ygfaqghp6h0l/cmqjd37vn0dg6ygfatkxw8f1h
+
+
+npx tsx src/script.ts
+
+
+npx prisma studio
+
+
+=========================================================
+
+link: https://www.prisma.io/docs/prisma-orm/quickstart/prisma-postgres
+
+npm init
+
+package name: (prisma_press) prisma-press-backend
+version: 0.0.1
+description: 
+entry point: server.ts
+test command: 
+git repository: 
+keywords: 
+author: 
+license: 
+type: (commonjs) module
+Is this OK? (yes) yes
+
+npm install typescript tsx @types/node --save-dev
+npx tsc --init
+
+npm install --save-dev typescript@6.0.3
+npx tsc --version
+
+npm install prisma @types/pg --save-dev
+npm install @prisma/client @prisma/adapter-pg pg dotenv
+
+npx prisma
+npx prisma init --output ../generated/prisma
+
+
+
+npm install express
+npm i --save-dev @types/express
+
+
+npm i cors
+npm i --save-dev @types/cors
+
+npm install cookie-parser
+npm i --save-dev @types/cookie-parser
+
+
+npm i jsonwebtoken
+npm i --save-dev @types/jsonwebtoken
+
+
+npm i bcryptjs
+npm i http-status
+npm install http-status-codes --save
+
+
+prisma:
+
+https://www.prisma.io/docs/prisma-postgres/quickstart/prisma-orm
+
+
+
+npx prisma migrate dev
+npx prisma generate
+
+npm i zod
+
+
+Redis:
+https://cloud.redis.io/#/databases/14535596/subscription/3375228/view-bdb/configuration
+
+https://redis.io/docs/latest/commands/redis-6-2-commands/
+
+https://cloud.redis.io/#/databases
+
+npm i redis
+
+Google auth: npm i google-auth-library
+
+npm i nodemailer
+npm i @types/nodemailer
+
+
+npm i ejs
+npm i @types/ejs
+
+
+npm i multer
+npm i @types/multer
+
+
+npm i cloudinary
+
+npm i node-cron
+
+npm i date-fns
+npm i @types/date-fns
+
+npm i pdfkit
+npm i @types/pdfkit
+
+
+-------------------------------------------
+
+BIOME:
+npm i -D -E @biomejs/biome
+npx @biomejs/biome init
+
+
+# Format all files
+npx @biomejs/biome format --write
+
+# Format specific files
+npx @biomejs/biome format --write <files>
+
+# Lint files and apply safe fixes to all files
+npx @biomejs/biome lint --write
+
+# Lint files and apply safe fixes to specific files
+npx @biomejs/biome lint --write <files>
+
+# Format, lint, and organize imports of all files
+npx @biomejs/biome check --write
+
+# Format, lint, and organize imports of specific files
+npx @biomejs/biome check --write <files>
+
+
+CLI
+The following command checks the formatting of the files in the src directory. It emits text differences if it finds code that is not formatted.
+npx @biomejs/biome format ./src
+
+If you want to apply the new formatting, pass the --write option:
+npx @biomejs/biome format --write ./src
+-------------------------------------------
+
+=========================================================
