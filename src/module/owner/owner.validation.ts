@@ -34,9 +34,27 @@ const assignManagerValidation = z.object({
     managerId: z.string().uuid("Invalid manager id"),
 });
 
+const updateFlatValidation = z.object({
+    flatNumber: z.string().min(1, "Flat number is required").optional(),
+    floorNumber: z.coerce.number().int().optional(),
+    bedrooms: z.coerce.number().int().min(0).optional(),
+    bathrooms: z.coerce.number().int().min(0).optional(),
+    areaSqFt: z.coerce.number().positive().optional(),
+    description: z.string().optional(),
+});
+
+const updateRoomValidation = z.object({
+    roomNumber: z.string().min(1, "Room number is required").optional(),
+    name: z.string().optional(),
+    areaSqFt: z.coerce.number().positive().optional(),
+    description: z.string().optional(),
+});
+
 export const OwnerValidation = {
     createProperty: createPropertyValidation,
     addFlat: addFlatValidation,
     addRoom: addRoomValidation,
     assignManager: assignManagerValidation,
+    updateFlat: updateFlatValidation,
+    updateRoom: updateRoomValidation,
 };

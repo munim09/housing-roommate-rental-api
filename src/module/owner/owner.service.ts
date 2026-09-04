@@ -1,8 +1,15 @@
 import httpStatus from "http-status";
-import { prisma } from "../../lib/prisma";
 import { uploadImageToCloudinary } from "../../lib/cloudinary";
+import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
-import { IAddFlat, IAddRoom, IAssignManager, ICreateProperty } from "./owner.interface";
+import {
+    IAddFlat,
+    IAddRoom,
+    IAssignManager,
+    ICreateProperty,
+    IUpdateFlat,
+    IUpdateRoom,
+} from "./owner.interface";
 
 const createProperty = async (ownerId: string, payload: ICreateProperty) => {
     const property = await prisma.property.create({
@@ -47,7 +54,10 @@ const addFlat = async (
     }
 
     if (property.createdById !== ownerId) {
-        throw new AppError(httpStatus.FORBIDDEN, "You do not own this property");
+        throw new AppError(
+            httpStatus.FORBIDDEN,
+            "You do not own this property",
+        );
     }
 
     const uploadedImages = await Promise.all(
@@ -164,7 +174,100 @@ const addRoom = async (
     };
 };
 
-const assignManager = async (ownerId: string, flatId: string, payload: IAssignManager) => {
+const updateFlat = async (
+    ownerId: string,
+    flatId: string,
+    payload: IUpdateFlat,
+) => {
+    const ownership = await prisma.propertyOwnership.findFirst({
+        where: {
+            flatId,
+            ownerId,
+            status: "ACTIVE",
+        },
+    });
+
+    if (!ownership) {
+        throw new AppError(httpStatus.FORBIDDEN, "You do not own this flat");
+    }
+
+    const updatedFlat = await prisma.flat.update({
+        where: { id: flatId },
+        data: {
+            flatNumber: payload.flatNumber,
+            floorNumber: payload.floorNumber,
+            bedrooms: payload.bedrooms,
+            bathrooms: payload.bathrooms,
+            areaSqFt: payload.areaSqFt,
+            description: payload.description,
+        },
+        select: {
+            id: true,
+            flatNumber: true,
+            floorNumber: true,
+            bedrooms: true,
+            bathrooms: true,
+            areaSqFt: true,
+            description: true,
+            status: true,
+        },
+    });
+
+    return updatedFlat;
+};
+
+const updateRoom = async (
+    ownerId: string,
+    roomId: string,
+    payload: IUpdateRoom,
+) => {
+    const room = await prisma.room.findUnique({
+        where: { id: roomId },
+        include: { flat: true },
+    });
+
+    if (!room) {
+        throw new AppError(httpStatus.NOT_FOUND, "Room not found");
+    }
+
+    const ownership = await prisma.propertyOwnership.findFirst({
+        where: {
+            flatId: room.flatId,
+            ownerId,
+            status: "ACTIVE",
+        },
+    });
+
+    if (!ownership) {
+        throw new AppError(httpStatus.FORBIDDEN, "You do not own this flat");
+    }
+
+    const updatedRoom = await prisma.room.update({
+        where: { id: roomId },
+        data: {
+            roomNumber: payload.roomNumber,
+            name: payload.name,
+            areaSqFt: payload.areaSqFt,
+            description: payload.description,
+        },
+        select: {
+            id: true,
+            roomNumber: true,
+            name: true,
+            areaSqFt: true,
+            description: true,
+            status: true,
+        },
+    });
+
+    return updatedRoom;
+};
+
+const assignManager = async (
+    ownerId: string,
+    flatId: string,
+    payload: IAssignManager,
+) => {
     const ownership = await prisma.propertyOwnership.findFirst({
         where: {
             flatId,
@@ -192,7 +295,10 @@ const assignManager = async (ownerId: string, flatId: string, payload: IAssignMa
     }
 
     if (manager.status !== "ACTIVE") {
-        throw new AppError(httpStatus.BAD_REQUEST, "Manager account is not active");
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Manager account is not active",
+        );
     }
 
     const assignment = await prisma.$transaction(async (tx) => {
@@ -278,6 +384,14 @@ const getMyFlats = async (ownerId: string) => {
                             roomNumber: true,
                             name: true,
                             status: true,
+                            images: {
+                                orderBy: { sortOrder: "asc" },
+                                select: {
+                                    id: true,
+                                    imageUrl: true,
+                                    isPrimary: true,
+                                },
+                            },
                         },
                     },
                     images: {
@@ -309,11 +423,41 @@ const getMyFlats = async (ownerId: string) => {
     return flats;
 };
 
+const getActiveManagers = async () => {
+    const managers = await prisma.user.findMany({
+        where: {
+            role: "MANAGER",
+            status: "ACTIVE",
+            emailVerified: true,
+        },
+        select: {
+            id: true,
+            name: true,
+            email: true,
+            phone: true,
+            managerProfile: {
+                select: {
+                    id: true,
+                    nid: true,
+                    address: true,
+                    occupation: true,
+                },
+            },
+        },
+        orderBy: { name: "asc" },
+    });
+
+    return managers;
+};
+
 export const OwnerService = {
     createProperty,
     addFlat,
     addRoom,
+    updateFlat,
+    updateRoom,
     assignManager,
     getMyProperties,
     getMyFlats,
+    getActiveManagers,
 };

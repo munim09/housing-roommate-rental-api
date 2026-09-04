@@ -108,6 +108,36 @@ const assignManager = async (req: Request, res: Response) => {
     });
 };
 
+const updateFlat = async (req: Request, res: Response) => {
+    const result = await OwnerService.updateFlat(
+        req.user!.userId,
+        req.params.flatId as string,
+        req.body,
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Flat updated successfully",
+        data: result,
+    });
+};
+
+const updateRoom = async (req: Request, res: Response) => {
+    const result = await OwnerService.updateRoom(
+        req.user!.userId,
+        req.params.roomId as string,
+        req.body,
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Room updated successfully",
+        data: result,
+    });
+};
+
 const getMyProperties = async (req: Request, res: Response) => {
     const result = await OwnerService.getMyProperties(req.user!.userId);
 
@@ -130,11 +160,25 @@ const getMyFlats = async (req: Request, res: Response) => {
     });
 };
 
+const getActiveManagers = async (req: Request, res: Response) => {
+    const result = await OwnerService.getActiveManagers();
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Active managers retrieved successfully",
+        data: result,
+    });
+};
+
 export const OwnerController = {
     createProperty,
     addFlat,
     addRoom,
     assignManager,
+    updateFlat,
+    updateRoom,
     getMyProperties,
     getMyFlats,
+    getActiveManagers,
 };

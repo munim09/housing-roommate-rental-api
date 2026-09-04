@@ -33,3 +33,7 @@ export interface IAddRoom {
 export interface IAssignManager {
     managerId: string;
 }
+
+export type IUpdateFlat = Partial<IAddFlat>;
+
+export type IUpdateRoom = Partial<IAddRoom>;

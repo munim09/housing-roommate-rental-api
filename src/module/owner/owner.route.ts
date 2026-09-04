@@ -21,6 +21,8 @@ router.get("/properties", catchAsync(OwnerController.getMyProperties));
 
 router.get("/flats", catchAsync(OwnerController.getMyFlats));
 
+router.get("/managers", catchAsync(OwnerController.getActiveManagers));
+
 // router.post(
 //     "/properties/:propertyId/flats",
 //     uploadImages,
@@ -55,6 +57,18 @@ router.post(
     "/flats/:flatId/assign-manager",
     validateRequest(OwnerValidation.assignManager),
     catchAsync(OwnerController.assignManager),
+);
+
+router.patch(
+    "/flats/:flatId",
+    validateRequest(OwnerValidation.updateFlat),
+    catchAsync(OwnerController.updateFlat),
+);
+
+router.patch(
+    "/rooms/:roomId",
+    validateRequest(OwnerValidation.updateRoom),
+    catchAsync(OwnerController.updateRoom),
 );
 
 export const OwnerRoutes = router;
