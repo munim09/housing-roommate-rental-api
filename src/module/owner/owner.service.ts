@@ -11,6 +11,17 @@ import {
     IUpdateRoom,
 } from "./owner.interface";
 
+const uploadImages = async (images: Buffer[], folder: string) => {
+    return Promise.all(
+        images.map((buffer, index) =>
+            uploadImageToCloudinary(buffer, folder).then((result) => ({
+                url: result.url,
+                isPrimary: index === 0,
+            })),
+        ),
+    );
+};
+
 const createProperty = async (ownerId: string, payload: ICreateProperty) => {
     const property = await prisma.property.create({
         data: {
@@ -60,14 +71,7 @@ const addFlat = async (
         );
     }
 
-    const uploadedImages = await Promise.all(
-        images.map((buffer, index) =>
-            uploadImageToCloudinary(buffer, "housing/flats").then((result) => ({
-                url: result.url,
-                isPrimary: index === 0,
-            })),
-        ),
-    );
+    const uploadedImages = await uploadImages(images, "housing/flats");
 
     const flat = await prisma.$transaction(async (tx) => {
         const createdFlat = await tx.flat.create({
@@ -134,14 +138,7 @@ const addRoom = async (
         throw new AppError(httpStatus.NOT_FOUND, "Flat not found");
     }
 
-    const uploadedImages = await Promise.all(
-        images.map((buffer, index) =>
-            uploadImageToCloudinary(buffer, "housing/rooms").then((result) => ({
-                url: result.url,
-                isPrimary: index === 0,
-            })),
-        ),
-    );
+    const uploadedImages = await uploadImages(images, "housing/rooms");
 
     const room = await prisma.$transaction(async (tx) => {
         const createdRoom = await tx.room.create({
@@ -172,6 +169,96 @@ const addRoom = async (
         ...room,
         images: uploadedImages.map((img) => img.url),
     };
+};
+
+const addFlatImages = async (
+    ownerId: string,
+    flatId: string,
+    images: Buffer[],
+) => {
+    if (images.length === 0) {
+        throw new AppError(httpStatus.BAD_REQUEST, "No images provided");
+    }
+
+    const ownership = await prisma.propertyOwnership.findFirst({
+        where: {
+            flatId,
+            ownerId,
+            status: "ACTIVE",
+        },
+    });
+
+    if (!ownership) {
+        throw new AppError(httpStatus.FORBIDDEN, "You do not own this flat");
+    }
+
+    const lastImage = await prisma.accommodationImage.findFirst({
+        where: { flatId },
+        orderBy: { sortOrder: "desc" },
+    });
+    const nextSortOrder = lastImage ? lastImage.sortOrder + 1 : 0;
+
+    const uploadedImages = await uploadImages(images, "housing/flats");
+
+    await prisma.accommodationImage.createMany({
+        data: uploadedImages.map((img, index) => ({
+            flatId,
+            imageUrl: img.url,
+            isPrimary: img.isPrimary && nextSortOrder === 0,
+            sortOrder: nextSortOrder + index,
+        })),
+    });
+
+    return uploadedImages.map((img) => img.url);
+};
+
+const addRoomImages = async (
+    ownerId: string,
+    roomId: string,
+    images: Buffer[],
+) => {
+    if (images.length === 0) {
+        throw new AppError(httpStatus.BAD_REQUEST, "No images provided");
+    }
+
+    const room = await prisma.room.findUnique({
+        where: { id: roomId },
+    });
+
+    if (!room) {
+        throw new AppError(httpStatus.NOT_FOUND, "Room not found");
+    }
+
+    const ownership = await prisma.propertyOwnership.findFirst({
+        where: {
+            flatId: room.flatId,
+            ownerId,
+            status: "ACTIVE",
+        },
+    });
+
+    if (!ownership) {
+        throw new AppError(httpStatus.FORBIDDEN, "You do not own this flat");
+    }
+
+    const lastImage = await prisma.accommodationImage.findFirst({
+        where: { roomId },
+        orderBy: { sortOrder: "desc" },
+    });
+    const nextSortOrder = lastImage ? lastImage.sortOrder + 1 : 0;
+
+    const uploadedImages = await uploadImages(images, "housing/rooms");
+
+    await prisma.accommodationImage.createMany({
+        data: uploadedImages.map((img, index) => ({
+            roomId,
+            imageUrl: img.url,
+            isPrimary: img.isPrimary && nextSortOrder === 0,
+            sortOrder: nextSortOrder + index,
+        })),
+    });
+
+    return uploadedImages.map((img) => img.url);
 };
 
 const updateFlat = async (
@@ -454,6 +541,8 @@ export const OwnerService = {
     createProperty,
     addFlat,
     addRoom,
+    addFlatImages,
+    addRoomImages,
     updateFlat,
     updateRoom,
     assignManager,

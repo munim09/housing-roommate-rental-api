@@ -108,6 +108,44 @@ const assignManager = async (req: Request, res: Response) => {
     });
 };
 
+const addFlatImages = async (req: Request, res: Response) => {
+    const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+    const imageFiles = files?.["images"] || [];
+    const imageBuffers = imageFiles.map((file) => file.buffer);
+
+    const result = await OwnerService.addFlatImages(
+        req.user!.userId,
+        req.params.flatId as string,
+        imageBuffers,
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Images added successfully",
+        data: result,
+    });
+};
+
+const addRoomImages = async (req: Request, res: Response) => {
+    const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+    const imageFiles = files?.["images"] || [];
+    const imageBuffers = imageFiles.map((file) => file.buffer);
+
+    const result = await OwnerService.addRoomImages(
+        req.user!.userId,
+        req.params.roomId as string,
+        imageBuffers,
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Images added successfully",
+        data: result,
+    });
+};
+
 const updateFlat = async (req: Request, res: Response) => {
     const result = await OwnerService.updateFlat(
         req.user!.userId,
@@ -175,6 +213,8 @@ export const OwnerController = {
     createProperty,
     addFlat,
     addRoom,
+    addFlatImages,
+    addRoomImages,
     assignManager,
     updateFlat,
     updateRoom,

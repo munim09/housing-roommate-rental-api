@@ -59,6 +59,28 @@ router.post(
     catchAsync(OwnerController.assignManager),
 );
 
+router.post(
+    "/flats/:flatId/images",
+    upload.fields([
+        {
+            name: "images",
+            maxCount: 10,
+        },
+    ]),
+    catchAsync(OwnerController.addFlatImages),
+);
+
+router.post(
+    "/rooms/:roomId/images",
+    upload.fields([
+        {
+            name: "images",
+            maxCount: 10,
+        },
+    ]),
+    catchAsync(OwnerController.addRoomImages),
+);
+
 router.patch(
     "/flats/:flatId",
     validateRequest(OwnerValidation.updateFlat),
