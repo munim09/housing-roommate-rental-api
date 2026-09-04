@@ -1,0 +1,1071 @@
+// ============================================================
+// ENUMS
+// ============================================================
+
+enum UserRole {
+  OWNER
+  MANAGER
+  TENANT
+  ADMIN
+}
+
+enum UserStatus {
+  PENDING_APPROVAL
+  ACTIVE
+  REJECTED
+  SUSPENDED
+}
+
+enum PropertyType {
+  SINGLE_FLAT
+  MULTI_FLAT
+}
+
+enum PropertyStatus {
+  ACTIVE
+  INACTIVE
+  ARCHIVED
+}
+
+enum FlatStatus {
+  ACTIVE
+  INACTIVE
+  ARCHIVED
+}
+
+enum RoomStatus {
+  ACTIVE
+  INACTIVE
+  ARCHIVED
+}
+
+enum OwnershipStatus {
+  ACTIVE
+  ENDED
+}
+
+enum ManagerAssignmentStatus {
+  ACTIVE
+  ENDED
+}
+
+
+// ------------------------------------------------------------
+// Advertisement
+// ------------------------------------------------------------
+
+enum AdvertisementCategory {
+  RENTAL
+  ROOMMATE
+}
+
+enum AdvertisementTarget {
+  ENTIRE_FLAT
+  ROOM
+}
+
+enum AdvertisementStatus {
+  DRAFT
+  PUBLISHED
+  UNPUBLISHED
+  RENTED
+  FULL
+  EXPIRED
+  ARCHIVED
+}
+
+
+// ------------------------------------------------------------
+// Application
+// ------------------------------------------------------------
+
+enum ApplicationType {
+  RENTAL
+  ROOMMATE
+}
+
+enum ApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  WITHDRAWN
+  EXPIRED
+}
+
+
+// ------------------------------------------------------------
+// Stay
+// ------------------------------------------------------------
+
+enum StayType {
+  PRIMARY
+  ROOMMATE
+}
+
+enum StayStatus {
+  WAITING_FOR_PAYMENT
+  CONFIRMED
+  ACTIVE
+  COMPLETED
+  TERMINATED
+  CANCELLED
+  EXPIRED
+}
+
+
+// ------------------------------------------------------------
+// Invoice
+// ------------------------------------------------------------
+
+enum InvoiceType {
+  RENT
+  UTILITY
+}
+
+enum BillStatus {
+  PENDING
+  PAID
+  PARTIALLY_PAID
+  OVERDUE
+  CANCELLED
+}
+
+
+// ------------------------------------------------------------
+// Payment
+// ------------------------------------------------------------
+
+enum PaymentType {
+  RENT
+  UTILITY
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  SUCCESS
+  FAILED
+  CANCELLED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+
+
+
+// ------------------------------------------------------------
+// Viewing
+// ------------------------------------------------------------
+
+enum ViewingRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+  COMPLETED
+  NO_SHOW
+}
+
+
+// ------------------------------------------------------------
+// Maintenance
+// ------------------------------------------------------------
+
+enum MaintenanceStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+  CANCELLED
+}
+
+enum MaintenancePriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+
+
+}
+
+
+// ------------------------------------------------------------
+// Notification
+// ------------------------------------------------------------
+
+enum NotificationType {
+  SYSTEM
+  APPLICATION
+  PAYMENT
+  UTILITY
+  VIEWING
+  MAINTENANCE
+  ROOMMATE
+}
+
+
+// ============================================================
+// USER
+// ============================================================
+
+model User {
+  id            String     @id @default(uuid()) @db.Uuid
+
+  name          String
+  email         String     @unique
+  phone         String?    @unique
+  password      String
+
+  role          UserRole
+  status        UserStatus @default(PENDING_APPROVAL)
+
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+
+  // ----------------------------------------------------------
+  // Profiles
+  // ----------------------------------------------------------
+
+  ownerProfile   OwnerProfile?
+  managerProfile ManagerProfile?
+  tenantProfile  TenantProfile?
+
+
+  // ----------------------------------------------------------
+  // Property
+  // ----------------------------------------------------------
+
+  createdProperties Property[] @relation("PropertyCreatedBy")
+
+
+  // ----------------------------------------------------------
+  // Ownership
+  // ----------------------------------------------------------
+
+  ownedFlats PropertyOwnership[] @relation("FlatOwner")
+
+
+  // ----------------------------------------------------------
+  // Manager assignment
+  // ----------------------------------------------------------
+
+  managedFlats ManagerAssignment[] @relation("FlatManager")
+
+
+  // ----------------------------------------------------------
+  // Advertisement
+  // ----------------------------------------------------------
+
+  advertisements Advertisement[] @relation("AdvertisementCreatedBy")
+
+
+  // ----------------------------------------------------------
+  // Applications
+  // ----------------------------------------------------------
+
+  applications Application[] @relation("ApplicationApplicant")
+
+  reviewedApplications Application[] @relation("ApplicationReviewer")
+
+
+  // ----------------------------------------------------------
+  // Stays
+  // ----------------------------------------------------------
+
+  stays Stay[] @relation("StayOccupant")
+
+
+  // ----------------------------------------------------------
+  // Invoices
+  // ----------------------------------------------------------
+
+  invoicesAsPayer Invoice[] @relation("InvoicePayer")
+
+  invoicesAsReceiver Invoice[] @relation("InvoiceReceiver")
+
+
+
+
+  // ----------------------------------------------------------
+  // Payments
+  // ----------------------------------------------------------
+
+  paymentsAsPayer Payment[] @relation("PaymentPayer")
+
+  paymentsAsReceiver Payment[] @relation("PaymentReceiver")
+
+
+  // ----------------------------------------------------------
+  // Viewing requests
+  // ----------------------------------------------------------
+
+  viewingRequests ViewingRequest[] @relation("ViewingRequester")
+
+  reviewedViewingRequests ViewingRequest[] @relation("ViewingReviewer")
+
+
+  // ----------------------------------------------------------
+  // Notifications
+  // ----------------------------------------------------------
+
+  notifications Notification[]
+
+
+
+}
+
+
+// ============================================================
+// USER PROFILES
+// ============================================================
+
+model OwnerProfile {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId String @unique @db.Uuid
+
+  nid         String? @unique
+  address     String?
+  occupation  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(
+    fields: [userId],
+    references: [id]
+  )
+}
+
+
+model ManagerProfile {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId String @unique @db.Uuid
+
+  nid        String? @unique
+  address    String?
+  occupation String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(
+    fields: [userId],
+    references: [id]
+  )
+}
+
+
+model TenantProfile {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId String @unique @db.Uuid
+
+  nid        String? @unique
+  address    String?
+  occupation String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(
+    fields: [userId],
+    references: [id]
+  )
+}
+
+
+// ============================================================
+// PROPERTY
+// ============================================================
+
+model Property {
+  id String @id @default(uuid()) @db.Uuid
+
+  name        String
+  type        PropertyType
+  description String?
+
+  address     String
+  city        String
+  district    String
+  postalCode  String?
+
+  latitude    Decimal? @db.Decimal(10, 7)
+  longitude   Decimal? @db.Decimal(10, 7)
+
+  status      PropertyStatus @default(ACTIVE)
+
+  createdById String @db.Uuid
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+
+  // ----------------------------------------------------------
+  // Relations
+  // ----------------------------------------------------------
+
+  createdBy User @relation(
+    "PropertyCreatedBy",
+    fields: [createdById],
+    references: [id]
+  )
+
+  flats Flat[]
+
+
+
+  stays Stay[]
+
+
+  @@index([createdById])
+  @@index([status])
+}
+
+
+// ============================================================
+// FLAT
+// ============================================================
+
+model Flat {
+  id String @id @default(uuid()) @db.Uuid
+
+  propertyId String @db.Uuid
+
+  flatNumber String
+  floorNumber Int?
+
+  bedrooms Int?
+  bathrooms Int?
+
+  areaSqFt Decimal? @db.Decimal(10, 2)
+
+  description String?
+
+  status FlatStatus @default(ACTIVE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+
+  // ----------------------------------------------------------
+  // Relations
+  // ----------------------------------------------------------
+
+  property Property @relation(
+    fields: [propertyId],
+    references: [id]
+  )
+
+  rooms Room[]
+
+  ownerships PropertyOwnership[]
+
+  managerAssignments ManagerAssignment[]
+
+  advertisements Advertisement[]
+
+  stays Stay[]
+
+
+
+  @@unique([propertyId, flatNumber])
+  @@index([propertyId])
+  @@index([status])
+}
+
+
+// ============================================================
+// ROOM
+// ============================================================
+
+model Room {
+  id String @id @default(uuid()) @db.Uuid
+
+  flatId String @db.Uuid
+
+  roomNumber String
+  name       String?
+
+  areaSqFt Decimal? @db.Decimal(10, 2)
+
+  description String?
+
+  status RoomStatus @default(ACTIVE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+
+  // ----------------------------------------------------------
+  // Relations
+  // ----------------------------------------------------------
+
+  flat Flat @relation(
+    fields: [flatId],
+    references: [id]
+  )
+
+  advertisements Advertisement[]
+
+  stays Stay[]
+
+
+
+  @@unique([flatId, roomNumber])
+  @@index([flatId])
+  @@index([status])
+}
+
+
+// ============================================================
+// FLAT OWNERSHIP
+// ============================================================
+//
+// IMPORTANT:
+// Ownership exists ONLY at Flat level.
+//
+// A Property has no owner.
+// A person owns one or more Flats.
+//
+// Example:
+//
+// Green View
+// ├── Flat A → Owner 1
+// ├── Flat B → Owner 2
+// └── Flat C → Owner 1
+//
+// ============================================================
+
+model PropertyOwnership {
+  id String @id @default(uuid()) @db.Uuid
+
+  flatId String @db.Uuid
+  ownerId String @db.Uuid
+
+  status OwnershipStatus @default(ACTIVE)
+
+  startedAt DateTime @default(now())
+  endedAt   DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+
+  flat Flat @relation(
+    fields: [flatId],
+    references: [id]
+  )
+
+  owner User @relation(
+    "FlatOwner",
+    fields: [ownerId],
+    references: [id]
+  )
+
+
+  @@index([flatId])
+  @@index([ownerId])
+  @@index([status])
+}
+
+
+// ============================================================
+// MANAGER ASSIGNMENT
+// ============================================================
+//
+// Manager assignment is ALWAYS at Flat level.
+//
+// ============================================================
+
+model ManagerAssignment {
+  id String @id @default(uuid()) @db.Uuid
+
+  flatId String @db.Uuid
+  managerId String @db.Uuid
+
+  status ManagerAssignmentStatus @default(ACTIVE)
+
+  startedAt DateTime @default(now())
+  endedAt   DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+
+  flat Flat @relation(
+    fields: [flatId],
+    references: [id]
+  )
+
+  manager User @relation(
+    "FlatManager",
+    fields: [managerId],
+    references: [id]
+  )
+
+
+  @@index([flatId])
+  @@index([managerId])
+  @@index([status])
+}
+
+
+// ============================================================
+// ADVERTISEMENT
+// ============================================================
+//
+// ONE table for:
+//
+// 1. Owner/Manager rental advertisement
+// 2. Tenant roommate advertisement
+//
+// category:
+//   RENTAL
+//   ROOMMATE
+//
+// target:
+//   ENTIRE_FLAT
+//   ROOM
+//
+// ============================================================
+
+model Advertisement {
+  id String @id @default(uuid()) @db.Uuid
+
+  createdById String @db.Uuid
+
+  flatId String? @db.Uuid
+  roomId String? @db.Uuid
+
+  category AdvertisementCategory
+  target   AdvertisementTarget
+
+  title       String
+  description String?
+
+  monthlyRent Decimal @db.Decimal(12, 2)
+
+  // For roommate advertisement
+  availableFrom DateTime?
+  availableTo   DateTime?
+
+  status AdvertisementStatus @default(DRAFT)
+
+  publishedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+
+  // ----------------------------------------------------------
+  // Relations
+  // ----------------------------------------------------------
+
+  createdBy User @relation(
+    "AdvertisementCreatedBy",
+    fields: [createdById],
+    references: [id]
+  )
+
+  flat Flat? @relation(
+    fields: [flatId],
+    references: [id]
+  )
+
+  room Room? @relation(
+    fields: [roomId],
+    references: [id]
+  )
+
+  applications Application[]
+
+  viewingRequests ViewingRequest[]
+
+
+  @@index([createdById])
+  @@index([flatId])
+  @@index([roomId])
+  @@index([category, status])
+}
+
+
+// ============================================================
+// APPLICATION
+// ============================================================
+//
+// ONE table for:
+//
+// Rental application
+// Roommate application
+//
+// ============================================================
+
+model Application {
+  id String @id @default(uuid()) @db.Uuid
+
+  advertisementId String @db.Uuid
+  applicantId     String @db.Uuid
+
+  type   ApplicationType
+  status ApplicationStatus @default(PENDING)
+
+  requestedStartDate DateTime
+  requestedEndDate   DateTime
+
+  note String?
+
+  reviewedById String? @db.Uuid
+  reviewedAt   DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+
+  advertisement Advertisement @relation(
+    fields: [advertisementId],
+    references: [id]
+  )
+
+  applicant User @relation(
+    "ApplicationApplicant",
+    fields: [applicantId],
+    references: [id]
+  )
+
+  reviewedBy User? @relation(
+    "ApplicationReviewer",
+    fields: [reviewedById],
+    references: [id]
+  )
+
+  stay Stay?
+
+
+  @@index([advertisementId])
+  @@index([applicantId])
+  @@index([status])
+}
+
+
+// ============================================================
+// STAY
+// ============================================================
+//
+// ONE table for:
+//
+// Primary tenant stay
+// Roommate stay
+//
+// A roommate is simply another occupant.
+//
+// ============================================================
+
+model Stay {
+  id String @id @default(uuid()) @db.Uuid
+
+  applicationId String @unique @db.Uuid
+
+  occupantId String @db.Uuid
+
+  propertyId String @db.Uuid
+  flatId     String @db.Uuid
+  roomId     String? @db.Uuid
+
+  type   StayType
+  status StayStatus @default(WAITING_FOR_PAYMENT)
+
+  startDate DateTime
+  endDate   DateTime
+
+  // Snapshot of rent at approval time.
+  // Future advertisement rent changes do not affect this stay.
+  monthlyRent Decimal @db.Decimal(12, 2)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+
+  // ----------------------------------------------------------
+  // Relations
+  // ----------------------------------------------------------
+
+  application Application @relation(
+    fields: [applicationId],
+    references: [id]
+  )
+
+  occupant User @relation(
+    "StayOccupant",
+    fields: [occupantId],
+    references: [id]
+  )
+
+  property Property @relation(
+    fields: [propertyId],
+    references: [id]
+  )
+
+  flat Flat @relation(
+    fields: [flatId],
+    references: [id]
+  )
+
+  room Room? @relation(
+    fields: [roomId],
+    references: [id]
+  )
+
+  invoices Invoice[]
+
+
+  payments Payment[]
+
+
+
+
+  @@index([occupantId])
+  @@index([propertyId])
+  @@index([flatId])
+  @@index([roomId])
+  @@index([status])
+  @@index([startDate, endDate])
+}
+
+
+// ============================================================
+// INVOICE
+// ============================================================
+//
+// ONE table for all rent invoices.
+//
+// payer / receiver determines the payment direction.
+//
+// Tenant rent:
+//
+// Tenant → Owner
+//
+// Roommate rent:
+//
+// Roommate → Tenant
+//
+// ============================================================
+
+model Invoice {
+  id String @id @default(uuid()) @db.Uuid
+
+  stayId String @db.Uuid
+
+  payerId    String @db.Uuid
+  receiverId String @db.Uuid
+
+  type InvoiceType
+
+  amount Decimal @db.Decimal(12, 2)
+
+  billingPeriodStart DateTime
+  billingPeriodEnd   DateTime
+
+  dueDate DateTime
+
+  status BillStatus @default(PENDING)
+
+  description String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+
+  stay Stay @relation(
+    fields: [stayId],
+    references: [id]
+  )
+
+  payer User @relation(
+    "InvoicePayer",
+    fields: [payerId],
+    references: [id]
+  )
+
+  receiver User @relation(
+    "InvoiceReceiver",
+    fields: [receiverId],
+    references: [id]
+  )
+
+  payments Payment[]
+
+
+  @@index([stayId])
+  @@index([payerId])
+  @@index([receiverId])
+  @@index([status])
+  @@index([dueDate])
+}
+
+
+// ============================================================
+// PAYMENT
+// ============================================================
+//
+// ONE payment table.
+//
+// Examples:
+//
+// Tenant → Owner
+// Tenant → Manager
+// Roommate → Tenant
+//
+// ============================================================
+
+model Payment {
+  id String @id @default(uuid()) @db.Uuid
+
+  stayId String? @db.Uuid
+
+  invoiceId     String? @db.Uuid
+
+  payerId    String @db.Uuid
+  receiverId String @db.Uuid
+
+  type PaymentType
+
+  amount Decimal @db.Decimal(12, 2)
+
+  status PaymentStatus @default(PENDING)
+
+
+  transactionReference String?
+
+  gatewayResponse Json?
+
+  paidAt DateTime?
+
+  failureReason String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+
+  // ----------------------------------------------------------
+  // Relations
+  // ----------------------------------------------------------
+
+  stay Stay? @relation(
+    fields: [stayId],
+    references: [id]
+  )
+
+  invoice Invoice? @relation(
+    fields: [invoiceId],
+    references: [id]
+  )
+
+
+  payer User @relation(
+    "PaymentPayer",
+    fields: [payerId],
+    references: [id]
+  )
+
+  receiver User @relation(
+    "PaymentReceiver",
+    fields: [receiverId],
+    references: [id]
+  )
+
+
+  @@index([stayId])
+  @@index([invoiceId])
+  @@index([payerId])
+  @@index([receiverId])
+  @@index([status])
+}
+
+
+// ============================================================
+// VIEWING REQUEST
+// ============================================================
+//
+// ONE table for viewing any advertisement.
+//
+// ============================================================
+
+model ViewingRequest {
+  id String @id @default(uuid()) @db.Uuid
+
+  advertisementId String @db.Uuid
+  requesterId     String @db.Uuid
+
+  requestedDate DateTime
+
+  status ViewingRequestStatus @default(PENDING)
+
+  reviewedById String? @db.Uuid
+  reviewedAt   DateTime?
+
+  note String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+
+  advertisement Advertisement @relation(
+    fields: [advertisementId],
+    references: [id]
+  )
+
+  requester User @relation(
+    "ViewingRequester",
+    fields: [requesterId],
+    references: [id]
+  )
+
+  reviewedBy User? @relation(
+    "ViewingReviewer",
+    fields: [reviewedById],
+    references: [id]
+  )
+
+
+  @@index([advertisementId])
+  @@index([requesterId])
+  @@index([status])
+  @@index([requestedDate])
+}
+
+
+// ============================================================
+// NOTIFICATION
+// ============================================================
+
+model Notification {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId String @db.Uuid
+
+  type NotificationType
+
+  title   String
+  message String
+
+  readAt DateTime?
+
+  createdAt DateTime @default(now())
+
+
+  user User @relation(
+    fields: [userId],
+    references: [id]
+  )
+
+
+  @@index([userId])
+  @@index([readAt])
+  @@index([createdAt])
+}
+
+

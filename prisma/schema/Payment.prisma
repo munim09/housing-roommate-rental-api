@@ -1,0 +1,59 @@
+// ============================================================
+// PAYMENT
+// ============================================================
+//
+// ONE payment table.
+//
+// Examples:
+//
+// Tenant → Owner
+// Tenant → Manager
+// Roommate → Tenant
+//
+// ============================================================
+
+model Payment {
+  id String @id @default(uuid())
+
+  stayId String?
+
+  invoiceId String?
+
+  payerId    String
+  receiverId String
+
+  type PaymentType
+
+  amount Decimal @db.Decimal(12, 2)
+
+  status PaymentStatus @default(PENDING)
+
+  transactionReference String?
+
+  gatewayResponse Json?
+
+  paidAt DateTime?
+
+  failureReason String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // ----------------------------------------------------------
+  // Relations
+  // ----------------------------------------------------------
+
+  stay Stay? @relation(fields: [stayId], references: [id])
+
+  invoice Invoice? @relation(fields: [invoiceId], references: [id])
+
+  payer User @relation("PaymentPayer", fields: [payerId], references: [id])
+
+  receiver User @relation("PaymentReceiver", fields: [receiverId], references: [id])
+
+  @@index([stayId])
+  @@index([invoiceId])
+  @@index([payerId])
+  @@index([receiverId])
+  @@index([status])
+}

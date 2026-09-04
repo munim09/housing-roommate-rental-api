@@ -1,0 +1,95 @@
+// ============================================================
+// USER
+// ============================================================
+
+model User {
+  id String @id @default(uuid())
+
+  name     String
+  email    String  @unique
+  phone    String? @unique
+  password String
+
+  role   Role
+  status UserStatus @default(PENDING_APPROVAL)
+  emailVerified      Boolean      @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // ----------------------------------------------------------
+  // Profiles
+  // ----------------------------------------------------------
+
+  ownerProfile   OwnerProfile?
+  managerProfile ManagerProfile?
+  tenantProfile  TenantProfile?
+
+  // ----------------------------------------------------------
+  // Property
+  // ----------------------------------------------------------
+
+  createdProperties Property[] @relation("PropertyCreatedBy")
+
+  // ----------------------------------------------------------
+  // Ownership
+  // ----------------------------------------------------------
+
+  ownedFlats PropertyOwnership[] @relation("FlatOwner")
+
+  // ----------------------------------------------------------
+  // Manager assignment
+  // ----------------------------------------------------------
+
+  managedFlats ManagerAssignment[] @relation("FlatManager")
+
+  // ----------------------------------------------------------
+  // Advertisement
+  // ----------------------------------------------------------
+
+  advertisements Advertisement[] @relation("AdvertisementCreatedBy")
+
+  // ----------------------------------------------------------
+  // Applications
+  // ----------------------------------------------------------
+
+  applications Application[] @relation("ApplicationApplicant")
+
+  reviewedApplications Application[] @relation("ApplicationReviewer")
+
+  // ----------------------------------------------------------
+  // Stays
+  // ----------------------------------------------------------
+
+  stays Stay[] @relation("StayOccupant")
+
+  // ----------------------------------------------------------
+  // Invoices
+  // ----------------------------------------------------------
+
+  invoicesAsPayer Invoice[] @relation("InvoicePayer")
+
+  invoicesAsReceiver Invoice[] @relation("InvoiceReceiver")
+
+  // ----------------------------------------------------------
+  // Payments
+  // ----------------------------------------------------------
+
+  paymentsAsPayer Payment[] @relation("PaymentPayer")
+
+  paymentsAsReceiver Payment[] @relation("PaymentReceiver")
+
+  // ----------------------------------------------------------
+  // Viewing requests
+  // ----------------------------------------------------------
+
+  viewingRequests ViewingRequest[] @relation("ViewingRequester")
+
+  reviewedViewingRequests ViewingRequest[] @relation("ViewingReviewer")
+
+  // ----------------------------------------------------------
+  // Notifications
+  // ----------------------------------------------------------
+
+  notifications Notification[]
+}

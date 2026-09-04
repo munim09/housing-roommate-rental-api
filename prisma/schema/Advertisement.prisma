@@ -1,0 +1,65 @@
+// ============================================================
+// ADVERTISEMENT
+// ============================================================
+//
+// ONE table for:
+//
+// 1. Owner/Manager rental advertisement
+// 2. Tenant roommate advertisement
+//
+// category:
+//   RENTAL
+//   ROOMMATE
+//
+// target:
+//   ENTIRE_FLAT
+//   ROOM
+//
+// ============================================================
+
+model Advertisement {
+  id String @id @default(uuid())
+
+  createdById String
+
+  flatId String?
+  roomId String?
+
+  category AdvertisementCategory
+  target   AdvertisementTarget
+
+  title       String
+  description String?
+
+  monthlyRent Decimal @db.Decimal(12, 2)
+
+  // For roommate advertisement
+  availableFrom DateTime?
+  availableTo   DateTime?
+
+  status AdvertisementStatus @default(DRAFT)
+
+  publishedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // ----------------------------------------------------------
+  // Relations
+  // ----------------------------------------------------------
+
+  createdBy User @relation("AdvertisementCreatedBy", fields: [createdById], references: [id])
+
+  flat Flat? @relation(fields: [flatId], references: [id])
+
+  room Room? @relation(fields: [roomId], references: [id])
+
+  applications Application[]
+
+  viewingRequests ViewingRequest[]
+
+  @@index([createdById])
+  @@index([flatId])
+  @@index([roomId])
+  @@index([category, status])
+}

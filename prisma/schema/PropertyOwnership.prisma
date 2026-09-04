@@ -1,0 +1,41 @@
+// ============================================================
+// FLAT OWNERSHIP
+// ============================================================
+//
+// IMPORTANT:
+// Ownership exists ONLY at Flat level.
+//
+// A Property has no owner.
+// A person owns one or more Flats.
+//
+// Example:
+//
+// Green View
+// ├── Flat A → Owner 1
+// ├── Flat B → Owner 2
+// └── Flat C → Owner 1
+//
+// ============================================================
+
+model PropertyOwnership {
+  id String @id @default(uuid())
+
+  flatId  String
+  ownerId String
+
+  status OwnershipStatus @default(ACTIVE)
+
+  startedAt DateTime  @default(now())
+  endedAt   DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  flat Flat @relation(fields: [flatId], references: [id])
+
+  owner User @relation("FlatOwner", fields: [ownerId], references: [id])
+
+  @@index([flatId])
+  @@index([ownerId])
+  @@index([status])
+}

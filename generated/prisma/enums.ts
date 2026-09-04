@@ -9,7 +9,227 @@
 * 🟢 You can import this file directly.
 */
 
+export const Role = {
+  OWNER: 'OWNER',
+  MANAGER: 'MANAGER',
+  TENANT: 'TENANT',
+  ADMIN: 'ADMIN'
+} as const
+
+export type Role = (typeof Role)[keyof typeof Role]
 
 
-// This file is empty because there are no enums in the schema.
-export {}
+export const UserStatus = {
+  PENDING_APPROVAL: 'PENDING_APPROVAL',
+  ACTIVE: 'ACTIVE',
+  REJECTED: 'REJECTED',
+  SUSPENDED: 'SUSPENDED'
+} as const
+
+export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus]
+
+
+export const PropertyType = {
+  SINGLE_FLAT: 'SINGLE_FLAT',
+  MULTI_FLAT: 'MULTI_FLAT'
+} as const
+
+export type PropertyType = (typeof PropertyType)[keyof typeof PropertyType]
+
+
+export const PropertyStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  ARCHIVED: 'ARCHIVED'
+} as const
+
+export type PropertyStatus = (typeof PropertyStatus)[keyof typeof PropertyStatus]
+
+
+export const FlatStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  ARCHIVED: 'ARCHIVED'
+} as const
+
+export type FlatStatus = (typeof FlatStatus)[keyof typeof FlatStatus]
+
+
+export const RoomStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  ARCHIVED: 'ARCHIVED'
+} as const
+
+export type RoomStatus = (typeof RoomStatus)[keyof typeof RoomStatus]
+
+
+export const OwnershipStatus = {
+  ACTIVE: 'ACTIVE',
+  ENDED: 'ENDED'
+} as const
+
+export type OwnershipStatus = (typeof OwnershipStatus)[keyof typeof OwnershipStatus]
+
+
+export const ManagerAssignmentStatus = {
+  ACTIVE: 'ACTIVE',
+  ENDED: 'ENDED'
+} as const
+
+export type ManagerAssignmentStatus = (typeof ManagerAssignmentStatus)[keyof typeof ManagerAssignmentStatus]
+
+
+export const AdvertisementCategory = {
+  RENTAL: 'RENTAL',
+  ROOMMATE: 'ROOMMATE'
+} as const
+
+export type AdvertisementCategory = (typeof AdvertisementCategory)[keyof typeof AdvertisementCategory]
+
+
+export const AdvertisementTarget = {
+  ENTIRE_FLAT: 'ENTIRE_FLAT',
+  ROOM: 'ROOM'
+} as const
+
+export type AdvertisementTarget = (typeof AdvertisementTarget)[keyof typeof AdvertisementTarget]
+
+
+export const AdvertisementStatus = {
+  DRAFT: 'DRAFT',
+  PUBLISHED: 'PUBLISHED',
+  UNPUBLISHED: 'UNPUBLISHED',
+  RENTED: 'RENTED',
+  FULL: 'FULL',
+  EXPIRED: 'EXPIRED',
+  ARCHIVED: 'ARCHIVED'
+} as const
+
+export type AdvertisementStatus = (typeof AdvertisementStatus)[keyof typeof AdvertisementStatus]
+
+
+export const ApplicationType = {
+  RENTAL: 'RENTAL',
+  ROOMMATE: 'ROOMMATE'
+} as const
+
+export type ApplicationType = (typeof ApplicationType)[keyof typeof ApplicationType]
+
+
+export const ApplicationStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  WITHDRAWN: 'WITHDRAWN',
+  EXPIRED: 'EXPIRED'
+} as const
+
+export type ApplicationStatus = (typeof ApplicationStatus)[keyof typeof ApplicationStatus]
+
+
+export const StayType = {
+  PRIMARY: 'PRIMARY',
+  ROOMMATE: 'ROOMMATE'
+} as const
+
+export type StayType = (typeof StayType)[keyof typeof StayType]
+
+
+export const StayStatus = {
+  WAITING_FOR_PAYMENT: 'WAITING_FOR_PAYMENT',
+  CONFIRMED: 'CONFIRMED',
+  ACTIVE: 'ACTIVE',
+  COMPLETED: 'COMPLETED',
+  TERMINATED: 'TERMINATED',
+  CANCELLED: 'CANCELLED',
+  EXPIRED: 'EXPIRED'
+} as const
+
+export type StayStatus = (typeof StayStatus)[keyof typeof StayStatus]
+
+
+export const InvoiceType = {
+  RENT: 'RENT',
+  UTILITY: 'UTILITY'
+} as const
+
+export type InvoiceType = (typeof InvoiceType)[keyof typeof InvoiceType]
+
+
+export const BillStatus = {
+  PENDING: 'PENDING',
+  PAID: 'PAID',
+  PARTIALLY_PAID: 'PARTIALLY_PAID',
+  OVERDUE: 'OVERDUE',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type BillStatus = (typeof BillStatus)[keyof typeof BillStatus]
+
+
+export const PaymentType = {
+  RENT: 'RENT',
+  UTILITY: 'UTILITY'
+} as const
+
+export type PaymentType = (typeof PaymentType)[keyof typeof PaymentType]
+
+
+export const PaymentStatus = {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  SUCCESS: 'SUCCESS',
+  FAILED: 'FAILED',
+  CANCELLED: 'CANCELLED',
+  REFUNDED: 'REFUNDED',
+  PARTIALLY_REFUNDED: 'PARTIALLY_REFUNDED'
+} as const
+
+export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
+
+
+export const ViewingRequestStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  CANCELLED: 'CANCELLED',
+  COMPLETED: 'COMPLETED',
+  NO_SHOW: 'NO_SHOW'
+} as const
+
+export type ViewingRequestStatus = (typeof ViewingRequestStatus)[keyof typeof ViewingRequestStatus]
+
+
+export const MaintenanceStatus = {
+  OPEN: 'OPEN',
+  IN_PROGRESS: 'IN_PROGRESS',
+  RESOLVED: 'RESOLVED',
+  CLOSED: 'CLOSED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type MaintenanceStatus = (typeof MaintenanceStatus)[keyof typeof MaintenanceStatus]
+
+
+export const MaintenancePriority = {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  URGENT: 'URGENT'
+} as const
+
+export type MaintenancePriority = (typeof MaintenancePriority)[keyof typeof MaintenancePriority]
+
+
+export const NotificationType = {
+  SYSTEM: 'SYSTEM',
+  APPLICATION: 'APPLICATION',
+  PAYMENT: 'PAYMENT',
+  UTILITY: 'UTILITY',
+  VIEWING: 'VIEWING',
+  MAINTENANCE: 'MAINTENANCE',
+  ROOMMATE: 'ROOMMATE'
+} as const
+
+export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]

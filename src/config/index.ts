@@ -17,6 +17,7 @@ dotenv.config({ path: path.join(process.cwd(), ".env") });
 // };
 
 const config = {
+    node_env: process.env.NODE_ENV,
     PORT: process.env.PORT || 5000,
     DATABASE_URL: process.env.DATABASE_URL,
     APP_URL: process.env.APP_URL,
@@ -27,6 +28,13 @@ const config = {
     JWT_REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN,
     SSL_STORE_ID: process.env.SSL_STORE_ID,
     SSL_STORE_PASSWD: process.env.SSL_STORE_PASSWD,
+    REDIS_USER: process.env.REDIS_USER,
+    REDIS_PASSWORD: process.env.REDIS_PASSWORD,
+    REDIS_HOST: process.env.REDIS_HOST,
+    REDIS_PORT: process.env.REDIS_PORT,
+    SMTP_USER: process.env.SMTP_USER,
+    SMTP_PASSWORD: process.env.SMTP_PASSWORD,
+    EMAIL_SENDER: process.env.EMAIL_SENDER,
 };
 
 export default config;

@@ -99,6 +99,9 @@ https://www.prisma.io/docs/prisma-postgres/quickstart/prisma-orm
 npx prisma migrate dev
 npx prisma generate
 
+to check error: npx prisma format
+to validate: npx prisma validate
+
 npm i zod
 
 

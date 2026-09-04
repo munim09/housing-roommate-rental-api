@@ -1,0 +1,35 @@
+// ============================================================
+// ROOM
+// ============================================================
+
+model Room {
+  id String @id @default(uuid())
+
+  flatId String
+
+  roomNumber String
+  name       String?
+
+  areaSqFt Decimal? @db.Decimal(10, 2)
+
+  description String?
+
+  status RoomStatus @default(ACTIVE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // ----------------------------------------------------------
+  // Relations
+  // ----------------------------------------------------------
+
+  flat Flat @relation(fields: [flatId], references: [id])
+
+  advertisements Advertisement[]
+
+  stays Stay[]
+
+  @@unique([flatId, roomNumber])
+  @@index([flatId])
+  @@index([status])
+}

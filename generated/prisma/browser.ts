@@ -17,4 +17,83 @@ import * as Prisma from './internal/prismaNamespaceBrowser'
 export { Prisma }
 export * as $Enums from './enums'
 export * from './enums';
-
+/**
+ * Model Advertisement
+ * 
+ */
+export type Advertisement = Prisma.AdvertisementModel
+/**
+ * Model Application
+ * 
+ */
+export type Application = Prisma.ApplicationModel
+/**
+ * Model Flat
+ * 
+ */
+export type Flat = Prisma.FlatModel
+/**
+ * Model Invoice
+ * 
+ */
+export type Invoice = Prisma.InvoiceModel
+/**
+ * Model ManagerAssignment
+ * 
+ */
+export type ManagerAssignment = Prisma.ManagerAssignmentModel
+/**
+ * Model ManagerProfile
+ * 
+ */
+export type ManagerProfile = Prisma.ManagerProfileModel
+/**
+ * Model OwnerProfile
+ * 
+ */
+export type OwnerProfile = Prisma.OwnerProfileModel
+/**
+ * Model Payment
+ * 
+ */
+export type Payment = Prisma.PaymentModel
+/**
+ * Model Property
+ * 
+ */
+export type Property = Prisma.PropertyModel
+/**
+ * Model PropertyOwnership
+ * 
+ */
+export type PropertyOwnership = Prisma.PropertyOwnershipModel
+/**
+ * Model Room
+ * 
+ */
+export type Room = Prisma.RoomModel
+/**
+ * Model TenantProfile
+ * 
+ */
+export type TenantProfile = Prisma.TenantProfileModel
+/**
+ * Model Notification
+ * 
+ */
+export type Notification = Prisma.NotificationModel
+/**
+ * Model Stay
+ * 
+ */
+export type Stay = Prisma.StayModel
+/**
+ * Model User
+ * 
+ */
+export type User = Prisma.UserModel
+/**
+ * Model ViewingRequest
+ * 
+ */
+export type ViewingRequest = Prisma.ViewingRequestModel

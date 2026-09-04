@@ -1,0 +1,43 @@
+// ============================================================
+// APPLICATION
+// ============================================================
+//
+// ONE table for:
+//
+// Rental application
+// Roommate application
+//
+// ============================================================
+
+model Application {
+  id String @id @default(uuid())
+
+  advertisementId String
+  applicantId     String
+
+  type   ApplicationType
+  status ApplicationStatus @default(PENDING)
+
+  requestedStartDate DateTime
+  requestedEndDate   DateTime
+
+  note String?
+
+  reviewedById String?
+  reviewedAt   DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  advertisement Advertisement @relation(fields: [advertisementId], references: [id])
+
+  applicant User @relation("ApplicationApplicant", fields: [applicantId], references: [id])
+
+  reviewedBy User? @relation("ApplicationReviewer", fields: [reviewedById], references: [id])
+
+  stay Stay?
+
+  @@index([advertisementId])
+  @@index([applicantId])
+  @@index([status])
+}

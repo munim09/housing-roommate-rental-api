@@ -51,7 +51,22 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-
+  Advertisement: 'Advertisement',
+  Application: 'Application',
+  Flat: 'Flat',
+  Invoice: 'Invoice',
+  ManagerAssignment: 'ManagerAssignment',
+  ManagerProfile: 'ManagerProfile',
+  OwnerProfile: 'OwnerProfile',
+  Payment: 'Payment',
+  Property: 'Property',
+  PropertyOwnership: 'PropertyOwnership',
+  Room: 'Room',
+  TenantProfile: 'TenantProfile',
+  Notification: 'Notification',
+  Stay: 'Stay',
+  User: 'User',
+  ViewingRequest: 'ViewingRequest'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -68,4 +83,306 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 } as const)
 
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
+
+
+export const AdvertisementScalarFieldEnum = {
+  id: 'id',
+  createdById: 'createdById',
+  flatId: 'flatId',
+  roomId: 'roomId',
+  category: 'category',
+  target: 'target',
+  title: 'title',
+  description: 'description',
+  monthlyRent: 'monthlyRent',
+  availableFrom: 'availableFrom',
+  availableTo: 'availableTo',
+  status: 'status',
+  publishedAt: 'publishedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AdvertisementScalarFieldEnum = (typeof AdvertisementScalarFieldEnum)[keyof typeof AdvertisementScalarFieldEnum]
+
+
+export const ApplicationScalarFieldEnum = {
+  id: 'id',
+  advertisementId: 'advertisementId',
+  applicantId: 'applicantId',
+  type: 'type',
+  status: 'status',
+  requestedStartDate: 'requestedStartDate',
+  requestedEndDate: 'requestedEndDate',
+  note: 'note',
+  reviewedById: 'reviewedById',
+  reviewedAt: 'reviewedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ApplicationScalarFieldEnum = (typeof ApplicationScalarFieldEnum)[keyof typeof ApplicationScalarFieldEnum]
+
+
+export const FlatScalarFieldEnum = {
+  id: 'id',
+  propertyId: 'propertyId',
+  flatNumber: 'flatNumber',
+  floorNumber: 'floorNumber',
+  bedrooms: 'bedrooms',
+  bathrooms: 'bathrooms',
+  areaSqFt: 'areaSqFt',
+  description: 'description',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FlatScalarFieldEnum = (typeof FlatScalarFieldEnum)[keyof typeof FlatScalarFieldEnum]
+
+
+export const InvoiceScalarFieldEnum = {
+  id: 'id',
+  stayId: 'stayId',
+  payerId: 'payerId',
+  receiverId: 'receiverId',
+  type: 'type',
+  amount: 'amount',
+  billingPeriodStart: 'billingPeriodStart',
+  billingPeriodEnd: 'billingPeriodEnd',
+  dueDate: 'dueDate',
+  status: 'status',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type InvoiceScalarFieldEnum = (typeof InvoiceScalarFieldEnum)[keyof typeof InvoiceScalarFieldEnum]
+
+
+export const ManagerAssignmentScalarFieldEnum = {
+  id: 'id',
+  flatId: 'flatId',
+  managerId: 'managerId',
+  status: 'status',
+  startedAt: 'startedAt',
+  endedAt: 'endedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ManagerAssignmentScalarFieldEnum = (typeof ManagerAssignmentScalarFieldEnum)[keyof typeof ManagerAssignmentScalarFieldEnum]
+
+
+export const ManagerProfileScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  nid: 'nid',
+  address: 'address',
+  occupation: 'occupation',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ManagerProfileScalarFieldEnum = (typeof ManagerProfileScalarFieldEnum)[keyof typeof ManagerProfileScalarFieldEnum]
+
+
+export const OwnerProfileScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  nid: 'nid',
+  address: 'address',
+  occupation: 'occupation',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OwnerProfileScalarFieldEnum = (typeof OwnerProfileScalarFieldEnum)[keyof typeof OwnerProfileScalarFieldEnum]
+
+
+export const PaymentScalarFieldEnum = {
+  id: 'id',
+  stayId: 'stayId',
+  invoiceId: 'invoiceId',
+  payerId: 'payerId',
+  receiverId: 'receiverId',
+  type: 'type',
+  amount: 'amount',
+  status: 'status',
+  transactionReference: 'transactionReference',
+  gatewayResponse: 'gatewayResponse',
+  paidAt: 'paidAt',
+  failureReason: 'failureReason',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
+
+
+export const PropertyScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  type: 'type',
+  description: 'description',
+  address: 'address',
+  city: 'city',
+  district: 'district',
+  postalCode: 'postalCode',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  status: 'status',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PropertyScalarFieldEnum = (typeof PropertyScalarFieldEnum)[keyof typeof PropertyScalarFieldEnum]
+
+
+export const PropertyOwnershipScalarFieldEnum = {
+  id: 'id',
+  flatId: 'flatId',
+  ownerId: 'ownerId',
+  status: 'status',
+  startedAt: 'startedAt',
+  endedAt: 'endedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PropertyOwnershipScalarFieldEnum = (typeof PropertyOwnershipScalarFieldEnum)[keyof typeof PropertyOwnershipScalarFieldEnum]
+
+
+export const RoomScalarFieldEnum = {
+  id: 'id',
+  flatId: 'flatId',
+  roomNumber: 'roomNumber',
+  name: 'name',
+  areaSqFt: 'areaSqFt',
+  description: 'description',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RoomScalarFieldEnum = (typeof RoomScalarFieldEnum)[keyof typeof RoomScalarFieldEnum]
+
+
+export const TenantProfileScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  nid: 'nid',
+  address: 'address',
+  occupation: 'occupation',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TenantProfileScalarFieldEnum = (typeof TenantProfileScalarFieldEnum)[keyof typeof TenantProfileScalarFieldEnum]
+
+
+export const NotificationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  title: 'title',
+  message: 'message',
+  readAt: 'readAt',
+  createdAt: 'createdAt'
+} as const
+
+export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
+
+
+export const StayScalarFieldEnum = {
+  id: 'id',
+  applicationId: 'applicationId',
+  occupantId: 'occupantId',
+  propertyId: 'propertyId',
+  flatId: 'flatId',
+  roomId: 'roomId',
+  type: 'type',
+  status: 'status',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  monthlyRent: 'monthlyRent',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StayScalarFieldEnum = (typeof StayScalarFieldEnum)[keyof typeof StayScalarFieldEnum]
+
+
+export const UserScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  phone: 'phone',
+  password: 'password',
+  role: 'role',
+  status: 'status',
+  emailVerified: 'emailVerified',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const ViewingRequestScalarFieldEnum = {
+  id: 'id',
+  advertisementId: 'advertisementId',
+  requesterId: 'requesterId',
+  requestedDate: 'requestedDate',
+  status: 'status',
+  reviewedById: 'reviewedById',
+  reviewedAt: 'reviewedAt',
+  note: 'note',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ViewingRequestScalarFieldEnum = (typeof ViewingRequestScalarFieldEnum)[keyof typeof ViewingRequestScalarFieldEnum]
+
+
+export const SortOrder = {
+  asc: 'asc',
+  desc: 'desc'
+} as const
+
+export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+export const QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+} as const
+
+export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 

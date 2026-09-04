@@ -1,0 +1,56 @@
+// ============================================================
+// INVOICE
+// ============================================================
+//
+// ONE table for all rent invoices.
+//
+// payer / receiver determines the payment direction.
+//
+// Tenant rent:
+//
+// Tenant → Owner
+//
+// Roommate rent:
+//
+// Roommate → Tenant
+//
+// ============================================================
+
+model Invoice {
+  id String @id @default(uuid())
+
+  stayId String
+
+  payerId    String
+  receiverId String
+
+  type InvoiceType
+
+  amount Decimal @db.Decimal(12, 2)
+
+  billingPeriodStart DateTime
+  billingPeriodEnd   DateTime
+
+  dueDate DateTime
+
+  status BillStatus @default(PENDING)
+
+  description String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  stay Stay @relation(fields: [stayId], references: [id])
+
+  payer User @relation("InvoicePayer", fields: [payerId], references: [id])
+
+  receiver User @relation("InvoiceReceiver", fields: [receiverId], references: [id])
+
+  payments Payment[]
+
+  @@index([stayId])
+  @@index([payerId])
+  @@index([receiverId])
+  @@index([status])
+  @@index([dueDate])
+}

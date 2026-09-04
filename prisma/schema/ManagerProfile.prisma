@@ -1,0 +1,14 @@
+model ManagerProfile {
+  id String @id @default(uuid())
+
+  userId String @unique
+
+  nid        String? @unique
+  address    String?
+  occupation String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+}

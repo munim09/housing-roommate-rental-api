@@ -1,0 +1,37 @@
+// ============================================================
+// VIEWING REQUEST
+// ============================================================
+//
+// ONE table for viewing any advertisement.
+//
+// ============================================================
+
+model ViewingRequest {
+  id String @id @default(uuid())
+
+  advertisementId String
+  requesterId     String
+
+  requestedDate DateTime
+
+  status ViewingRequestStatus @default(PENDING)
+
+  reviewedById String?
+  reviewedAt   DateTime?
+
+  note String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  advertisement Advertisement @relation(fields: [advertisementId], references: [id])
+
+  requester User @relation("ViewingRequester", fields: [requesterId], references: [id])
+
+  reviewedBy User? @relation("ViewingReviewer", fields: [reviewedById], references: [id])
+
+  @@index([advertisementId])
+  @@index([requesterId])
+  @@index([status])
+  @@index([requestedDate])
+}

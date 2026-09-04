@@ -1,0 +1,44 @@
+// ============================================================
+// FLAT
+// ============================================================
+
+model Flat {
+  id String @id @default(uuid())
+
+  propertyId String
+
+  flatNumber  String
+  floorNumber Int?
+
+  bedrooms  Int?
+  bathrooms Int?
+
+  areaSqFt Decimal? @db.Decimal(10, 2)
+
+  description String?
+
+  status FlatStatus @default(ACTIVE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // ----------------------------------------------------------
+  // Relations
+  // ----------------------------------------------------------
+
+  property Property @relation(fields: [propertyId], references: [id])
+
+  rooms Room[]
+
+  ownerships PropertyOwnership[]
+
+  managerAssignments ManagerAssignment[]
+
+  advertisements Advertisement[]
+
+  stays Stay[]
+
+  @@unique([propertyId, flatNumber])
+  @@index([propertyId])
+  @@index([status])
+}

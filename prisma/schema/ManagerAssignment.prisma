@@ -1,0 +1,30 @@
+// ============================================================
+// MANAGER ASSIGNMENT
+// ============================================================
+//
+// Manager assignment is ALWAYS at Flat level.
+//
+// ============================================================
+
+model ManagerAssignment {
+  id String @id @default(uuid())
+
+  flatId    String
+  managerId String
+
+  status ManagerAssignmentStatus @default(ACTIVE)
+
+  startedAt DateTime  @default(now())
+  endedAt   DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  flat Flat @relation(fields: [flatId], references: [id])
+
+  manager User @relation("FlatManager", fields: [managerId], references: [id])
+
+  @@index([flatId])
+  @@index([managerId])
+  @@index([status])
+}

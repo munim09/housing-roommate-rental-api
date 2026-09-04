@@ -1,0 +1,39 @@
+// ============================================================
+// PROPERTY
+// ============================================================
+
+model Property {
+  id String @id @default(uuid())
+
+  name        String
+  type        PropertyType
+  description String?
+
+  address    String
+  city       String
+  district   String
+  postalCode String?
+
+  latitude  Decimal? @db.Decimal(10, 7)
+  longitude Decimal? @db.Decimal(10, 7)
+
+  status PropertyStatus @default(ACTIVE)
+
+  createdById String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // ----------------------------------------------------------
+  // Relations
+  // ----------------------------------------------------------
+
+  createdBy User @relation("PropertyCreatedBy", fields: [createdById], references: [id])
+
+  flats Flat[]
+
+  stays Stay[]
+
+  @@index([createdById])
+  @@index([status])
+}

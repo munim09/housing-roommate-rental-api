@@ -8,4 +8,20 @@
  *
  * 🟢 You can import this file directly.
  */
+export type * from './models/Advertisement'
+export type * from './models/Application'
+export type * from './models/Flat'
+export type * from './models/Invoice'
+export type * from './models/ManagerAssignment'
+export type * from './models/ManagerProfile'
+export type * from './models/OwnerProfile'
+export type * from './models/Payment'
+export type * from './models/Property'
+export type * from './models/PropertyOwnership'
+export type * from './models/Room'
+export type * from './models/TenantProfile'
+export type * from './models/Notification'
+export type * from './models/Stay'
+export type * from './models/User'
+export type * from './models/ViewingRequest'
 export type * from './commonInputTypes'

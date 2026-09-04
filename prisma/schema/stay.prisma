@@ -1,0 +1,62 @@
+// ============================================================
+// STAY
+// ============================================================
+//
+// ONE table for:
+//
+// Primary tenant stay
+// Roommate stay
+//
+// A roommate is simply another occupant.
+//
+// ============================================================
+
+model Stay {
+  id String @id @default(uuid())
+
+  applicationId String @unique
+
+  occupantId String
+
+  propertyId String
+  flatId     String
+  roomId     String?
+
+  type   StayType
+  status StayStatus @default(WAITING_FOR_PAYMENT)
+
+  startDate DateTime
+  endDate   DateTime
+
+  // Snapshot of rent at approval time.
+  // Future advertisement rent changes do not affect this stay.
+  monthlyRent Decimal @db.Decimal(12, 2)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // ----------------------------------------------------------
+  // Relations
+  // ----------------------------------------------------------
+
+  application Application @relation(fields: [applicationId], references: [id])
+
+  occupant User @relation("StayOccupant", fields: [occupantId], references: [id])
+
+  property Property @relation(fields: [propertyId], references: [id])
+
+  flat Flat @relation(fields: [flatId], references: [id])
+
+  room Room? @relation(fields: [roomId], references: [id])
+
+  invoices Invoice[]
+
+  payments Payment[]
+
+  @@index([occupantId])
+  @@index([propertyId])
+  @@index([flatId])
+  @@index([roomId])
+  @@index([status])
+  @@index([startDate, endDate])
+}

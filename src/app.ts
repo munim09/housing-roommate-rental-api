@@ -1,6 +1,13 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import express, { Application } from "express";
+import express, { Application, Request, Response } from "express";
+import httpStatus from "http-status";
+import { globalErrorHandler } from "./middlewares/globalErrorHandler";
+import { notFound } from "./middlewares/notFound";
+import { AuthRoutes } from "./module/auth/auth.route";
+import { AdminRoutes } from "./module/admin/admin.route";
+import { catchAsync } from "./utils/catchAsync";
+import { sendResponse } from "./utils/sendResponse";
 
 const app: Application = express();
 
@@ -19,5 +26,24 @@ app.use(
 app.get("/", async (req: Request, res: Response) => {
     res.send("Hello, World!");
 });
+
+app.get(
+    "/test",
+    catchAsync(async (req: Request, res: Response) => {
+        sendResponse(res, {
+            statusCode: httpStatus.CREATED,
+            success: true,
+            message: "testing.....",
+            data: {},
+        });
+    }),
+);
+
+app.use("/api/v1/auth", AuthRoutes);
+app.use("/api/v1/admin", AdminRoutes);
+
+app.use(notFound);
+
+app.use(globalErrorHandler);
 
 export default app;
