@@ -397,6 +397,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
+  AccommodationImage: 'AccommodationImage',
   Advertisement: 'Advertisement',
   Application: 'Application',
   Flat: 'Flat',
@@ -428,10 +429,84 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "advertisement" | "application" | "flat" | "invoice" | "managerAssignment" | "managerProfile" | "ownerProfile" | "payment" | "property" | "propertyOwnership" | "room" | "tenantProfile" | "notification" | "stay" | "user" | "viewingRequest"
+    modelProps: "accommodationImage" | "advertisement" | "application" | "flat" | "invoice" | "managerAssignment" | "managerProfile" | "ownerProfile" | "payment" | "property" | "propertyOwnership" | "room" | "tenantProfile" | "notification" | "stay" | "user" | "viewingRequest"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
+    AccommodationImage: {
+      payload: Prisma.$AccommodationImagePayload<ExtArgs>
+      fields: Prisma.AccommodationImageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AccommodationImageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccommodationImagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AccommodationImageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccommodationImagePayload>
+        }
+        findFirst: {
+          args: Prisma.AccommodationImageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccommodationImagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AccommodationImageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccommodationImagePayload>
+        }
+        findMany: {
+          args: Prisma.AccommodationImageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccommodationImagePayload>[]
+        }
+        create: {
+          args: Prisma.AccommodationImageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccommodationImagePayload>
+        }
+        createMany: {
+          args: Prisma.AccommodationImageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AccommodationImageCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccommodationImagePayload>[]
+        }
+        delete: {
+          args: Prisma.AccommodationImageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccommodationImagePayload>
+        }
+        update: {
+          args: Prisma.AccommodationImageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccommodationImagePayload>
+        }
+        deleteMany: {
+          args: Prisma.AccommodationImageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AccommodationImageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AccommodationImageUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccommodationImagePayload>[]
+        }
+        upsert: {
+          args: Prisma.AccommodationImageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccommodationImagePayload>
+        }
+        aggregate: {
+          args: Prisma.AccommodationImageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAccommodationImage>
+        }
+        groupBy: {
+          args: Prisma.AccommodationImageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AccommodationImageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AccommodationImageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AccommodationImageCountAggregateOutputType> | number
+        }
+      }
+    }
     Advertisement: {
       payload: Prisma.$AdvertisementPayload<ExtArgs>
       fields: Prisma.AdvertisementFieldRefs
@@ -1655,6 +1730,20 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const AccommodationImageScalarFieldEnum = {
+  id: 'id',
+  imageUrl: 'imageUrl',
+  flatId: 'flatId',
+  roomId: 'roomId',
+  sortOrder: 'sortOrder',
+  isPrimary: 'isPrimary',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AccommodationImageScalarFieldEnum = (typeof AccommodationImageScalarFieldEnum)[keyof typeof AccommodationImageScalarFieldEnum]
+
+
 export const AdvertisementScalarFieldEnum = {
   id: 'id',
   createdById: 'createdById',
@@ -1978,6 +2067,41 @@ export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 
 
 /**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
+ * Reference to a field of type 'DateTime'
+ */
+export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+    
+
+
+/**
+ * Reference to a field of type 'DateTime[]'
+ */
+export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
  * Reference to a field of type 'AdvertisementCategory'
  */
 export type EnumAdvertisementCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AdvertisementCategory'>
@@ -2020,20 +2144,6 @@ export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMo
 
 
 /**
- * Reference to a field of type 'DateTime'
- */
-export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
-    
-
-
-/**
- * Reference to a field of type 'DateTime[]'
- */
-export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
-    
-
-
-/**
  * Reference to a field of type 'AdvertisementStatus'
  */
 export type EnumAdvertisementStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AdvertisementStatus'>
@@ -2072,20 +2182,6 @@ export type EnumApplicationStatusFieldRefInput<$PrismaModel> = FieldRefInputType
  * Reference to a field of type 'ApplicationStatus[]'
  */
 export type ListEnumApplicationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApplicationStatus[]'>
-    
-
-
-/**
- * Reference to a field of type 'Int'
- */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-/**
- * Reference to a field of type 'Int[]'
- */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 
@@ -2314,13 +2410,6 @@ export type ListEnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$P
 
 
 /**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
-
-
-/**
  * Reference to a field of type 'ViewingRequestStatus'
  */
 export type EnumViewingRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ViewingRequestStatus'>
@@ -2498,6 +2587,7 @@ export interface PrismaClientOptionsWithAdapter extends PrismaClientBaseOptions 
  */
 export type PrismaClientOptions = PrismaClientOptionsWithAccelerateUrl | PrismaClientOptionsWithAdapter
 export type GlobalOmitConfig = {
+  accommodationImage?: Prisma.AccommodationImageOmit
   advertisement?: Prisma.AdvertisementOmit
   application?: Prisma.ApplicationOmit
   flat?: Prisma.FlatOmit

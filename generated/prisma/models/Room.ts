@@ -251,6 +251,7 @@ export type RoomWhereInput = {
   flat?: Prisma.XOR<Prisma.FlatScalarRelationFilter, Prisma.FlatWhereInput>
   advertisements?: Prisma.AdvertisementListRelationFilter
   stays?: Prisma.StayListRelationFilter
+  images?: Prisma.AccommodationImageListRelationFilter
 }
 
 export type RoomOrderByWithRelationInput = {
@@ -266,6 +267,7 @@ export type RoomOrderByWithRelationInput = {
   flat?: Prisma.FlatOrderByWithRelationInput
   advertisements?: Prisma.AdvertisementOrderByRelationAggregateInput
   stays?: Prisma.StayOrderByRelationAggregateInput
+  images?: Prisma.AccommodationImageOrderByRelationAggregateInput
 }
 
 export type RoomWhereUniqueInput = Prisma.AtLeast<{
@@ -285,6 +287,7 @@ export type RoomWhereUniqueInput = Prisma.AtLeast<{
   flat?: Prisma.XOR<Prisma.FlatScalarRelationFilter, Prisma.FlatWhereInput>
   advertisements?: Prisma.AdvertisementListRelationFilter
   stays?: Prisma.StayListRelationFilter
+  images?: Prisma.AccommodationImageListRelationFilter
 }, "id" | "flatId_roomNumber">
 
 export type RoomOrderByWithAggregationInput = {
@@ -331,6 +334,7 @@ export type RoomCreateInput = {
   flat: Prisma.FlatCreateNestedOneWithoutRoomsInput
   advertisements?: Prisma.AdvertisementCreateNestedManyWithoutRoomInput
   stays?: Prisma.StayCreateNestedManyWithoutRoomInput
+  images?: Prisma.AccommodationImageCreateNestedManyWithoutRoomInput
 }
 
 export type RoomUncheckedCreateInput = {
@@ -345,6 +349,7 @@ export type RoomUncheckedCreateInput = {
   updatedAt?: Date | string
   advertisements?: Prisma.AdvertisementUncheckedCreateNestedManyWithoutRoomInput
   stays?: Prisma.StayUncheckedCreateNestedManyWithoutRoomInput
+  images?: Prisma.AccommodationImageUncheckedCreateNestedManyWithoutRoomInput
 }
 
 export type RoomUpdateInput = {
@@ -359,6 +364,7 @@ export type RoomUpdateInput = {
   flat?: Prisma.FlatUpdateOneRequiredWithoutRoomsNestedInput
   advertisements?: Prisma.AdvertisementUpdateManyWithoutRoomNestedInput
   stays?: Prisma.StayUpdateManyWithoutRoomNestedInput
+  images?: Prisma.AccommodationImageUpdateManyWithoutRoomNestedInput
 }
 
 export type RoomUncheckedUpdateInput = {
@@ -373,6 +379,7 @@ export type RoomUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   advertisements?: Prisma.AdvertisementUncheckedUpdateManyWithoutRoomNestedInput
   stays?: Prisma.StayUncheckedUpdateManyWithoutRoomNestedInput
+  images?: Prisma.AccommodationImageUncheckedUpdateManyWithoutRoomNestedInput
 }
 
 export type RoomCreateManyInput = {
@@ -474,6 +481,22 @@ export type RoomSumOrderByAggregateInput = {
   areaSqFt?: Prisma.SortOrder
 }
 
+export type RoomCreateNestedOneWithoutImagesInput = {
+  create?: Prisma.XOR<Prisma.RoomCreateWithoutImagesInput, Prisma.RoomUncheckedCreateWithoutImagesInput>
+  connectOrCreate?: Prisma.RoomCreateOrConnectWithoutImagesInput
+  connect?: Prisma.RoomWhereUniqueInput
+}
+
+export type RoomUpdateOneWithoutImagesNestedInput = {
+  create?: Prisma.XOR<Prisma.RoomCreateWithoutImagesInput, Prisma.RoomUncheckedCreateWithoutImagesInput>
+  connectOrCreate?: Prisma.RoomCreateOrConnectWithoutImagesInput
+  upsert?: Prisma.RoomUpsertWithoutImagesInput
+  disconnect?: Prisma.RoomWhereInput | boolean
+  delete?: Prisma.RoomWhereInput | boolean
+  connect?: Prisma.RoomWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.RoomUpdateToOneWithWhereWithoutImagesInput, Prisma.RoomUpdateWithoutImagesInput>, Prisma.RoomUncheckedUpdateWithoutImagesInput>
+}
+
 export type RoomCreateNestedOneWithoutAdvertisementsInput = {
   create?: Prisma.XOR<Prisma.RoomCreateWithoutAdvertisementsInput, Prisma.RoomUncheckedCreateWithoutAdvertisementsInput>
   connectOrCreate?: Prisma.RoomCreateOrConnectWithoutAdvertisementsInput
@@ -552,6 +575,78 @@ export type RoomUpdateOneWithoutStaysNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.RoomUpdateToOneWithWhereWithoutStaysInput, Prisma.RoomUpdateWithoutStaysInput>, Prisma.RoomUncheckedUpdateWithoutStaysInput>
 }
 
+export type RoomCreateWithoutImagesInput = {
+  id?: string
+  roomNumber: string
+  name?: string | null
+  areaSqFt?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  description?: string | null
+  status?: $Enums.RoomStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  flat: Prisma.FlatCreateNestedOneWithoutRoomsInput
+  advertisements?: Prisma.AdvertisementCreateNestedManyWithoutRoomInput
+  stays?: Prisma.StayCreateNestedManyWithoutRoomInput
+}
+
+export type RoomUncheckedCreateWithoutImagesInput = {
+  id?: string
+  flatId: string
+  roomNumber: string
+  name?: string | null
+  areaSqFt?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  description?: string | null
+  status?: $Enums.RoomStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  advertisements?: Prisma.AdvertisementUncheckedCreateNestedManyWithoutRoomInput
+  stays?: Prisma.StayUncheckedCreateNestedManyWithoutRoomInput
+}
+
+export type RoomCreateOrConnectWithoutImagesInput = {
+  where: Prisma.RoomWhereUniqueInput
+  create: Prisma.XOR<Prisma.RoomCreateWithoutImagesInput, Prisma.RoomUncheckedCreateWithoutImagesInput>
+}
+
+export type RoomUpsertWithoutImagesInput = {
+  update: Prisma.XOR<Prisma.RoomUpdateWithoutImagesInput, Prisma.RoomUncheckedUpdateWithoutImagesInput>
+  create: Prisma.XOR<Prisma.RoomCreateWithoutImagesInput, Prisma.RoomUncheckedCreateWithoutImagesInput>
+  where?: Prisma.RoomWhereInput
+}
+
+export type RoomUpdateToOneWithWhereWithoutImagesInput = {
+  where?: Prisma.RoomWhereInput
+  data: Prisma.XOR<Prisma.RoomUpdateWithoutImagesInput, Prisma.RoomUncheckedUpdateWithoutImagesInput>
+}
+
+export type RoomUpdateWithoutImagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  roomNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  areaSqFt?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumRoomStatusFieldUpdateOperationsInput | $Enums.RoomStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  flat?: Prisma.FlatUpdateOneRequiredWithoutRoomsNestedInput
+  advertisements?: Prisma.AdvertisementUpdateManyWithoutRoomNestedInput
+  stays?: Prisma.StayUpdateManyWithoutRoomNestedInput
+}
+
+export type RoomUncheckedUpdateWithoutImagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  flatId?: Prisma.StringFieldUpdateOperationsInput | string
+  roomNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  areaSqFt?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumRoomStatusFieldUpdateOperationsInput | $Enums.RoomStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  advertisements?: Prisma.AdvertisementUncheckedUpdateManyWithoutRoomNestedInput
+  stays?: Prisma.StayUncheckedUpdateManyWithoutRoomNestedInput
+}
+
 export type RoomCreateWithoutAdvertisementsInput = {
   id?: string
   roomNumber: string
@@ -563,6 +658,7 @@ export type RoomCreateWithoutAdvertisementsInput = {
   updatedAt?: Date | string
   flat: Prisma.FlatCreateNestedOneWithoutRoomsInput
   stays?: Prisma.StayCreateNestedManyWithoutRoomInput
+  images?: Prisma.AccommodationImageCreateNestedManyWithoutRoomInput
 }
 
 export type RoomUncheckedCreateWithoutAdvertisementsInput = {
@@ -576,6 +672,7 @@ export type RoomUncheckedCreateWithoutAdvertisementsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   stays?: Prisma.StayUncheckedCreateNestedManyWithoutRoomInput
+  images?: Prisma.AccommodationImageUncheckedCreateNestedManyWithoutRoomInput
 }
 
 export type RoomCreateOrConnectWithoutAdvertisementsInput = {
@@ -605,6 +702,7 @@ export type RoomUpdateWithoutAdvertisementsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   flat?: Prisma.FlatUpdateOneRequiredWithoutRoomsNestedInput
   stays?: Prisma.StayUpdateManyWithoutRoomNestedInput
+  images?: Prisma.AccommodationImageUpdateManyWithoutRoomNestedInput
 }
 
 export type RoomUncheckedUpdateWithoutAdvertisementsInput = {
@@ -618,6 +716,7 @@ export type RoomUncheckedUpdateWithoutAdvertisementsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   stays?: Prisma.StayUncheckedUpdateManyWithoutRoomNestedInput
+  images?: Prisma.AccommodationImageUncheckedUpdateManyWithoutRoomNestedInput
 }
 
 export type RoomCreateWithoutFlatInput = {
@@ -631,6 +730,7 @@ export type RoomCreateWithoutFlatInput = {
   updatedAt?: Date | string
   advertisements?: Prisma.AdvertisementCreateNestedManyWithoutRoomInput
   stays?: Prisma.StayCreateNestedManyWithoutRoomInput
+  images?: Prisma.AccommodationImageCreateNestedManyWithoutRoomInput
 }
 
 export type RoomUncheckedCreateWithoutFlatInput = {
@@ -644,6 +744,7 @@ export type RoomUncheckedCreateWithoutFlatInput = {
   updatedAt?: Date | string
   advertisements?: Prisma.AdvertisementUncheckedCreateNestedManyWithoutRoomInput
   stays?: Prisma.StayUncheckedCreateNestedManyWithoutRoomInput
+  images?: Prisma.AccommodationImageUncheckedCreateNestedManyWithoutRoomInput
 }
 
 export type RoomCreateOrConnectWithoutFlatInput = {
@@ -698,6 +799,7 @@ export type RoomCreateWithoutStaysInput = {
   updatedAt?: Date | string
   flat: Prisma.FlatCreateNestedOneWithoutRoomsInput
   advertisements?: Prisma.AdvertisementCreateNestedManyWithoutRoomInput
+  images?: Prisma.AccommodationImageCreateNestedManyWithoutRoomInput
 }
 
 export type RoomUncheckedCreateWithoutStaysInput = {
@@ -711,6 +813,7 @@ export type RoomUncheckedCreateWithoutStaysInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   advertisements?: Prisma.AdvertisementUncheckedCreateNestedManyWithoutRoomInput
+  images?: Prisma.AccommodationImageUncheckedCreateNestedManyWithoutRoomInput
 }
 
 export type RoomCreateOrConnectWithoutStaysInput = {
@@ -740,6 +843,7 @@ export type RoomUpdateWithoutStaysInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   flat?: Prisma.FlatUpdateOneRequiredWithoutRoomsNestedInput
   advertisements?: Prisma.AdvertisementUpdateManyWithoutRoomNestedInput
+  images?: Prisma.AccommodationImageUpdateManyWithoutRoomNestedInput
 }
 
 export type RoomUncheckedUpdateWithoutStaysInput = {
@@ -753,6 +857,7 @@ export type RoomUncheckedUpdateWithoutStaysInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   advertisements?: Prisma.AdvertisementUncheckedUpdateManyWithoutRoomNestedInput
+  images?: Prisma.AccommodationImageUncheckedUpdateManyWithoutRoomNestedInput
 }
 
 export type RoomCreateManyFlatInput = {
@@ -777,6 +882,7 @@ export type RoomUpdateWithoutFlatInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   advertisements?: Prisma.AdvertisementUpdateManyWithoutRoomNestedInput
   stays?: Prisma.StayUpdateManyWithoutRoomNestedInput
+  images?: Prisma.AccommodationImageUpdateManyWithoutRoomNestedInput
 }
 
 export type RoomUncheckedUpdateWithoutFlatInput = {
@@ -790,6 +896,7 @@ export type RoomUncheckedUpdateWithoutFlatInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   advertisements?: Prisma.AdvertisementUncheckedUpdateManyWithoutRoomNestedInput
   stays?: Prisma.StayUncheckedUpdateManyWithoutRoomNestedInput
+  images?: Prisma.AccommodationImageUncheckedUpdateManyWithoutRoomNestedInput
 }
 
 export type RoomUncheckedUpdateManyWithoutFlatInput = {
@@ -811,11 +918,13 @@ export type RoomUncheckedUpdateManyWithoutFlatInput = {
 export type RoomCountOutputType = {
   advertisements: number
   stays: number
+  images: number
 }
 
 export type RoomCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   advertisements?: boolean | RoomCountOutputTypeCountAdvertisementsArgs
   stays?: boolean | RoomCountOutputTypeCountStaysArgs
+  images?: boolean | RoomCountOutputTypeCountImagesArgs
 }
 
 /**
@@ -842,6 +951,13 @@ export type RoomCountOutputTypeCountStaysArgs<ExtArgs extends runtime.Types.Exte
   where?: Prisma.StayWhereInput
 }
 
+/**
+ * RoomCountOutputType without action
+ */
+export type RoomCountOutputTypeCountImagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AccommodationImageWhereInput
+}
+
 
 export type RoomSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -856,6 +972,7 @@ export type RoomSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   flat?: boolean | Prisma.FlatDefaultArgs<ExtArgs>
   advertisements?: boolean | Prisma.Room$advertisementsArgs<ExtArgs>
   stays?: boolean | Prisma.Room$staysArgs<ExtArgs>
+  images?: boolean | Prisma.Room$imagesArgs<ExtArgs>
   _count?: boolean | Prisma.RoomCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["room"]>
 
@@ -902,6 +1019,7 @@ export type RoomInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   flat?: boolean | Prisma.FlatDefaultArgs<ExtArgs>
   advertisements?: boolean | Prisma.Room$advertisementsArgs<ExtArgs>
   stays?: boolean | Prisma.Room$staysArgs<ExtArgs>
+  images?: boolean | Prisma.Room$imagesArgs<ExtArgs>
   _count?: boolean | Prisma.RoomCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type RoomIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -917,6 +1035,7 @@ export type $RoomPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     flat: Prisma.$FlatPayload<ExtArgs>
     advertisements: Prisma.$AdvertisementPayload<ExtArgs>[]
     stays: Prisma.$StayPayload<ExtArgs>[]
+    images: Prisma.$AccommodationImagePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1325,6 +1444,7 @@ export interface Prisma__RoomClient<T, Null = never, ExtArgs extends runtime.Typ
   flat<T extends Prisma.FlatDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FlatDefaultArgs<ExtArgs>>): Prisma.Prisma__FlatClient<runtime.Types.Result.GetResult<Prisma.$FlatPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   advertisements<T extends Prisma.Room$advertisementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Room$advertisementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdvertisementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   stays<T extends Prisma.Room$staysArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Room$staysArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  images<T extends Prisma.Room$imagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Room$imagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccommodationImagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1809,6 +1929,30 @@ export type Room$staysArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
   take?: number
   skip?: number
   distinct?: Prisma.StayScalarFieldEnum | Prisma.StayScalarFieldEnum[]
+}
+
+/**
+ * Room.images
+ */
+export type Room$imagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AccommodationImage
+   */
+  select?: Prisma.AccommodationImageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AccommodationImage
+   */
+  omit?: Prisma.AccommodationImageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AccommodationImageInclude<ExtArgs> | null
+  where?: Prisma.AccommodationImageWhereInput
+  orderBy?: Prisma.AccommodationImageOrderByWithRelationInput | Prisma.AccommodationImageOrderByWithRelationInput[]
+  cursor?: Prisma.AccommodationImageWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AccommodationImageScalarFieldEnum | Prisma.AccommodationImageScalarFieldEnum[]
 }
 
 /**

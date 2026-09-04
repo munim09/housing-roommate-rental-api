@@ -282,6 +282,7 @@ export type FlatWhereInput = {
   managerAssignments?: Prisma.ManagerAssignmentListRelationFilter
   advertisements?: Prisma.AdvertisementListRelationFilter
   stays?: Prisma.StayListRelationFilter
+  images?: Prisma.AccommodationImageListRelationFilter
 }
 
 export type FlatOrderByWithRelationInput = {
@@ -302,6 +303,7 @@ export type FlatOrderByWithRelationInput = {
   managerAssignments?: Prisma.ManagerAssignmentOrderByRelationAggregateInput
   advertisements?: Prisma.AdvertisementOrderByRelationAggregateInput
   stays?: Prisma.StayOrderByRelationAggregateInput
+  images?: Prisma.AccommodationImageOrderByRelationAggregateInput
 }
 
 export type FlatWhereUniqueInput = Prisma.AtLeast<{
@@ -326,6 +328,7 @@ export type FlatWhereUniqueInput = Prisma.AtLeast<{
   managerAssignments?: Prisma.ManagerAssignmentListRelationFilter
   advertisements?: Prisma.AdvertisementListRelationFilter
   stays?: Prisma.StayListRelationFilter
+  images?: Prisma.AccommodationImageListRelationFilter
 }, "id" | "propertyId_flatNumber">
 
 export type FlatOrderByWithAggregationInput = {
@@ -381,6 +384,7 @@ export type FlatCreateInput = {
   managerAssignments?: Prisma.ManagerAssignmentCreateNestedManyWithoutFlatInput
   advertisements?: Prisma.AdvertisementCreateNestedManyWithoutFlatInput
   stays?: Prisma.StayCreateNestedManyWithoutFlatInput
+  images?: Prisma.AccommodationImageCreateNestedManyWithoutFlatInput
 }
 
 export type FlatUncheckedCreateInput = {
@@ -400,6 +404,7 @@ export type FlatUncheckedCreateInput = {
   managerAssignments?: Prisma.ManagerAssignmentUncheckedCreateNestedManyWithoutFlatInput
   advertisements?: Prisma.AdvertisementUncheckedCreateNestedManyWithoutFlatInput
   stays?: Prisma.StayUncheckedCreateNestedManyWithoutFlatInput
+  images?: Prisma.AccommodationImageUncheckedCreateNestedManyWithoutFlatInput
 }
 
 export type FlatUpdateInput = {
@@ -419,6 +424,7 @@ export type FlatUpdateInput = {
   managerAssignments?: Prisma.ManagerAssignmentUpdateManyWithoutFlatNestedInput
   advertisements?: Prisma.AdvertisementUpdateManyWithoutFlatNestedInput
   stays?: Prisma.StayUpdateManyWithoutFlatNestedInput
+  images?: Prisma.AccommodationImageUpdateManyWithoutFlatNestedInput
 }
 
 export type FlatUncheckedUpdateInput = {
@@ -438,6 +444,7 @@ export type FlatUncheckedUpdateInput = {
   managerAssignments?: Prisma.ManagerAssignmentUncheckedUpdateManyWithoutFlatNestedInput
   advertisements?: Prisma.AdvertisementUncheckedUpdateManyWithoutFlatNestedInput
   stays?: Prisma.StayUncheckedUpdateManyWithoutFlatNestedInput
+  images?: Prisma.AccommodationImageUncheckedUpdateManyWithoutFlatNestedInput
 }
 
 export type FlatCreateManyInput = {
@@ -560,6 +567,22 @@ export type FlatListRelationFilter = {
 
 export type FlatOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type FlatCreateNestedOneWithoutImagesInput = {
+  create?: Prisma.XOR<Prisma.FlatCreateWithoutImagesInput, Prisma.FlatUncheckedCreateWithoutImagesInput>
+  connectOrCreate?: Prisma.FlatCreateOrConnectWithoutImagesInput
+  connect?: Prisma.FlatWhereUniqueInput
+}
+
+export type FlatUpdateOneWithoutImagesNestedInput = {
+  create?: Prisma.XOR<Prisma.FlatCreateWithoutImagesInput, Prisma.FlatUncheckedCreateWithoutImagesInput>
+  connectOrCreate?: Prisma.FlatCreateOrConnectWithoutImagesInput
+  upsert?: Prisma.FlatUpsertWithoutImagesInput
+  disconnect?: Prisma.FlatWhereInput | boolean
+  delete?: Prisma.FlatWhereInput | boolean
+  connect?: Prisma.FlatWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.FlatUpdateToOneWithWhereWithoutImagesInput, Prisma.FlatUpdateWithoutImagesInput>, Prisma.FlatUncheckedUpdateWithoutImagesInput>
 }
 
 export type FlatCreateNestedOneWithoutAdvertisementsInput = {
@@ -696,6 +719,98 @@ export type FlatUpdateOneRequiredWithoutStaysNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.FlatUpdateToOneWithWhereWithoutStaysInput, Prisma.FlatUpdateWithoutStaysInput>, Prisma.FlatUncheckedUpdateWithoutStaysInput>
 }
 
+export type FlatCreateWithoutImagesInput = {
+  id?: string
+  flatNumber: string
+  floorNumber?: number | null
+  bedrooms?: number | null
+  bathrooms?: number | null
+  areaSqFt?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  description?: string | null
+  status?: $Enums.FlatStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  property: Prisma.PropertyCreateNestedOneWithoutFlatsInput
+  rooms?: Prisma.RoomCreateNestedManyWithoutFlatInput
+  ownerships?: Prisma.PropertyOwnershipCreateNestedManyWithoutFlatInput
+  managerAssignments?: Prisma.ManagerAssignmentCreateNestedManyWithoutFlatInput
+  advertisements?: Prisma.AdvertisementCreateNestedManyWithoutFlatInput
+  stays?: Prisma.StayCreateNestedManyWithoutFlatInput
+}
+
+export type FlatUncheckedCreateWithoutImagesInput = {
+  id?: string
+  propertyId: string
+  flatNumber: string
+  floorNumber?: number | null
+  bedrooms?: number | null
+  bathrooms?: number | null
+  areaSqFt?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  description?: string | null
+  status?: $Enums.FlatStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  rooms?: Prisma.RoomUncheckedCreateNestedManyWithoutFlatInput
+  ownerships?: Prisma.PropertyOwnershipUncheckedCreateNestedManyWithoutFlatInput
+  managerAssignments?: Prisma.ManagerAssignmentUncheckedCreateNestedManyWithoutFlatInput
+  advertisements?: Prisma.AdvertisementUncheckedCreateNestedManyWithoutFlatInput
+  stays?: Prisma.StayUncheckedCreateNestedManyWithoutFlatInput
+}
+
+export type FlatCreateOrConnectWithoutImagesInput = {
+  where: Prisma.FlatWhereUniqueInput
+  create: Prisma.XOR<Prisma.FlatCreateWithoutImagesInput, Prisma.FlatUncheckedCreateWithoutImagesInput>
+}
+
+export type FlatUpsertWithoutImagesInput = {
+  update: Prisma.XOR<Prisma.FlatUpdateWithoutImagesInput, Prisma.FlatUncheckedUpdateWithoutImagesInput>
+  create: Prisma.XOR<Prisma.FlatCreateWithoutImagesInput, Prisma.FlatUncheckedCreateWithoutImagesInput>
+  where?: Prisma.FlatWhereInput
+}
+
+export type FlatUpdateToOneWithWhereWithoutImagesInput = {
+  where?: Prisma.FlatWhereInput
+  data: Prisma.XOR<Prisma.FlatUpdateWithoutImagesInput, Prisma.FlatUncheckedUpdateWithoutImagesInput>
+}
+
+export type FlatUpdateWithoutImagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  flatNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  floorNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bedrooms?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bathrooms?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  areaSqFt?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumFlatStatusFieldUpdateOperationsInput | $Enums.FlatStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  property?: Prisma.PropertyUpdateOneRequiredWithoutFlatsNestedInput
+  rooms?: Prisma.RoomUpdateManyWithoutFlatNestedInput
+  ownerships?: Prisma.PropertyOwnershipUpdateManyWithoutFlatNestedInput
+  managerAssignments?: Prisma.ManagerAssignmentUpdateManyWithoutFlatNestedInput
+  advertisements?: Prisma.AdvertisementUpdateManyWithoutFlatNestedInput
+  stays?: Prisma.StayUpdateManyWithoutFlatNestedInput
+}
+
+export type FlatUncheckedUpdateWithoutImagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  propertyId?: Prisma.StringFieldUpdateOperationsInput | string
+  flatNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  floorNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bedrooms?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bathrooms?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  areaSqFt?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumFlatStatusFieldUpdateOperationsInput | $Enums.FlatStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rooms?: Prisma.RoomUncheckedUpdateManyWithoutFlatNestedInput
+  ownerships?: Prisma.PropertyOwnershipUncheckedUpdateManyWithoutFlatNestedInput
+  managerAssignments?: Prisma.ManagerAssignmentUncheckedUpdateManyWithoutFlatNestedInput
+  advertisements?: Prisma.AdvertisementUncheckedUpdateManyWithoutFlatNestedInput
+  stays?: Prisma.StayUncheckedUpdateManyWithoutFlatNestedInput
+}
+
 export type FlatCreateWithoutAdvertisementsInput = {
   id?: string
   flatNumber: string
@@ -712,6 +827,7 @@ export type FlatCreateWithoutAdvertisementsInput = {
   ownerships?: Prisma.PropertyOwnershipCreateNestedManyWithoutFlatInput
   managerAssignments?: Prisma.ManagerAssignmentCreateNestedManyWithoutFlatInput
   stays?: Prisma.StayCreateNestedManyWithoutFlatInput
+  images?: Prisma.AccommodationImageCreateNestedManyWithoutFlatInput
 }
 
 export type FlatUncheckedCreateWithoutAdvertisementsInput = {
@@ -730,6 +846,7 @@ export type FlatUncheckedCreateWithoutAdvertisementsInput = {
   ownerships?: Prisma.PropertyOwnershipUncheckedCreateNestedManyWithoutFlatInput
   managerAssignments?: Prisma.ManagerAssignmentUncheckedCreateNestedManyWithoutFlatInput
   stays?: Prisma.StayUncheckedCreateNestedManyWithoutFlatInput
+  images?: Prisma.AccommodationImageUncheckedCreateNestedManyWithoutFlatInput
 }
 
 export type FlatCreateOrConnectWithoutAdvertisementsInput = {
@@ -764,6 +881,7 @@ export type FlatUpdateWithoutAdvertisementsInput = {
   ownerships?: Prisma.PropertyOwnershipUpdateManyWithoutFlatNestedInput
   managerAssignments?: Prisma.ManagerAssignmentUpdateManyWithoutFlatNestedInput
   stays?: Prisma.StayUpdateManyWithoutFlatNestedInput
+  images?: Prisma.AccommodationImageUpdateManyWithoutFlatNestedInput
 }
 
 export type FlatUncheckedUpdateWithoutAdvertisementsInput = {
@@ -782,6 +900,7 @@ export type FlatUncheckedUpdateWithoutAdvertisementsInput = {
   ownerships?: Prisma.PropertyOwnershipUncheckedUpdateManyWithoutFlatNestedInput
   managerAssignments?: Prisma.ManagerAssignmentUncheckedUpdateManyWithoutFlatNestedInput
   stays?: Prisma.StayUncheckedUpdateManyWithoutFlatNestedInput
+  images?: Prisma.AccommodationImageUncheckedUpdateManyWithoutFlatNestedInput
 }
 
 export type FlatCreateWithoutManagerAssignmentsInput = {
@@ -800,6 +919,7 @@ export type FlatCreateWithoutManagerAssignmentsInput = {
   ownerships?: Prisma.PropertyOwnershipCreateNestedManyWithoutFlatInput
   advertisements?: Prisma.AdvertisementCreateNestedManyWithoutFlatInput
   stays?: Prisma.StayCreateNestedManyWithoutFlatInput
+  images?: Prisma.AccommodationImageCreateNestedManyWithoutFlatInput
 }
 
 export type FlatUncheckedCreateWithoutManagerAssignmentsInput = {
@@ -818,6 +938,7 @@ export type FlatUncheckedCreateWithoutManagerAssignmentsInput = {
   ownerships?: Prisma.PropertyOwnershipUncheckedCreateNestedManyWithoutFlatInput
   advertisements?: Prisma.AdvertisementUncheckedCreateNestedManyWithoutFlatInput
   stays?: Prisma.StayUncheckedCreateNestedManyWithoutFlatInput
+  images?: Prisma.AccommodationImageUncheckedCreateNestedManyWithoutFlatInput
 }
 
 export type FlatCreateOrConnectWithoutManagerAssignmentsInput = {
@@ -852,6 +973,7 @@ export type FlatUpdateWithoutManagerAssignmentsInput = {
   ownerships?: Prisma.PropertyOwnershipUpdateManyWithoutFlatNestedInput
   advertisements?: Prisma.AdvertisementUpdateManyWithoutFlatNestedInput
   stays?: Prisma.StayUpdateManyWithoutFlatNestedInput
+  images?: Prisma.AccommodationImageUpdateManyWithoutFlatNestedInput
 }
 
 export type FlatUncheckedUpdateWithoutManagerAssignmentsInput = {
@@ -870,6 +992,7 @@ export type FlatUncheckedUpdateWithoutManagerAssignmentsInput = {
   ownerships?: Prisma.PropertyOwnershipUncheckedUpdateManyWithoutFlatNestedInput
   advertisements?: Prisma.AdvertisementUncheckedUpdateManyWithoutFlatNestedInput
   stays?: Prisma.StayUncheckedUpdateManyWithoutFlatNestedInput
+  images?: Prisma.AccommodationImageUncheckedUpdateManyWithoutFlatNestedInput
 }
 
 export type FlatCreateWithoutPropertyInput = {
@@ -888,6 +1011,7 @@ export type FlatCreateWithoutPropertyInput = {
   managerAssignments?: Prisma.ManagerAssignmentCreateNestedManyWithoutFlatInput
   advertisements?: Prisma.AdvertisementCreateNestedManyWithoutFlatInput
   stays?: Prisma.StayCreateNestedManyWithoutFlatInput
+  images?: Prisma.AccommodationImageCreateNestedManyWithoutFlatInput
 }
 
 export type FlatUncheckedCreateWithoutPropertyInput = {
@@ -906,6 +1030,7 @@ export type FlatUncheckedCreateWithoutPropertyInput = {
   managerAssignments?: Prisma.ManagerAssignmentUncheckedCreateNestedManyWithoutFlatInput
   advertisements?: Prisma.AdvertisementUncheckedCreateNestedManyWithoutFlatInput
   stays?: Prisma.StayUncheckedCreateNestedManyWithoutFlatInput
+  images?: Prisma.AccommodationImageUncheckedCreateNestedManyWithoutFlatInput
 }
 
 export type FlatCreateOrConnectWithoutPropertyInput = {
@@ -967,6 +1092,7 @@ export type FlatCreateWithoutOwnershipsInput = {
   managerAssignments?: Prisma.ManagerAssignmentCreateNestedManyWithoutFlatInput
   advertisements?: Prisma.AdvertisementCreateNestedManyWithoutFlatInput
   stays?: Prisma.StayCreateNestedManyWithoutFlatInput
+  images?: Prisma.AccommodationImageCreateNestedManyWithoutFlatInput
 }
 
 export type FlatUncheckedCreateWithoutOwnershipsInput = {
@@ -985,6 +1111,7 @@ export type FlatUncheckedCreateWithoutOwnershipsInput = {
   managerAssignments?: Prisma.ManagerAssignmentUncheckedCreateNestedManyWithoutFlatInput
   advertisements?: Prisma.AdvertisementUncheckedCreateNestedManyWithoutFlatInput
   stays?: Prisma.StayUncheckedCreateNestedManyWithoutFlatInput
+  images?: Prisma.AccommodationImageUncheckedCreateNestedManyWithoutFlatInput
 }
 
 export type FlatCreateOrConnectWithoutOwnershipsInput = {
@@ -1019,6 +1146,7 @@ export type FlatUpdateWithoutOwnershipsInput = {
   managerAssignments?: Prisma.ManagerAssignmentUpdateManyWithoutFlatNestedInput
   advertisements?: Prisma.AdvertisementUpdateManyWithoutFlatNestedInput
   stays?: Prisma.StayUpdateManyWithoutFlatNestedInput
+  images?: Prisma.AccommodationImageUpdateManyWithoutFlatNestedInput
 }
 
 export type FlatUncheckedUpdateWithoutOwnershipsInput = {
@@ -1037,6 +1165,7 @@ export type FlatUncheckedUpdateWithoutOwnershipsInput = {
   managerAssignments?: Prisma.ManagerAssignmentUncheckedUpdateManyWithoutFlatNestedInput
   advertisements?: Prisma.AdvertisementUncheckedUpdateManyWithoutFlatNestedInput
   stays?: Prisma.StayUncheckedUpdateManyWithoutFlatNestedInput
+  images?: Prisma.AccommodationImageUncheckedUpdateManyWithoutFlatNestedInput
 }
 
 export type FlatCreateWithoutRoomsInput = {
@@ -1055,6 +1184,7 @@ export type FlatCreateWithoutRoomsInput = {
   managerAssignments?: Prisma.ManagerAssignmentCreateNestedManyWithoutFlatInput
   advertisements?: Prisma.AdvertisementCreateNestedManyWithoutFlatInput
   stays?: Prisma.StayCreateNestedManyWithoutFlatInput
+  images?: Prisma.AccommodationImageCreateNestedManyWithoutFlatInput
 }
 
 export type FlatUncheckedCreateWithoutRoomsInput = {
@@ -1073,6 +1203,7 @@ export type FlatUncheckedCreateWithoutRoomsInput = {
   managerAssignments?: Prisma.ManagerAssignmentUncheckedCreateNestedManyWithoutFlatInput
   advertisements?: Prisma.AdvertisementUncheckedCreateNestedManyWithoutFlatInput
   stays?: Prisma.StayUncheckedCreateNestedManyWithoutFlatInput
+  images?: Prisma.AccommodationImageUncheckedCreateNestedManyWithoutFlatInput
 }
 
 export type FlatCreateOrConnectWithoutRoomsInput = {
@@ -1107,6 +1238,7 @@ export type FlatUpdateWithoutRoomsInput = {
   managerAssignments?: Prisma.ManagerAssignmentUpdateManyWithoutFlatNestedInput
   advertisements?: Prisma.AdvertisementUpdateManyWithoutFlatNestedInput
   stays?: Prisma.StayUpdateManyWithoutFlatNestedInput
+  images?: Prisma.AccommodationImageUpdateManyWithoutFlatNestedInput
 }
 
 export type FlatUncheckedUpdateWithoutRoomsInput = {
@@ -1125,6 +1257,7 @@ export type FlatUncheckedUpdateWithoutRoomsInput = {
   managerAssignments?: Prisma.ManagerAssignmentUncheckedUpdateManyWithoutFlatNestedInput
   advertisements?: Prisma.AdvertisementUncheckedUpdateManyWithoutFlatNestedInput
   stays?: Prisma.StayUncheckedUpdateManyWithoutFlatNestedInput
+  images?: Prisma.AccommodationImageUncheckedUpdateManyWithoutFlatNestedInput
 }
 
 export type FlatCreateWithoutStaysInput = {
@@ -1143,6 +1276,7 @@ export type FlatCreateWithoutStaysInput = {
   ownerships?: Prisma.PropertyOwnershipCreateNestedManyWithoutFlatInput
   managerAssignments?: Prisma.ManagerAssignmentCreateNestedManyWithoutFlatInput
   advertisements?: Prisma.AdvertisementCreateNestedManyWithoutFlatInput
+  images?: Prisma.AccommodationImageCreateNestedManyWithoutFlatInput
 }
 
 export type FlatUncheckedCreateWithoutStaysInput = {
@@ -1161,6 +1295,7 @@ export type FlatUncheckedCreateWithoutStaysInput = {
   ownerships?: Prisma.PropertyOwnershipUncheckedCreateNestedManyWithoutFlatInput
   managerAssignments?: Prisma.ManagerAssignmentUncheckedCreateNestedManyWithoutFlatInput
   advertisements?: Prisma.AdvertisementUncheckedCreateNestedManyWithoutFlatInput
+  images?: Prisma.AccommodationImageUncheckedCreateNestedManyWithoutFlatInput
 }
 
 export type FlatCreateOrConnectWithoutStaysInput = {
@@ -1195,6 +1330,7 @@ export type FlatUpdateWithoutStaysInput = {
   ownerships?: Prisma.PropertyOwnershipUpdateManyWithoutFlatNestedInput
   managerAssignments?: Prisma.ManagerAssignmentUpdateManyWithoutFlatNestedInput
   advertisements?: Prisma.AdvertisementUpdateManyWithoutFlatNestedInput
+  images?: Prisma.AccommodationImageUpdateManyWithoutFlatNestedInput
 }
 
 export type FlatUncheckedUpdateWithoutStaysInput = {
@@ -1213,6 +1349,7 @@ export type FlatUncheckedUpdateWithoutStaysInput = {
   ownerships?: Prisma.PropertyOwnershipUncheckedUpdateManyWithoutFlatNestedInput
   managerAssignments?: Prisma.ManagerAssignmentUncheckedUpdateManyWithoutFlatNestedInput
   advertisements?: Prisma.AdvertisementUncheckedUpdateManyWithoutFlatNestedInput
+  images?: Prisma.AccommodationImageUncheckedUpdateManyWithoutFlatNestedInput
 }
 
 export type FlatCreateManyPropertyInput = {
@@ -1244,6 +1381,7 @@ export type FlatUpdateWithoutPropertyInput = {
   managerAssignments?: Prisma.ManagerAssignmentUpdateManyWithoutFlatNestedInput
   advertisements?: Prisma.AdvertisementUpdateManyWithoutFlatNestedInput
   stays?: Prisma.StayUpdateManyWithoutFlatNestedInput
+  images?: Prisma.AccommodationImageUpdateManyWithoutFlatNestedInput
 }
 
 export type FlatUncheckedUpdateWithoutPropertyInput = {
@@ -1262,6 +1400,7 @@ export type FlatUncheckedUpdateWithoutPropertyInput = {
   managerAssignments?: Prisma.ManagerAssignmentUncheckedUpdateManyWithoutFlatNestedInput
   advertisements?: Prisma.AdvertisementUncheckedUpdateManyWithoutFlatNestedInput
   stays?: Prisma.StayUncheckedUpdateManyWithoutFlatNestedInput
+  images?: Prisma.AccommodationImageUncheckedUpdateManyWithoutFlatNestedInput
 }
 
 export type FlatUncheckedUpdateManyWithoutPropertyInput = {
@@ -1288,6 +1427,7 @@ export type FlatCountOutputType = {
   managerAssignments: number
   advertisements: number
   stays: number
+  images: number
 }
 
 export type FlatCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1296,6 +1436,7 @@ export type FlatCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   managerAssignments?: boolean | FlatCountOutputTypeCountManagerAssignmentsArgs
   advertisements?: boolean | FlatCountOutputTypeCountAdvertisementsArgs
   stays?: boolean | FlatCountOutputTypeCountStaysArgs
+  images?: boolean | FlatCountOutputTypeCountImagesArgs
 }
 
 /**
@@ -1343,6 +1484,13 @@ export type FlatCountOutputTypeCountStaysArgs<ExtArgs extends runtime.Types.Exte
   where?: Prisma.StayWhereInput
 }
 
+/**
+ * FlatCountOutputType without action
+ */
+export type FlatCountOutputTypeCountImagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AccommodationImageWhereInput
+}
+
 
 export type FlatSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1362,6 +1510,7 @@ export type FlatSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   managerAssignments?: boolean | Prisma.Flat$managerAssignmentsArgs<ExtArgs>
   advertisements?: boolean | Prisma.Flat$advertisementsArgs<ExtArgs>
   stays?: boolean | Prisma.Flat$staysArgs<ExtArgs>
+  images?: boolean | Prisma.Flat$imagesArgs<ExtArgs>
   _count?: boolean | Prisma.FlatCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["flat"]>
 
@@ -1417,6 +1566,7 @@ export type FlatInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   managerAssignments?: boolean | Prisma.Flat$managerAssignmentsArgs<ExtArgs>
   advertisements?: boolean | Prisma.Flat$advertisementsArgs<ExtArgs>
   stays?: boolean | Prisma.Flat$staysArgs<ExtArgs>
+  images?: boolean | Prisma.Flat$imagesArgs<ExtArgs>
   _count?: boolean | Prisma.FlatCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type FlatIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1435,6 +1585,7 @@ export type $FlatPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     managerAssignments: Prisma.$ManagerAssignmentPayload<ExtArgs>[]
     advertisements: Prisma.$AdvertisementPayload<ExtArgs>[]
     stays: Prisma.$StayPayload<ExtArgs>[]
+    images: Prisma.$AccommodationImagePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1848,6 +1999,7 @@ export interface Prisma__FlatClient<T, Null = never, ExtArgs extends runtime.Typ
   managerAssignments<T extends Prisma.Flat$managerAssignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Flat$managerAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ManagerAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   advertisements<T extends Prisma.Flat$advertisementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Flat$advertisementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdvertisementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   stays<T extends Prisma.Flat$staysArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Flat$staysArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  images<T extends Prisma.Flat$imagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Flat$imagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccommodationImagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2406,6 +2558,30 @@ export type Flat$staysArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
   take?: number
   skip?: number
   distinct?: Prisma.StayScalarFieldEnum | Prisma.StayScalarFieldEnum[]
+}
+
+/**
+ * Flat.images
+ */
+export type Flat$imagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AccommodationImage
+   */
+  select?: Prisma.AccommodationImageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AccommodationImage
+   */
+  omit?: Prisma.AccommodationImageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AccommodationImageInclude<ExtArgs> | null
+  where?: Prisma.AccommodationImageWhereInput
+  orderBy?: Prisma.AccommodationImageOrderByWithRelationInput | Prisma.AccommodationImageOrderByWithRelationInput[]
+  cursor?: Prisma.AccommodationImageWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AccommodationImageScalarFieldEnum | Prisma.AccommodationImageScalarFieldEnum[]
 }
 
 /**

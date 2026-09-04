@@ -8,6 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
+export type * from './models/AccommodationImage'
 export type * from './models/Advertisement'
 export type * from './models/Application'
 export type * from './models/Flat'

@@ -1,0 +1,29 @@
+model AccommodationImage {
+  id String @id @default(uuid())
+
+  imageUrl String
+
+  flatId String?
+  roomId String?
+
+  sortOrder Int @default(0)
+
+  isPrimary Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // ----------------------------------------------------------
+  // Relations
+  // ----------------------------------------------------------
+
+
+  flat Flat? @relation(    fields: [flatId],    references: [id],    onDelete: Cascade  )
+
+  room Room? @relation(    fields: [roomId],    references: [id],    onDelete: Cascade  )
+
+  @@index([flatId])
+  @@index([roomId])
+  @@index([flatId, sortOrder])
+  @@index([roomId, sortOrder])
+}

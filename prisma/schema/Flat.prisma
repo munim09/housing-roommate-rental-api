@@ -38,6 +38,8 @@ model Flat {
 
   stays Stay[]
 
+   images AccommodationImage[]
+
   @@unique([propertyId, flatNumber])
   @@index([propertyId])
   @@index([status])
