@@ -1,4 +1,5 @@
 import httpStatus from "http-status";
+import { AdvertisementStatus } from "../../../generated/prisma/enums";
 import {
     deleteImageFromCloudinary,
     uploadImageToCloudinary,
@@ -288,6 +289,39 @@ const deleteFlat = async (ownerId: string, flatId: string) => {
         throw new AppError(httpStatus.FORBIDDEN, "You do not own this flat");
     }
 
+    const activeFlatAd = await prisma.advertisement.findFirst({
+        where: {
+            flatId,
+            status: AdvertisementStatus.PUBLISHED,
+        },
+    });
+
+    if (activeFlatAd) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Cannot delete flat with active advertisements",
+        );
+    }
+
+    const activeRoomAd = await prisma.advertisement.findFirst({
+        where: {
+            room: { flatId },
+            status: AdvertisementStatus.PUBLISHED,
+        },
+    });
+
+    if (activeRoomAd) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Cannot delete flat with active room advertisements",
+        );
+    }
+
+    await prisma.room.updateMany({
+        where: { flatId },
+        data: { status: "ARCHIVED" },
+    });
+
     const deletedFlat = await prisma.flat.update({
         where: { id: flatId },
         data: { status: "ARCHIVED" },
@@ -318,6 +352,20 @@ const deleteRoom = async (ownerId: string, roomId: string) => {
 
     if (!ownership) {
         throw new AppError(httpStatus.FORBIDDEN, "You do not own this flat");
+    }
+
+    const activeAd = await prisma.advertisement.findFirst({
+        where: {
+            roomId,
+            status: AdvertisementStatus.PUBLISHED,
+        },
+    });
+
+    if (activeAd) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Cannot delete room with active advertisements",
+        );
     }
 
     const deletedRoom = await prisma.room.update({

@@ -181,6 +181,12 @@ const createRoomAdvertisement = async (
         throw new AppError(httpStatus.BAD_REQUEST, "Room is not active");
     }
 
+    const flat = await prisma.flat.findUnique({ where: { id: room.flatId } });
+
+    if (!flat || flat.status !== "ACTIVE") {
+        throw new AppError(httpStatus.BAD_REQUEST, "Flat is not active");
+    }
+
     await assertAdvertiserPermission(creatorId, role, room.flatId);
     validateAvailability(payload);
 
