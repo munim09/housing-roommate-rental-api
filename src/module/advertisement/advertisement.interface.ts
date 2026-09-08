@@ -5,3 +5,11 @@ export interface ICreateAdvertisement {
     availableFrom: Date;
     availableTo: Date;
 }
+
+export interface IUpdateAdvertisement {
+    title?: string;
+    description?: string | null;
+    monthlyRent?: number;
+    availableFrom?: Date;
+    availableTo?: Date;
+}

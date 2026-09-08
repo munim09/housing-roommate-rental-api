@@ -4,7 +4,6 @@ import { upload } from "../../lib/multer";
 import { auth } from "../../middlewares/checkAuth";
 import { validateRequest } from "../../middlewares/validateRequest";
 import { catchAsync } from "../../utils/catchAsync";
-import { AdvertisementValidation } from "../advertisement/advertisement.validation";
 import { OwnerController } from "./owner.controller";
 import { OwnerValidation } from "./owner.validation";
 
@@ -23,18 +22,6 @@ router.get("/properties", catchAsync(OwnerController.getMyProperties));
 router.get("/flats", catchAsync(OwnerController.getMyFlats));
 
 router.get("/managers", catchAsync(OwnerController.getActiveManagers));
-
-router.post(
-    "/flats/:flatId/advertisements",
-    validateRequest(AdvertisementValidation.createAdvertisement),
-    catchAsync(OwnerController.createFlatAdvertisement),
-);
-
-router.post(
-    "/rooms/:roomId/advertisements",
-    validateRequest(AdvertisementValidation.createAdvertisement),
-    catchAsync(OwnerController.createRoomAdvertisement),
-);
 
 // router.post(
 //     "/properties/:propertyId/flats",

@@ -7,7 +7,10 @@ import {
 } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
-import type { ICreateAdvertisement } from "./advertisement.interface";
+import type {
+    ICreateAdvertisement,
+    IUpdateAdvertisement,
+} from "./advertisement.interface";
 
 const AD_CONFLICT_STATUSES = [
     AdvertisementStatus.DRAFT,
@@ -40,7 +43,10 @@ const assertAdvertiserPermission = async (
         });
 
         if (!ownership) {
-            throw new AppError(httpStatus.FORBIDDEN, "You do not own this flat");
+            throw new AppError(
+                httpStatus.FORBIDDEN,
+                "You do not own this flat",
+            );
         }
         return;
     }
@@ -274,7 +280,140 @@ const createRoomAdvertisement = async (
     });
 };
 
+const CLOSED_ADVERTISEMENT_STATUSES: AdvertisementStatus[] = [
+    AdvertisementStatus.RENTED,
+    AdvertisementStatus.FULL,
+    AdvertisementStatus.EXPIRED,
+    AdvertisementStatus.ARCHIVED,
+];
+
+const ADVERTISER_STATUSES: AdvertisementStatus[] = [
+    AdvertisementStatus.DRAFT,
+    AdvertisementStatus.PUBLISHED,
+    AdvertisementStatus.UNPUBLISHED,
+    AdvertisementStatus.ARCHIVED,
+];
+
+const fetchAdvertisementWithFlat = (advertisementId: string) => {
+    return prisma.advertisement.findUnique({
+        where: { id: advertisementId },
+        include: { room: { select: { flatId: true } } },
+    });
+};
+
+const getAdvertisementFlatId = (
+    advertisement: NonNullable<
+        Awaited<ReturnType<typeof fetchAdvertisementWithFlat>>
+    >,
+) => advertisement.flatId ?? advertisement.room?.flatId;
+
+const updateAdvertisementStatus = async (
+    userId: string,
+    role: string,
+    advertisementId: string,
+    status: AdvertisementStatus,
+) => {
+    const advertisement = await fetchAdvertisementWithFlat(advertisementId);
+
+    if (!advertisement) {
+        throw new AppError(httpStatus.NOT_FOUND, "Advertisement not found");
+    }
+
+    const flatId = getAdvertisementFlatId(advertisement);
+
+    if (!flatId) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Advertisement is not linked to any flat",
+        );
+    }
+
+    await assertAdvertiserPermission(userId, role, flatId);
+
+    // if (CLOSED_ADVERTISEMENT_STATUSES.includes(advertisement.status)) {
+    //     throw new AppError(
+    //         httpStatus.BAD_REQUEST,
+    //         "Cannot update status of a closed advertisement",
+    //     );
+    // }
+
+    if (!ADVERTISER_STATUSES.includes(status)) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            `Cannot set advertisement status to ${status}`,
+        );
+    }
+
+    return prisma.advertisement.update({
+        where: { id: advertisementId },
+        data: {
+            status,
+            publishedAt:
+                status === AdvertisementStatus.PUBLISHED
+                    ? new Date()
+                    : advertisement.publishedAt,
+        },
+    });
+};
+
+const updateAdvertisement = async (
+    userId: string,
+    role: string,
+    advertisementId: string,
+    payload: IUpdateAdvertisement,
+) => {
+    const advertisement = await fetchAdvertisementWithFlat(advertisementId);
+
+    if (!advertisement) {
+        throw new AppError(httpStatus.NOT_FOUND, "Advertisement not found");
+    }
+
+    const flatId = getAdvertisementFlatId(advertisement);
+
+    if (!flatId) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Advertisement is not linked to any flat",
+        );
+    }
+
+    await assertAdvertiserPermission(userId, role, flatId);
+
+    // if (CLOSED_ADVERTISEMENT_STATUSES.includes(advertisement.status)) {
+    //     throw new AppError(
+    //         httpStatus.BAD_REQUEST,
+    //         "Cannot update details of a closed advertisement",
+    //     );
+    // }
+
+    if (
+        payload.availableFrom !== undefined ||
+        payload.availableTo !== undefined
+    ) {
+        validateAvailability({
+            title: advertisement.title,
+            monthlyRent: Number(advertisement.monthlyRent),
+            availableFrom:
+                payload.availableFrom ?? advertisement.availableFrom!,
+            availableTo: payload.availableTo ?? advertisement.availableTo!,
+        });
+    }
+
+    return prisma.advertisement.update({
+        where: { id: advertisementId },
+        data: {
+            title: payload.title,
+            description: payload.description,
+            monthlyRent: payload.monthlyRent,
+            availableFrom: payload.availableFrom,
+            availableTo: payload.availableTo,
+        },
+    });
+};
+
 export const AdvertisementService = {
     createFlatAdvertisement,
     createRoomAdvertisement,
+    updateAdvertisementStatus,
+    updateAdvertisement,
 };

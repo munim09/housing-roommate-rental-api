@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import httpStatus from "http-status";
 import { AppError } from "../../utils/AppError";
 import { sendResponse } from "../../utils/sendResponse";
-import { AdvertisementService } from "../advertisement/advertisement.service";
 import { OwnerService } from "./owner.service";
 import { OwnerValidation } from "./owner.validation";
 
@@ -249,38 +248,6 @@ const deleteRoom = async (req: Request, res: Response) => {
     });
 };
 
-const createFlatAdvertisement = async (req: Request, res: Response) => {
-    const result = await AdvertisementService.createFlatAdvertisement(
-        req.user!.userId,
-        req.user!.role,
-        req.params.flatId as string,
-        req.body,
-    );
-
-    sendResponse(res, {
-        statusCode: httpStatus.CREATED,
-        success: true,
-        message: "Flat advertisement created successfully",
-        data: result,
-    });
-};
-
-const createRoomAdvertisement = async (req: Request, res: Response) => {
-    const result = await AdvertisementService.createRoomAdvertisement(
-        req.user!.userId,
-        req.user!.role,
-        req.params.roomId as string,
-        req.body,
-    );
-
-    sendResponse(res, {
-        statusCode: httpStatus.CREATED,
-        success: true,
-        message: "Room advertisement created successfully",
-        data: result,
-    });
-};
-
 const getMyProperties = async (req: Request, res: Response) => {
     const result = await OwnerService.getMyProperties(req.user!.userId);
 
@@ -328,8 +295,6 @@ export const OwnerController = {
     updateRoom,
     deleteFlat,
     deleteRoom,
-    createFlatAdvertisement,
-    createRoomAdvertisement,
     getMyProperties,
     getMyFlats,
     getActiveManagers,
