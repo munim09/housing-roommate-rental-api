@@ -37,6 +37,7 @@ export type AccommodationImageSumAggregateOutputType = {
 export type AccommodationImageMinAggregateOutputType = {
   id: string | null
   imageUrl: string | null
+  publicId: string | null
   flatId: string | null
   roomId: string | null
   sortOrder: number | null
@@ -48,6 +49,7 @@ export type AccommodationImageMinAggregateOutputType = {
 export type AccommodationImageMaxAggregateOutputType = {
   id: string | null
   imageUrl: string | null
+  publicId: string | null
   flatId: string | null
   roomId: string | null
   sortOrder: number | null
@@ -59,6 +61,7 @@ export type AccommodationImageMaxAggregateOutputType = {
 export type AccommodationImageCountAggregateOutputType = {
   id: number
   imageUrl: number
+  publicId: number
   flatId: number
   roomId: number
   sortOrder: number
@@ -80,6 +83,7 @@ export type AccommodationImageSumAggregateInputType = {
 export type AccommodationImageMinAggregateInputType = {
   id?: true
   imageUrl?: true
+  publicId?: true
   flatId?: true
   roomId?: true
   sortOrder?: true
@@ -91,6 +95,7 @@ export type AccommodationImageMinAggregateInputType = {
 export type AccommodationImageMaxAggregateInputType = {
   id?: true
   imageUrl?: true
+  publicId?: true
   flatId?: true
   roomId?: true
   sortOrder?: true
@@ -102,6 +107,7 @@ export type AccommodationImageMaxAggregateInputType = {
 export type AccommodationImageCountAggregateInputType = {
   id?: true
   imageUrl?: true
+  publicId?: true
   flatId?: true
   roomId?: true
   sortOrder?: true
@@ -200,6 +206,7 @@ export type AccommodationImageGroupByArgs<ExtArgs extends runtime.Types.Extensio
 export type AccommodationImageGroupByOutputType = {
   id: string
   imageUrl: string
+  publicId: string | null
   flatId: string | null
   roomId: string | null
   sortOrder: number
@@ -234,6 +241,7 @@ export type AccommodationImageWhereInput = {
   NOT?: Prisma.AccommodationImageWhereInput | Prisma.AccommodationImageWhereInput[]
   id?: Prisma.StringFilter<"AccommodationImage"> | string
   imageUrl?: Prisma.StringFilter<"AccommodationImage"> | string
+  publicId?: Prisma.StringNullableFilter<"AccommodationImage"> | string | null
   flatId?: Prisma.StringNullableFilter<"AccommodationImage"> | string | null
   roomId?: Prisma.StringNullableFilter<"AccommodationImage"> | string | null
   sortOrder?: Prisma.IntFilter<"AccommodationImage"> | number
@@ -247,6 +255,7 @@ export type AccommodationImageWhereInput = {
 export type AccommodationImageOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
+  publicId?: Prisma.SortOrderInput | Prisma.SortOrder
   flatId?: Prisma.SortOrderInput | Prisma.SortOrder
   roomId?: Prisma.SortOrderInput | Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
@@ -263,6 +272,7 @@ export type AccommodationImageWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.AccommodationImageWhereInput[]
   NOT?: Prisma.AccommodationImageWhereInput | Prisma.AccommodationImageWhereInput[]
   imageUrl?: Prisma.StringFilter<"AccommodationImage"> | string
+  publicId?: Prisma.StringNullableFilter<"AccommodationImage"> | string | null
   flatId?: Prisma.StringNullableFilter<"AccommodationImage"> | string | null
   roomId?: Prisma.StringNullableFilter<"AccommodationImage"> | string | null
   sortOrder?: Prisma.IntFilter<"AccommodationImage"> | number
@@ -276,6 +286,7 @@ export type AccommodationImageWhereUniqueInput = Prisma.AtLeast<{
 export type AccommodationImageOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
+  publicId?: Prisma.SortOrderInput | Prisma.SortOrder
   flatId?: Prisma.SortOrderInput | Prisma.SortOrder
   roomId?: Prisma.SortOrderInput | Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
@@ -295,6 +306,7 @@ export type AccommodationImageScalarWhereWithAggregatesInput = {
   NOT?: Prisma.AccommodationImageScalarWhereWithAggregatesInput | Prisma.AccommodationImageScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"AccommodationImage"> | string
   imageUrl?: Prisma.StringWithAggregatesFilter<"AccommodationImage"> | string
+  publicId?: Prisma.StringNullableWithAggregatesFilter<"AccommodationImage"> | string | null
   flatId?: Prisma.StringNullableWithAggregatesFilter<"AccommodationImage"> | string | null
   roomId?: Prisma.StringNullableWithAggregatesFilter<"AccommodationImage"> | string | null
   sortOrder?: Prisma.IntWithAggregatesFilter<"AccommodationImage"> | number
@@ -306,6 +318,7 @@ export type AccommodationImageScalarWhereWithAggregatesInput = {
 export type AccommodationImageCreateInput = {
   id?: string
   imageUrl: string
+  publicId?: string | null
   sortOrder?: number
   isPrimary?: boolean
   createdAt?: Date | string
@@ -317,6 +330,7 @@ export type AccommodationImageCreateInput = {
 export type AccommodationImageUncheckedCreateInput = {
   id?: string
   imageUrl: string
+  publicId?: string | null
   flatId?: string | null
   roomId?: string | null
   sortOrder?: number
@@ -328,6 +342,7 @@ export type AccommodationImageUncheckedCreateInput = {
 export type AccommodationImageUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isPrimary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -339,6 +354,7 @@ export type AccommodationImageUpdateInput = {
 export type AccommodationImageUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   flatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
@@ -350,6 +366,7 @@ export type AccommodationImageUncheckedUpdateInput = {
 export type AccommodationImageCreateManyInput = {
   id?: string
   imageUrl: string
+  publicId?: string | null
   flatId?: string | null
   roomId?: string | null
   sortOrder?: number
@@ -361,6 +378,7 @@ export type AccommodationImageCreateManyInput = {
 export type AccommodationImageUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isPrimary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -370,6 +388,7 @@ export type AccommodationImageUpdateManyMutationInput = {
 export type AccommodationImageUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   flatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
@@ -381,6 +400,7 @@ export type AccommodationImageUncheckedUpdateManyInput = {
 export type AccommodationImageCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
+  publicId?: Prisma.SortOrder
   flatId?: Prisma.SortOrder
   roomId?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
@@ -396,6 +416,7 @@ export type AccommodationImageAvgOrderByAggregateInput = {
 export type AccommodationImageMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
+  publicId?: Prisma.SortOrder
   flatId?: Prisma.SortOrder
   roomId?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
@@ -407,6 +428,7 @@ export type AccommodationImageMaxOrderByAggregateInput = {
 export type AccommodationImageMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
+  publicId?: Prisma.SortOrder
   flatId?: Prisma.SortOrder
   roomId?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
@@ -433,6 +455,10 @@ export type StringFieldUpdateOperationsInput = {
   set?: string
 }
 
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
+}
+
 export type IntFieldUpdateOperationsInput = {
   set?: number
   increment?: number
@@ -447,10 +473,6 @@ export type BoolFieldUpdateOperationsInput = {
 
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
-}
-
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
 }
 
 export type AccommodationImageCreateNestedManyWithoutFlatInput = {
@@ -540,6 +562,7 @@ export type AccommodationImageUncheckedUpdateManyWithoutRoomNestedInput = {
 export type AccommodationImageCreateWithoutFlatInput = {
   id?: string
   imageUrl: string
+  publicId?: string | null
   sortOrder?: number
   isPrimary?: boolean
   createdAt?: Date | string
@@ -550,6 +573,7 @@ export type AccommodationImageCreateWithoutFlatInput = {
 export type AccommodationImageUncheckedCreateWithoutFlatInput = {
   id?: string
   imageUrl: string
+  publicId?: string | null
   roomId?: string | null
   sortOrder?: number
   isPrimary?: boolean
@@ -589,6 +613,7 @@ export type AccommodationImageScalarWhereInput = {
   NOT?: Prisma.AccommodationImageScalarWhereInput | Prisma.AccommodationImageScalarWhereInput[]
   id?: Prisma.StringFilter<"AccommodationImage"> | string
   imageUrl?: Prisma.StringFilter<"AccommodationImage"> | string
+  publicId?: Prisma.StringNullableFilter<"AccommodationImage"> | string | null
   flatId?: Prisma.StringNullableFilter<"AccommodationImage"> | string | null
   roomId?: Prisma.StringNullableFilter<"AccommodationImage"> | string | null
   sortOrder?: Prisma.IntFilter<"AccommodationImage"> | number
@@ -600,6 +625,7 @@ export type AccommodationImageScalarWhereInput = {
 export type AccommodationImageCreateWithoutRoomInput = {
   id?: string
   imageUrl: string
+  publicId?: string | null
   sortOrder?: number
   isPrimary?: boolean
   createdAt?: Date | string
@@ -610,6 +636,7 @@ export type AccommodationImageCreateWithoutRoomInput = {
 export type AccommodationImageUncheckedCreateWithoutRoomInput = {
   id?: string
   imageUrl: string
+  publicId?: string | null
   flatId?: string | null
   sortOrder?: number
   isPrimary?: boolean
@@ -646,6 +673,7 @@ export type AccommodationImageUpdateManyWithWhereWithoutRoomInput = {
 export type AccommodationImageCreateManyFlatInput = {
   id?: string
   imageUrl: string
+  publicId?: string | null
   roomId?: string | null
   sortOrder?: number
   isPrimary?: boolean
@@ -656,6 +684,7 @@ export type AccommodationImageCreateManyFlatInput = {
 export type AccommodationImageUpdateWithoutFlatInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isPrimary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -666,6 +695,7 @@ export type AccommodationImageUpdateWithoutFlatInput = {
 export type AccommodationImageUncheckedUpdateWithoutFlatInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isPrimary?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -676,6 +706,7 @@ export type AccommodationImageUncheckedUpdateWithoutFlatInput = {
 export type AccommodationImageUncheckedUpdateManyWithoutFlatInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isPrimary?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -686,6 +717,7 @@ export type AccommodationImageUncheckedUpdateManyWithoutFlatInput = {
 export type AccommodationImageCreateManyRoomInput = {
   id?: string
   imageUrl: string
+  publicId?: string | null
   flatId?: string | null
   sortOrder?: number
   isPrimary?: boolean
@@ -696,6 +728,7 @@ export type AccommodationImageCreateManyRoomInput = {
 export type AccommodationImageUpdateWithoutRoomInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isPrimary?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -706,6 +739,7 @@ export type AccommodationImageUpdateWithoutRoomInput = {
 export type AccommodationImageUncheckedUpdateWithoutRoomInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   flatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isPrimary?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -716,6 +750,7 @@ export type AccommodationImageUncheckedUpdateWithoutRoomInput = {
 export type AccommodationImageUncheckedUpdateManyWithoutRoomInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  publicId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   flatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isPrimary?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -728,6 +763,7 @@ export type AccommodationImageUncheckedUpdateManyWithoutRoomInput = {
 export type AccommodationImageSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   imageUrl?: boolean
+  publicId?: boolean
   flatId?: boolean
   roomId?: boolean
   sortOrder?: boolean
@@ -741,6 +777,7 @@ export type AccommodationImageSelect<ExtArgs extends runtime.Types.Extensions.In
 export type AccommodationImageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   imageUrl?: boolean
+  publicId?: boolean
   flatId?: boolean
   roomId?: boolean
   sortOrder?: boolean
@@ -754,6 +791,7 @@ export type AccommodationImageSelectCreateManyAndReturn<ExtArgs extends runtime.
 export type AccommodationImageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   imageUrl?: boolean
+  publicId?: boolean
   flatId?: boolean
   roomId?: boolean
   sortOrder?: boolean
@@ -767,6 +805,7 @@ export type AccommodationImageSelectUpdateManyAndReturn<ExtArgs extends runtime.
 export type AccommodationImageSelectScalar = {
   id?: boolean
   imageUrl?: boolean
+  publicId?: boolean
   flatId?: boolean
   roomId?: boolean
   sortOrder?: boolean
@@ -775,7 +814,7 @@ export type AccommodationImageSelectScalar = {
   updatedAt?: boolean
 }
 
-export type AccommodationImageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "imageUrl" | "flatId" | "roomId" | "sortOrder" | "isPrimary" | "createdAt" | "updatedAt", ExtArgs["result"]["accommodationImage"]>
+export type AccommodationImageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "imageUrl" | "publicId" | "flatId" | "roomId" | "sortOrder" | "isPrimary" | "createdAt" | "updatedAt", ExtArgs["result"]["accommodationImage"]>
 export type AccommodationImageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   flat?: boolean | Prisma.AccommodationImage$flatArgs<ExtArgs>
   room?: boolean | Prisma.AccommodationImage$roomArgs<ExtArgs>
@@ -798,6 +837,7 @@ export type $AccommodationImagePayload<ExtArgs extends runtime.Types.Extensions.
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     imageUrl: string
+    publicId: string | null
     flatId: string | null
     roomId: string | null
     sortOrder: number
@@ -1231,6 +1271,7 @@ export interface Prisma__AccommodationImageClient<T, Null = never, ExtArgs exten
 export interface AccommodationImageFieldRefs {
   readonly id: Prisma.FieldRef<"AccommodationImage", 'String'>
   readonly imageUrl: Prisma.FieldRef<"AccommodationImage", 'String'>
+  readonly publicId: Prisma.FieldRef<"AccommodationImage", 'String'>
   readonly flatId: Prisma.FieldRef<"AccommodationImage", 'String'>
   readonly roomId: Prisma.FieldRef<"AccommodationImage", 'String'>
   readonly sortOrder: Prisma.FieldRef<"AccommodationImage", 'Int'>

@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import httpStatus from "http-status";
 import { AppError } from "../../utils/AppError";
 import { sendResponse } from "../../utils/sendResponse";
+import { AdvertisementService } from "../advertisement/advertisement.service";
 import { OwnerService } from "./owner.service";
 import { OwnerValidation } from "./owner.validation";
 
@@ -108,6 +109,50 @@ const assignManager = async (req: Request, res: Response) => {
     });
 };
 
+const revokeManager = async (req: Request, res: Response) => {
+    const result = await OwnerService.revokeManager(
+        req.user!.userId,
+        req.params.flatId as string,
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Manager assignment revoked successfully",
+        data: result,
+    });
+};
+
+const removeFlatImage = async (req: Request, res: Response) => {
+    const result = await OwnerService.removeFlatImage(
+        req.user!.userId,
+        req.params.flatId as string,
+        req.params.imageId as string,
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Flat image removed successfully",
+        data: result,
+    });
+};
+
+const removeRoomImage = async (req: Request, res: Response) => {
+    const result = await OwnerService.removeRoomImage(
+        req.user!.userId,
+        req.params.roomId as string,
+        req.params.imageId as string,
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Room image removed successfully",
+        data: result,
+    });
+};
+
 const addFlatImages = async (req: Request, res: Response) => {
     const files = req.files as { [fieldname: string]: Express.Multer.File[] };
     const imageFiles = files?.["images"] || [];
@@ -176,6 +221,66 @@ const updateRoom = async (req: Request, res: Response) => {
     });
 };
 
+const deleteFlat = async (req: Request, res: Response) => {
+    const result = await OwnerService.deleteFlat(
+        req.user!.userId,
+        req.params.flatId as string,
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Flat deleted successfully",
+        data: result,
+    });
+};
+
+const deleteRoom = async (req: Request, res: Response) => {
+    const result = await OwnerService.deleteRoom(
+        req.user!.userId,
+        req.params.roomId as string,
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Room deleted successfully",
+        data: result,
+    });
+};
+
+const createFlatAdvertisement = async (req: Request, res: Response) => {
+    const result = await AdvertisementService.createFlatAdvertisement(
+        req.user!.userId,
+        req.user!.role,
+        req.params.flatId as string,
+        req.body,
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.CREATED,
+        success: true,
+        message: "Flat advertisement created successfully",
+        data: result,
+    });
+};
+
+const createRoomAdvertisement = async (req: Request, res: Response) => {
+    const result = await AdvertisementService.createRoomAdvertisement(
+        req.user!.userId,
+        req.user!.role,
+        req.params.roomId as string,
+        req.body,
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.CREATED,
+        success: true,
+        message: "Room advertisement created successfully",
+        data: result,
+    });
+};
+
 const getMyProperties = async (req: Request, res: Response) => {
     const result = await OwnerService.getMyProperties(req.user!.userId);
 
@@ -216,8 +321,15 @@ export const OwnerController = {
     addFlatImages,
     addRoomImages,
     assignManager,
+    revokeManager,
+    removeFlatImage,
+    removeRoomImage,
     updateFlat,
     updateRoom,
+    deleteFlat,
+    deleteRoom,
+    createFlatAdvertisement,
+    createRoomAdvertisement,
     getMyProperties,
     getMyFlats,
     getActiveManagers,

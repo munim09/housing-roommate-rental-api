@@ -31,4 +31,18 @@ export const uploadImageToCloudinary = (
     });
 };
 
+export const deleteImageFromCloudinary = (
+    publicId: string,
+): Promise<{ result: string }> => {
+    return new Promise((resolve, reject) => {
+        cloudinary.uploader.destroy(publicId, (error, result) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+};
+
 export default cloudinary;

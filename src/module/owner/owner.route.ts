@@ -4,6 +4,7 @@ import { upload } from "../../lib/multer";
 import { auth } from "../../middlewares/checkAuth";
 import { validateRequest } from "../../middlewares/validateRequest";
 import { catchAsync } from "../../utils/catchAsync";
+import { AdvertisementValidation } from "../advertisement/advertisement.validation";
 import { OwnerController } from "./owner.controller";
 import { OwnerValidation } from "./owner.validation";
 
@@ -22,6 +23,18 @@ router.get("/properties", catchAsync(OwnerController.getMyProperties));
 router.get("/flats", catchAsync(OwnerController.getMyFlats));
 
 router.get("/managers", catchAsync(OwnerController.getActiveManagers));
+
+router.post(
+    "/flats/:flatId/advertisements",
+    validateRequest(AdvertisementValidation.createAdvertisement),
+    catchAsync(OwnerController.createFlatAdvertisement),
+);
+
+router.post(
+    "/rooms/:roomId/advertisements",
+    validateRequest(AdvertisementValidation.createAdvertisement),
+    catchAsync(OwnerController.createRoomAdvertisement),
+);
 
 // router.post(
 //     "/properties/:propertyId/flats",
@@ -60,6 +73,11 @@ router.post(
 );
 
 router.post(
+    "/flats/:flatId/revoke-manager",
+    catchAsync(OwnerController.revokeManager),
+);
+
+router.post(
     "/flats/:flatId/images",
     upload.fields([
         {
@@ -81,6 +99,16 @@ router.post(
     catchAsync(OwnerController.addRoomImages),
 );
 
+router.delete(
+    "/flats/:flatId/images/:imageId",
+    catchAsync(OwnerController.removeFlatImage),
+);
+
+router.delete(
+    "/rooms/:roomId/images/:imageId",
+    catchAsync(OwnerController.removeRoomImage),
+);
+
 router.patch(
     "/flats/:flatId",
     validateRequest(OwnerValidation.updateFlat),
@@ -92,5 +120,9 @@ router.patch(
     validateRequest(OwnerValidation.updateRoom),
     catchAsync(OwnerController.updateRoom),
 );
+
+router.delete("/flats/:flatId", catchAsync(OwnerController.deleteFlat));
+
+router.delete("/rooms/:roomId", catchAsync(OwnerController.deleteRoom));
 
 export const OwnerRoutes = router;

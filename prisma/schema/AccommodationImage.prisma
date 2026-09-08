@@ -3,6 +3,8 @@ model AccommodationImage {
 
   imageUrl String
 
+  publicId String?
+
   flatId String?
   roomId String?
 

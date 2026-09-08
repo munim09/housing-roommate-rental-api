@@ -1,5 +1,8 @@
 import httpStatus from "http-status";
-import { uploadImageToCloudinary } from "../../lib/cloudinary";
+import {
+    deleteImageFromCloudinary,
+    uploadImageToCloudinary,
+} from "../../lib/cloudinary";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
 import {
@@ -16,6 +19,7 @@ const uploadImages = async (images: Buffer[], folder: string) => {
         images.map((buffer, index) =>
             uploadImageToCloudinary(buffer, folder).then((result) => ({
                 url: result.url,
+                publicId: result.publicId,
                 isPrimary: index === 0,
             })),
         ),
@@ -99,6 +103,7 @@ const addFlat = async (
                 data: uploadedImages.map((img, index) => ({
                     flatId: createdFlat.id,
                     imageUrl: img.url,
+                    publicId: img.publicId,
                     isPrimary: img.isPrimary,
                     sortOrder: index,
                 })),
@@ -156,6 +161,7 @@ const addRoom = async (
                 data: uploadedImages.map((img, index) => ({
                     roomId: createdRoom.id,
                     imageUrl: img.url,
+                    publicId: img.publicId,
                     isPrimary: img.isPrimary,
                     sortOrder: index,
                 })),
@@ -204,6 +210,7 @@ const addFlatImages = async (
         data: uploadedImages.map((img, index) => ({
             flatId,
             imageUrl: img.url,
+            publicId: img.publicId,
             isPrimary: img.isPrimary && nextSortOrder === 0,
             sortOrder: nextSortOrder + index,
         })),
@@ -253,12 +260,77 @@ const addRoomImages = async (
         data: uploadedImages.map((img, index) => ({
             roomId,
             imageUrl: img.url,
+            publicId: img.publicId,
             isPrimary: img.isPrimary && nextSortOrder === 0,
             sortOrder: nextSortOrder + index,
         })),
     });
 
     return uploadedImages.map((img) => img.url);
+};
+
+const deleteFlat = async (ownerId: string, flatId: string) => {
+    const flat = await prisma.flat.findUnique({ where: { id: flatId } });
+
+    if (!flat) {
+        throw new AppError(httpStatus.NOT_FOUND, "Flat not found");
+    }
+
+    const ownership = await prisma.propertyOwnership.findFirst({
+        where: {
+            flatId,
+            ownerId,
+            status: "ACTIVE",
+        },
+    });
+
+    if (!ownership) {
+        throw new AppError(httpStatus.FORBIDDEN, "You do not own this flat");
+    }
+
+    const deletedFlat = await prisma.flat.update({
+        where: { id: flatId },
+        data: { status: "ARCHIVED" },
+        select: {
+            id: true,
+            flatNumber: true,
+            status: true,
+        },
+    });
+
+    return deletedFlat;
+};
+
+const deleteRoom = async (ownerId: string, roomId: string) => {
+    const room = await prisma.room.findUnique({ where: { id: roomId } });
+
+    if (!room) {
+        throw new AppError(httpStatus.NOT_FOUND, "Room not found");
+    }
+
+    const ownership = await prisma.propertyOwnership.findFirst({
+        where: {
+            flatId: room.flatId,
+            ownerId,
+            status: "ACTIVE",
+        },
+    });
+
+    if (!ownership) {
+        throw new AppError(httpStatus.FORBIDDEN, "You do not own this flat");
+    }
+
+    const deletedRoom = await prisma.room.update({
+        where: { id: roomId },
+        data: { status: "ARCHIVED" },
+        select: {
+            id: true,
+            roomNumber: true,
+            status: true,
+        },
+    });
+
+    return deletedRoom;
 };
 
 const updateFlat = async (
@@ -350,6 +422,107 @@ const updateRoom = async (
     return updatedRoom;
 };
 
+const extractPublicIdFromUrl = (url: string) => {
+    const match = url.match(/\/image\/upload\/(?:v\d+\/)?(.+?)\.[a-z]{3,4}$/i);
+    return match ? match[1] : null;
+};
+
+const deleteCloudinaryImage = async (
+    publicId: string | null,
+    imageUrl: string,
+) => {
+    const id = publicId || extractPublicIdFromUrl(imageUrl);
+
+    if (!id) {
+        return;
+    }
+
+    try {
+        const result = await deleteImageFromCloudinary(id);
+
+        if (result.result !== "ok" && result.result !== "not found") {
+            throw new AppError(
+                httpStatus.BAD_GATEWAY,
+                "Failed to delete image from Cloudinary",
+            );
+        }
+    } catch (error) {
+        if (error instanceof AppError) {
+            throw error;
+        }
+        throw new AppError(
+            httpStatus.BAD_GATEWAY,
+            "Failed to delete image from Cloudinary",
+        );
+    }
+};
+
+const removeFlatImage = async (
+    ownerId: string,
+    flatId: string,
+    imageId: string,
+) => {
+    const ownership = await prisma.propertyOwnership.findFirst({
+        where: {
+            flatId,
+            ownerId,
+            status: "ACTIVE",
+        },
+    });
+
+    if (!ownership) {
+        throw new AppError(httpStatus.FORBIDDEN, "You do not own this flat");
+    }
+
+    const image = await prisma.accommodationImage.findFirst({
+        where: { id: imageId, flatId },
+    });
+
+    if (!image) {
+        throw new AppError(httpStatus.NOT_FOUND, "Flat image not found");
+    }
+
+    await deleteCloudinaryImage(image.publicId, image.imageUrl);
+
+    return prisma.accommodationImage.delete({ where: { id: image.id } });
+};
+
+const removeRoomImage = async (
+    ownerId: string,
+    roomId: string,
+    imageId: string,
+) => {
+    const room = await prisma.room.findUnique({ where: { id: roomId } });
+
+    if (!room) {
+        throw new AppError(httpStatus.NOT_FOUND, "Room not found");
+    }
+
+    const ownership = await prisma.propertyOwnership.findFirst({
+        where: {
+            flatId: room.flatId,
+            ownerId,
+            status: "ACTIVE",
+        },
+    });
+
+    if (!ownership) {
+        throw new AppError(httpStatus.FORBIDDEN, "You do not own this flat");
+    }
+
+    const image = await prisma.accommodationImage.findFirst({
+        where: { id: imageId, roomId },
+    });
+
+    if (!image) {
+        throw new AppError(httpStatus.NOT_FOUND, "Room image not found");
+    }
+
+    await deleteCloudinaryImage(image.publicId, image.imageUrl);
+
+    return prisma.accommodationImage.delete({ where: { id: image.id } });
+};
+
 const assignManager = async (
     ownerId: string,
     flatId: string,
@@ -404,6 +577,64 @@ const assignManager = async (
     });
 
     return assignment;
+};
+
+const revokeManager = async (ownerId: string, flatId: string) => {
+    const flat = await prisma.flat.findUnique({ where: { id: flatId } });
+
+    if (!flat) {
+        throw new AppError(httpStatus.NOT_FOUND, "Flat not found");
+    }
+
+    const ownership = await prisma.propertyOwnership.findFirst({
+        where: {
+            flatId,
+            ownerId,
+            status: "ACTIVE",
+        },
+    });
+
+    if (!ownership) {
+        throw new AppError(httpStatus.FORBIDDEN, "You do not own this flat");
+    }
+
+    const assignment = await prisma.managerAssignment.findFirst({
+        where: { flatId, status: "ACTIVE" },
+        include: {
+            manager: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                },
+            },
+        },
+    });
+
+    if (!assignment) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "No active manager assigned to this flat",
+        );
+    }
+
+    const revoked = await prisma.managerAssignment.update({
+        where: { id: assignment.id },
+        data: { status: "ENDED", endedAt: new Date() },
+        select: {
+            id: true,
+            flatId: true,
+            managerId: true,
+            status: true,
+            startedAt: true,
+            endedAt: true,
+        },
+    });
+
+    return {
+        ...revoked,
+        manager: assignment.manager,
+    };
 };
 
 const getMyProperties = async (ownerId: string) => {
@@ -545,7 +776,12 @@ export const OwnerService = {
     addRoomImages,
     updateFlat,
     updateRoom,
+    deleteFlat,
+    deleteRoom,
     assignManager,
+    revokeManager,
+    removeFlatImage,
+    removeRoomImage,
     getMyProperties,
     getMyFlats,
     getActiveManagers,

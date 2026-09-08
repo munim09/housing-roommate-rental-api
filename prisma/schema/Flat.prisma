@@ -15,6 +15,7 @@ model Flat {
 
   areaSqFt Decimal? @db.Decimal(10, 2)
 
+  
   description String?
 
   status FlatStatus @default(ACTIVE)

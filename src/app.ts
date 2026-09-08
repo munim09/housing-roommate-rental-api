@@ -7,6 +7,7 @@ import { notFound } from "./middlewares/notFound";
 import { AuthRoutes } from "./module/auth/auth.route";
 import { AdminRoutes } from "./module/admin/admin.route";
 import { OwnerRoutes } from "./module/owner/owner.route";
+import { ManagerRoutes } from "./module/manager/manager.route";
 import { catchAsync } from "./utils/catchAsync";
 import { sendResponse } from "./utils/sendResponse";
 
@@ -43,6 +44,7 @@ app.get(
 app.use("/api/v1/auth", AuthRoutes);
 app.use("/api/v1/admin", AdminRoutes);
 app.use("/api/v1/owner", OwnerRoutes);
+app.use("/api/v1/manager", ManagerRoutes);
 
 app.use(notFound);
 

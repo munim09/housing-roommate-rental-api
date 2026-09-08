@@ -1733,6 +1733,7 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 export const AccommodationImageScalarFieldEnum = {
   id: 'id',
   imageUrl: 'imageUrl',
+  publicId: 'publicId',
   flatId: 'flatId',
   roomId: 'roomId',
   sortOrder: 'sortOrder',
