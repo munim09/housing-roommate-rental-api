@@ -112,7 +112,7 @@ https://redis.io/docs/latest/commands/redis-6-2-commands/
 
 https://cloud.redis.io/#/databases
 
-npm i redis
+npm i redis / npm i ioredis
 
 Google auth: npm i google-auth-library
 
