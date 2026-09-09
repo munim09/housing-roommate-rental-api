@@ -270,6 +270,17 @@ const getMyFlats = async (req: Request, res: Response) => {
     });
 };
 
+const getMyAdvertisements = async (req: Request, res: Response) => {
+    const result = await OwnerService.getMyAdvertisements(req.user!.userId);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Advertisements retrieved successfully",
+        data: result,
+    });
+};
+
 const getActiveManagers = async (req: Request, res: Response) => {
     const result = await OwnerService.getActiveManagers();
 
@@ -297,5 +308,6 @@ export const OwnerController = {
     deleteRoom,
     getMyProperties,
     getMyFlats,
+    getMyAdvertisements,
     getActiveManagers,
 };

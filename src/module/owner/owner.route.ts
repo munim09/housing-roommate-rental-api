@@ -21,6 +21,8 @@ router.get("/properties", catchAsync(OwnerController.getMyProperties));
 
 router.get("/flats", catchAsync(OwnerController.getMyFlats));
 
+router.get("/advertisements", catchAsync(OwnerController.getMyAdvertisements));
+
 router.get("/managers", catchAsync(OwnerController.getActiveManagers));
 
 // router.post(

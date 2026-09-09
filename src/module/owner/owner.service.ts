@@ -789,6 +789,77 @@ const getMyFlats = async (ownerId: string) => {
     return flats;
 };
 
+const getMyAdvertisements = async (ownerId: string) => {
+    const ownedFlatIds = (
+        await prisma.propertyOwnership.findMany({
+            where: { ownerId, status: "ACTIVE" },
+            select: { flatId: true },
+        })
+    ).map((ownership) => ownership.flatId);
+
+    if (ownedFlatIds.length === 0) {
+        return [];
+    }
+
+    const advertisements = await prisma.advertisement.findMany({
+        where: {
+            OR: [
+                { flatId: { in: ownedFlatIds } },
+                { room: { flatId: { in: ownedFlatIds } } },
+            ],
+        },
+        select: {
+            id: true,
+            title: true,
+            description: true,
+            monthlyRent: true,
+            category: true,
+            target: true,
+            status: true,
+            availableFrom: true,
+            availableTo: true,
+            publishedAt: true,
+            createdAt: true,
+            updatedAt: true,
+            createdBy: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    role: true,
+                },
+            },
+            flat: {
+                select: {
+                    id: true,
+                    flatNumber: true,
+                    floorNumber: true,
+                    status: true,
+                    property: {
+                        select: {
+                            id: true,
+                            name: true,
+                            city: true,
+                            district: true,
+                        },
+                    },
+                },
+            },
+            room: {
+                select: {
+                    id: true,
+                    roomNumber: true,
+                    name: true,
+                    status: true,
+                },
+            },
+        },
+        orderBy: { createdAt: "desc" },
+    });
+
+    return advertisements;
+};
+
 const getActiveManagers = async () => {
     const managers = await prisma.user.findMany({
         where: {
@@ -832,5 +903,6 @@ export const OwnerService = {
     removeRoomImage,
     getMyProperties,
     getMyFlats,
+    getMyAdvertisements,
     getActiveManagers,
 };
