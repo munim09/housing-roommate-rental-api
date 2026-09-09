@@ -165,7 +165,7 @@ const createFlatAdvertisement = async (
             monthlyRent: payload.monthlyRent,
             availableFrom,
             availableTo,
-            status: AdvertisementStatus.PUBLISHED,
+            status: AdvertisementStatus.DRAFT,
             publishedAt: new Date(),
         },
     });
@@ -274,7 +274,7 @@ const createRoomAdvertisement = async (
             monthlyRent: payload.monthlyRent,
             availableFrom,
             availableTo,
-            status: AdvertisementStatus.PUBLISHED,
+            status: AdvertisementStatus.DRAFT,
             publishedAt: new Date(),
         },
     });
@@ -288,7 +288,6 @@ const CLOSED_ADVERTISEMENT_STATUSES: AdvertisementStatus[] = [
 ];
 
 const ADVERTISER_STATUSES: AdvertisementStatus[] = [
-    AdvertisementStatus.DRAFT,
     AdvertisementStatus.PUBLISHED,
     AdvertisementStatus.UNPUBLISHED,
     AdvertisementStatus.ARCHIVED,
@@ -342,6 +341,25 @@ const updateAdvertisementStatus = async (
             httpStatus.BAD_REQUEST,
             `Cannot set advertisement status to ${status}`,
         );
+    }
+
+    if (status === AdvertisementStatus.PUBLISHED) {
+        if (!advertisement.availableFrom || !advertisement.availableTo) {
+            throw new AppError(
+                httpStatus.BAD_REQUEST,
+                "Advertisement availability dates are not set",
+            );
+        }
+
+        if (
+            advertisement.availableFrom < startOfToday() ||
+            advertisement.availableTo < startOfToday()
+        ) {
+            throw new AppError(
+                httpStatus.BAD_REQUEST,
+                "Advertisement availability dates must be today or in the future",
+            );
+        }
     }
 
     return prisma.advertisement.update({

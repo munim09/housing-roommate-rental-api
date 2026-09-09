@@ -22,7 +22,7 @@ const updateAdvertisementValidation = z.object({
 });
 
 const updateAdvertisementStatusValidation = z.object({
-    status: z.enum(["DRAFT", "PUBLISHED", "UNPUBLISHED", "ARCHIVED"]),
+    status: z.enum(["PUBLISHED", "UNPUBLISHED", "ARCHIVED"]),
 });
 
 export const AdvertisementValidation = {

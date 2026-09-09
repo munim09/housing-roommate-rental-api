@@ -17,7 +17,7 @@ router.post(
 );
 
 router.post(
-    "/rooms/:roomId/advertisements",
+    "/rooms/:roomId",
     validateRequest(AdvertisementValidation.createAdvertisement),
     catchAsync(AdvertisementController.createRoomAdvertisement),
 );

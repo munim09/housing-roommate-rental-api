@@ -343,9 +343,9 @@ async function main() {
 
     // await seedUsers(hashedPassword);
     // await seedProfiles();
-    await seedProperty();
-    await seedFlat();
-    await seedRooms();
+    // await seedProperty();
+    // await seedFlat();
+    // await seedRooms();
 }
 
 main()

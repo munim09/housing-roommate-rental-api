@@ -14,7 +14,7 @@ const createFlatAdvertisement = async (req: Request, res: Response) => {
     sendResponse(res, {
         statusCode: httpStatus.CREATED,
         success: true,
-        message: "Flat advertisement created successfully",
+        message: "Draft of flat advertisement created successfully",
         data: result,
     });
 };
@@ -30,7 +30,7 @@ const createRoomAdvertisement = async (req: Request, res: Response) => {
     sendResponse(res, {
         statusCode: httpStatus.CREATED,
         success: true,
-        message: "Room advertisement created successfully",
+        message: "Draft of flat room advertisement created successfully",
         data: result,
     });
 };
