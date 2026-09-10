@@ -1,0 +1,13 @@
+import { ViewingRequestStatus } from "../../../generated/prisma/enums";
+
+export interface ICreateViewingRequest {
+    advertisementId: string;
+    requestedDate: Date;
+    note?: string;
+}
+
+export interface IViewingRequestQuery {
+    status?: ViewingRequestStatus;
+    page?: number;
+    limit?: number;
+}

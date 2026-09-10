@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import httpStatus from "http-status";
 import { SignOptions } from "jsonwebtoken";
+import { Role } from "../../../generated/prisma/enums";
 import config from "../../config";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
@@ -95,6 +96,10 @@ const register = async (payload: {
     const existingUser = await prisma.user.findUnique({
         where: { email: payload.email },
     });
+
+    if (payload.role == Role.ADMIN) {
+        throw new AppError(httpStatus.FORBIDDEN, "Invalid role");
+    }
 
     if (existingUser) {
         throw new AppError(httpStatus.BAD_REQUEST, "User already exists");
