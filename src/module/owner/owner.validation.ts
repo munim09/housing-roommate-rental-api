@@ -7,7 +7,7 @@ const createPropertyValidation = z.object({
     }),
     description: z.string().optional(),
     address: z.string().min(1, "Address is required"),
-    areaId: z.string().uuid("Invalid area ID"),
+    areaId: z.string().min(1, "Invalid area ID"),
     postalCode: z.string().optional(),
     latitude: z.coerce.number().optional(),
     longitude: z.coerce.number().optional(),
