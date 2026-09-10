@@ -22,8 +22,25 @@ const updateRoleValidation = z.object({
     }),
 });
 
+const createCityValidation = z.object({
+    name: z
+        .string()
+        .min(1, "City name is required")
+        .max(100, "City name must be at most 100 characters"),
+});
+
+const createAreaValidation = z.object({
+    cityId: z.string().uuid("Invalid city ID"),
+    name: z
+        .string()
+        .min(1, "Area name is required")
+        .max(100, "Area name must be at most 100 characters"),
+});
+
 export const AdminValidation = {
     getAllUsers: getAllUsersValidation,
     updateStatus: updateStatusValidation,
     updateRole: updateRoleValidation,
+    createCity: createCityValidation,
+    createArea: createAreaValidation,
 };

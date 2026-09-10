@@ -11,6 +11,8 @@
 export type * from './models/AccommodationImage'
 export type * from './models/Advertisement'
 export type * from './models/Application'
+export type * from './models/Area'
+export type * from './models/City'
 export type * from './models/Flat'
 export type * from './models/Invoice'
 export type * from './models/ManagerAssignment'

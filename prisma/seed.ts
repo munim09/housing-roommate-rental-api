@@ -16,6 +16,10 @@ const USER_IDS = {
 
 const PROPERTY_ID = "30000000-0000-4000-8000-000000000001";
 
+const CITY_ID = "20000000-0000-4000-8000-000000000001";
+
+const AREA_ID = "20000000-0000-4000-8000-000000000002";
+
 const FLAT_ID = "40000000-0000-4000-8000-000000000001";
 
 const ROOM_IDS = {
@@ -237,6 +241,32 @@ const seedProfiles = async () => {
     console.log("Profiles seeded");
 };
 
+const seedLocation = async () => {
+    await prisma.city.upsert({
+        where: { id: CITY_ID },
+        update: { name: "Dhaka" },
+        create: {
+            id: CITY_ID,
+            name: "Dhaka",
+        },
+    });
+
+    await prisma.area.upsert({
+        where: { id: AREA_ID },
+        update: {
+            cityId: CITY_ID,
+            name: "Dhanmondi",
+        },
+        create: {
+            id: AREA_ID,
+            cityId: CITY_ID,
+            name: "Dhanmondi",
+        },
+    });
+
+    console.log("Location seeded");
+};
+
 const seedProperty = async () => {
     await prisma.property.upsert({
         where: { id: PROPERTY_ID },
@@ -248,8 +278,7 @@ const seedProperty = async () => {
             description:
                 "A comfortable residential building in Dhanmondi with modern amenities.",
             address: "House 12, Road 5, Dhanmondi",
-            city: "Dhaka",
-            district: "Dhaka",
+            areaId: AREA_ID,
             postalCode: "1205",
             latitude: 23.7461,
             longitude: 90.3742,
@@ -343,6 +372,7 @@ async function main() {
 
     // await seedUsers(hashedPassword);
     // await seedProfiles();
+    // await seedLocation();
     // await seedProperty();
     // await seedFlat();
     // await seedRooms();

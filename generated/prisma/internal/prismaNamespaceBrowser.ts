@@ -54,6 +54,8 @@ export const ModelName = {
   AccommodationImage: 'AccommodationImage',
   Advertisement: 'Advertisement',
   Application: 'Application',
+  Area: 'Area',
+  City: 'City',
   Flat: 'Flat',
   Invoice: 'Invoice',
   ManagerAssignment: 'ManagerAssignment',
@@ -138,6 +140,27 @@ export const ApplicationScalarFieldEnum = {
 } as const
 
 export type ApplicationScalarFieldEnum = (typeof ApplicationScalarFieldEnum)[keyof typeof ApplicationScalarFieldEnum]
+
+
+export const AreaScalarFieldEnum = {
+  id: 'id',
+  cityId: 'cityId',
+  name: 'name',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AreaScalarFieldEnum = (typeof AreaScalarFieldEnum)[keyof typeof AreaScalarFieldEnum]
+
+
+export const CityScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CityScalarFieldEnum = (typeof CityScalarFieldEnum)[keyof typeof CityScalarFieldEnum]
 
 
 export const FlatScalarFieldEnum = {
@@ -242,9 +265,8 @@ export const PropertyScalarFieldEnum = {
   type: 'type',
   description: 'description',
   address: 'address',
-  city: 'city',
-  district: 'district',
   postalCode: 'postalCode',
+  areaId: 'areaId',
   latitude: 'latitude',
   longitude: 'longitude',
   status: 'status',

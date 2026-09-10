@@ -1,0 +1,21 @@
+model Area {
+  id String @id @default(uuid())
+
+  cityId String
+
+  name String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // ----------------------------------------------------------
+  // Relations
+  // ----------------------------------------------------------
+
+  city City @relation(    fields: [cityId],    references: [id]  )
+
+  properties Property[]
+
+  @@unique([cityId, name])
+  @@index([cityId])
+}

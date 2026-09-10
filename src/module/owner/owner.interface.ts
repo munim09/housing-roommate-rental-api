@@ -3,8 +3,7 @@ export interface ICreateProperty {
     type: "SINGLE_FLAT" | "MULTI_FLAT";
     description?: string;
     address: string;
-    city: string;
-    district: string;
+    areaId: string;
     postalCode?: string;
     latitude?: number;
     longitude?: number;

@@ -19,3 +19,12 @@ export interface IAdminUpdateRole {
     userId: string;
     role: Role;
 }
+
+export interface IAdminCreateCity {
+    name: string;
+}
+
+export interface IAdminCreateArea {
+    cityId: string;
+    name: string;
+}

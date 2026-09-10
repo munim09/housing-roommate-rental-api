@@ -33,6 +33,16 @@ export type Advertisement = Prisma.AdvertisementModel
  */
 export type Application = Prisma.ApplicationModel
 /**
+ * Model Area
+ * 
+ */
+export type Area = Prisma.AreaModel
+/**
+ * Model City
+ * 
+ */
+export type City = Prisma.CityModel
+/**
  * Model Flat
  * 
  */

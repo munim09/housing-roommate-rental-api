@@ -10,9 +10,11 @@ model Property {
   description String?
 
   address    String
-  city       String
-  district   String
+//   city       String
+//   district   String
   postalCode String?
+
+  areaId String
 
   latitude  Decimal? @db.Decimal(10, 7)
   longitude Decimal? @db.Decimal(10, 7)
@@ -30,9 +32,13 @@ model Property {
 
   createdBy User @relation("PropertyCreatedBy", fields: [createdById], references: [id])
 
+  area Area @relation(     fields: [areaId],    references: [id]  )
+
   flats Flat[]
 
   stays Stay[]
+
+  @@index([areaId])
 
   @@index([createdById])
   @@index([status])

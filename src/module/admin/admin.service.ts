@@ -2,7 +2,7 @@ import { Prisma, UserStatus } from "../../../generated/prisma/client";
 import httpStatus from "http-status";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
-import { IAdminUserQuery } from "./admin.interface";
+import { IAdminCreateArea, IAdminCreateCity, IAdminUserQuery } from "./admin.interface";
 
 const getAllUsers = async (query: IAdminUserQuery) => {
     const { role, status, search, page = 1, limit = 10, sortBy = "createdAt", sortOrder = "desc" } = query;
@@ -155,10 +155,40 @@ const deleteUser = async (userId: string) => {
     return { message: "User deleted successfully" };
 };
 
+const createCity = async (data: IAdminCreateCity) => {
+    const city = await prisma.city.create({
+        data: { name: data.name },
+    });
+
+    return city;
+};
+
+const createArea = async (data: IAdminCreateArea) => {
+    const city = await prisma.city.findUnique({
+        where: { id: data.cityId },
+    });
+
+    if (!city) {
+        throw new AppError(httpStatus.NOT_FOUND, "City not found");
+    }
+
+    const area = await prisma.area.create({
+        data: {
+            name: data.name,
+            cityId: data.cityId,
+        },
+        include: { city: true },
+    });
+
+    return area;
+};
+
 export const AdminService = {
     getAllUsers,
     getUserById,
     updateUserStatus,
     updateUserRole,
     deleteUser,
+    createCity,
+    createArea,
 };

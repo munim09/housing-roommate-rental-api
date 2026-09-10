@@ -28,14 +28,21 @@ const uploadImages = async (images: Buffer[], folder: string) => {
 };
 
 const createProperty = async (ownerId: string, payload: ICreateProperty) => {
+    const area = await prisma.area.findUnique({
+        where: { id: payload.areaId },
+    });
+
+    if (!area) {
+        throw new AppError(httpStatus.NOT_FOUND, "Area not found");
+    }
+
     const property = await prisma.property.create({
         data: {
             name: payload.name,
             type: payload.type,
             description: payload.description || null,
             address: payload.address,
-            city: payload.city,
-            district: payload.district,
+            areaId: payload.areaId,
             postalCode: payload.postalCode || null,
             latitude: payload.latitude,
             longitude: payload.longitude,
@@ -46,8 +53,7 @@ const createProperty = async (ownerId: string, payload: ICreateProperty) => {
             name: true,
             type: true,
             address: true,
-            city: true,
-            district: true,
+            areaId: true,
             createdAt: true,
         },
     });

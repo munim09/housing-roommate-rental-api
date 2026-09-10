@@ -42,9 +42,8 @@ export type PropertyMinAggregateOutputType = {
   type: $Enums.PropertyType | null
   description: string | null
   address: string | null
-  city: string | null
-  district: string | null
   postalCode: string | null
+  areaId: string | null
   latitude: runtime.Decimal | null
   longitude: runtime.Decimal | null
   status: $Enums.PropertyStatus | null
@@ -59,9 +58,8 @@ export type PropertyMaxAggregateOutputType = {
   type: $Enums.PropertyType | null
   description: string | null
   address: string | null
-  city: string | null
-  district: string | null
   postalCode: string | null
+  areaId: string | null
   latitude: runtime.Decimal | null
   longitude: runtime.Decimal | null
   status: $Enums.PropertyStatus | null
@@ -76,9 +74,8 @@ export type PropertyCountAggregateOutputType = {
   type: number
   description: number
   address: number
-  city: number
-  district: number
   postalCode: number
+  areaId: number
   latitude: number
   longitude: number
   status: number
@@ -105,9 +102,8 @@ export type PropertyMinAggregateInputType = {
   type?: true
   description?: true
   address?: true
-  city?: true
-  district?: true
   postalCode?: true
+  areaId?: true
   latitude?: true
   longitude?: true
   status?: true
@@ -122,9 +118,8 @@ export type PropertyMaxAggregateInputType = {
   type?: true
   description?: true
   address?: true
-  city?: true
-  district?: true
   postalCode?: true
+  areaId?: true
   latitude?: true
   longitude?: true
   status?: true
@@ -139,9 +134,8 @@ export type PropertyCountAggregateInputType = {
   type?: true
   description?: true
   address?: true
-  city?: true
-  district?: true
   postalCode?: true
+  areaId?: true
   latitude?: true
   longitude?: true
   status?: true
@@ -243,9 +237,8 @@ export type PropertyGroupByOutputType = {
   type: $Enums.PropertyType
   description: string | null
   address: string
-  city: string
-  district: string
   postalCode: string | null
+  areaId: string
   latitude: runtime.Decimal | null
   longitude: runtime.Decimal | null
   status: $Enums.PropertyStatus
@@ -283,9 +276,8 @@ export type PropertyWhereInput = {
   type?: Prisma.EnumPropertyTypeFilter<"Property"> | $Enums.PropertyType
   description?: Prisma.StringNullableFilter<"Property"> | string | null
   address?: Prisma.StringFilter<"Property"> | string
-  city?: Prisma.StringFilter<"Property"> | string
-  district?: Prisma.StringFilter<"Property"> | string
   postalCode?: Prisma.StringNullableFilter<"Property"> | string | null
+  areaId?: Prisma.StringFilter<"Property"> | string
   latitude?: Prisma.DecimalNullableFilter<"Property"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   longitude?: Prisma.DecimalNullableFilter<"Property"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumPropertyStatusFilter<"Property"> | $Enums.PropertyStatus
@@ -293,6 +285,7 @@ export type PropertyWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Property"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Property"> | Date | string
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  area?: Prisma.XOR<Prisma.AreaScalarRelationFilter, Prisma.AreaWhereInput>
   flats?: Prisma.FlatListRelationFilter
   stays?: Prisma.StayListRelationFilter
 }
@@ -303,9 +296,8 @@ export type PropertyOrderByWithRelationInput = {
   type?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrder
-  city?: Prisma.SortOrder
-  district?: Prisma.SortOrder
   postalCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  areaId?: Prisma.SortOrder
   latitude?: Prisma.SortOrderInput | Prisma.SortOrder
   longitude?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -313,6 +305,7 @@ export type PropertyOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   createdBy?: Prisma.UserOrderByWithRelationInput
+  area?: Prisma.AreaOrderByWithRelationInput
   flats?: Prisma.FlatOrderByRelationAggregateInput
   stays?: Prisma.StayOrderByRelationAggregateInput
 }
@@ -326,9 +319,8 @@ export type PropertyWhereUniqueInput = Prisma.AtLeast<{
   type?: Prisma.EnumPropertyTypeFilter<"Property"> | $Enums.PropertyType
   description?: Prisma.StringNullableFilter<"Property"> | string | null
   address?: Prisma.StringFilter<"Property"> | string
-  city?: Prisma.StringFilter<"Property"> | string
-  district?: Prisma.StringFilter<"Property"> | string
   postalCode?: Prisma.StringNullableFilter<"Property"> | string | null
+  areaId?: Prisma.StringFilter<"Property"> | string
   latitude?: Prisma.DecimalNullableFilter<"Property"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   longitude?: Prisma.DecimalNullableFilter<"Property"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumPropertyStatusFilter<"Property"> | $Enums.PropertyStatus
@@ -336,6 +328,7 @@ export type PropertyWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Property"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Property"> | Date | string
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  area?: Prisma.XOR<Prisma.AreaScalarRelationFilter, Prisma.AreaWhereInput>
   flats?: Prisma.FlatListRelationFilter
   stays?: Prisma.StayListRelationFilter
 }, "id">
@@ -346,9 +339,8 @@ export type PropertyOrderByWithAggregationInput = {
   type?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrder
-  city?: Prisma.SortOrder
-  district?: Prisma.SortOrder
   postalCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  areaId?: Prisma.SortOrder
   latitude?: Prisma.SortOrderInput | Prisma.SortOrder
   longitude?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -371,9 +363,8 @@ export type PropertyScalarWhereWithAggregatesInput = {
   type?: Prisma.EnumPropertyTypeWithAggregatesFilter<"Property"> | $Enums.PropertyType
   description?: Prisma.StringNullableWithAggregatesFilter<"Property"> | string | null
   address?: Prisma.StringWithAggregatesFilter<"Property"> | string
-  city?: Prisma.StringWithAggregatesFilter<"Property"> | string
-  district?: Prisma.StringWithAggregatesFilter<"Property"> | string
   postalCode?: Prisma.StringNullableWithAggregatesFilter<"Property"> | string | null
+  areaId?: Prisma.StringWithAggregatesFilter<"Property"> | string
   latitude?: Prisma.DecimalNullableWithAggregatesFilter<"Property"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   longitude?: Prisma.DecimalNullableWithAggregatesFilter<"Property"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumPropertyStatusWithAggregatesFilter<"Property"> | $Enums.PropertyStatus
@@ -388,8 +379,6 @@ export type PropertyCreateInput = {
   type: $Enums.PropertyType
   description?: string | null
   address: string
-  city: string
-  district: string
   postalCode?: string | null
   latitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   longitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -397,6 +386,7 @@ export type PropertyCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedPropertiesInput
+  area: Prisma.AreaCreateNestedOneWithoutPropertiesInput
   flats?: Prisma.FlatCreateNestedManyWithoutPropertyInput
   stays?: Prisma.StayCreateNestedManyWithoutPropertyInput
 }
@@ -407,9 +397,8 @@ export type PropertyUncheckedCreateInput = {
   type: $Enums.PropertyType
   description?: string | null
   address: string
-  city: string
-  district: string
   postalCode?: string | null
+  areaId: string
   latitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   longitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.PropertyStatus
@@ -426,8 +415,6 @@ export type PropertyUpdateInput = {
   type?: Prisma.EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  district?: Prisma.StringFieldUpdateOperationsInput | string
   postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   longitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -435,6 +422,7 @@ export type PropertyUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedPropertiesNestedInput
+  area?: Prisma.AreaUpdateOneRequiredWithoutPropertiesNestedInput
   flats?: Prisma.FlatUpdateManyWithoutPropertyNestedInput
   stays?: Prisma.StayUpdateManyWithoutPropertyNestedInput
 }
@@ -445,9 +433,8 @@ export type PropertyUncheckedUpdateInput = {
   type?: Prisma.EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  district?: Prisma.StringFieldUpdateOperationsInput | string
   postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  areaId?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   longitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
@@ -464,9 +451,8 @@ export type PropertyCreateManyInput = {
   type: $Enums.PropertyType
   description?: string | null
   address: string
-  city: string
-  district: string
   postalCode?: string | null
+  areaId: string
   latitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   longitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.PropertyStatus
@@ -481,8 +467,6 @@ export type PropertyUpdateManyMutationInput = {
   type?: Prisma.EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  district?: Prisma.StringFieldUpdateOperationsInput | string
   postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   longitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -497,15 +481,24 @@ export type PropertyUncheckedUpdateManyInput = {
   type?: Prisma.EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  district?: Prisma.StringFieldUpdateOperationsInput | string
   postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  areaId?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   longitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type PropertyListRelationFilter = {
+  every?: Prisma.PropertyWhereInput
+  some?: Prisma.PropertyWhereInput
+  none?: Prisma.PropertyWhereInput
+}
+
+export type PropertyOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type PropertyScalarRelationFilter = {
@@ -519,9 +512,8 @@ export type PropertyCountOrderByAggregateInput = {
   type?: Prisma.SortOrder
   description?: Prisma.SortOrder
   address?: Prisma.SortOrder
-  city?: Prisma.SortOrder
-  district?: Prisma.SortOrder
   postalCode?: Prisma.SortOrder
+  areaId?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -541,9 +533,8 @@ export type PropertyMaxOrderByAggregateInput = {
   type?: Prisma.SortOrder
   description?: Prisma.SortOrder
   address?: Prisma.SortOrder
-  city?: Prisma.SortOrder
-  district?: Prisma.SortOrder
   postalCode?: Prisma.SortOrder
+  areaId?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -558,9 +549,8 @@ export type PropertyMinOrderByAggregateInput = {
   type?: Prisma.SortOrder
   description?: Prisma.SortOrder
   address?: Prisma.SortOrder
-  city?: Prisma.SortOrder
-  district?: Prisma.SortOrder
   postalCode?: Prisma.SortOrder
+  areaId?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -574,14 +564,46 @@ export type PropertySumOrderByAggregateInput = {
   longitude?: Prisma.SortOrder
 }
 
-export type PropertyListRelationFilter = {
-  every?: Prisma.PropertyWhereInput
-  some?: Prisma.PropertyWhereInput
-  none?: Prisma.PropertyWhereInput
+export type PropertyCreateNestedManyWithoutAreaInput = {
+  create?: Prisma.XOR<Prisma.PropertyCreateWithoutAreaInput, Prisma.PropertyUncheckedCreateWithoutAreaInput> | Prisma.PropertyCreateWithoutAreaInput[] | Prisma.PropertyUncheckedCreateWithoutAreaInput[]
+  connectOrCreate?: Prisma.PropertyCreateOrConnectWithoutAreaInput | Prisma.PropertyCreateOrConnectWithoutAreaInput[]
+  createMany?: Prisma.PropertyCreateManyAreaInputEnvelope
+  connect?: Prisma.PropertyWhereUniqueInput | Prisma.PropertyWhereUniqueInput[]
 }
 
-export type PropertyOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
+export type PropertyUncheckedCreateNestedManyWithoutAreaInput = {
+  create?: Prisma.XOR<Prisma.PropertyCreateWithoutAreaInput, Prisma.PropertyUncheckedCreateWithoutAreaInput> | Prisma.PropertyCreateWithoutAreaInput[] | Prisma.PropertyUncheckedCreateWithoutAreaInput[]
+  connectOrCreate?: Prisma.PropertyCreateOrConnectWithoutAreaInput | Prisma.PropertyCreateOrConnectWithoutAreaInput[]
+  createMany?: Prisma.PropertyCreateManyAreaInputEnvelope
+  connect?: Prisma.PropertyWhereUniqueInput | Prisma.PropertyWhereUniqueInput[]
+}
+
+export type PropertyUpdateManyWithoutAreaNestedInput = {
+  create?: Prisma.XOR<Prisma.PropertyCreateWithoutAreaInput, Prisma.PropertyUncheckedCreateWithoutAreaInput> | Prisma.PropertyCreateWithoutAreaInput[] | Prisma.PropertyUncheckedCreateWithoutAreaInput[]
+  connectOrCreate?: Prisma.PropertyCreateOrConnectWithoutAreaInput | Prisma.PropertyCreateOrConnectWithoutAreaInput[]
+  upsert?: Prisma.PropertyUpsertWithWhereUniqueWithoutAreaInput | Prisma.PropertyUpsertWithWhereUniqueWithoutAreaInput[]
+  createMany?: Prisma.PropertyCreateManyAreaInputEnvelope
+  set?: Prisma.PropertyWhereUniqueInput | Prisma.PropertyWhereUniqueInput[]
+  disconnect?: Prisma.PropertyWhereUniqueInput | Prisma.PropertyWhereUniqueInput[]
+  delete?: Prisma.PropertyWhereUniqueInput | Prisma.PropertyWhereUniqueInput[]
+  connect?: Prisma.PropertyWhereUniqueInput | Prisma.PropertyWhereUniqueInput[]
+  update?: Prisma.PropertyUpdateWithWhereUniqueWithoutAreaInput | Prisma.PropertyUpdateWithWhereUniqueWithoutAreaInput[]
+  updateMany?: Prisma.PropertyUpdateManyWithWhereWithoutAreaInput | Prisma.PropertyUpdateManyWithWhereWithoutAreaInput[]
+  deleteMany?: Prisma.PropertyScalarWhereInput | Prisma.PropertyScalarWhereInput[]
+}
+
+export type PropertyUncheckedUpdateManyWithoutAreaNestedInput = {
+  create?: Prisma.XOR<Prisma.PropertyCreateWithoutAreaInput, Prisma.PropertyUncheckedCreateWithoutAreaInput> | Prisma.PropertyCreateWithoutAreaInput[] | Prisma.PropertyUncheckedCreateWithoutAreaInput[]
+  connectOrCreate?: Prisma.PropertyCreateOrConnectWithoutAreaInput | Prisma.PropertyCreateOrConnectWithoutAreaInput[]
+  upsert?: Prisma.PropertyUpsertWithWhereUniqueWithoutAreaInput | Prisma.PropertyUpsertWithWhereUniqueWithoutAreaInput[]
+  createMany?: Prisma.PropertyCreateManyAreaInputEnvelope
+  set?: Prisma.PropertyWhereUniqueInput | Prisma.PropertyWhereUniqueInput[]
+  disconnect?: Prisma.PropertyWhereUniqueInput | Prisma.PropertyWhereUniqueInput[]
+  delete?: Prisma.PropertyWhereUniqueInput | Prisma.PropertyWhereUniqueInput[]
+  connect?: Prisma.PropertyWhereUniqueInput | Prisma.PropertyWhereUniqueInput[]
+  update?: Prisma.PropertyUpdateWithWhereUniqueWithoutAreaInput | Prisma.PropertyUpdateWithWhereUniqueWithoutAreaInput[]
+  updateMany?: Prisma.PropertyUpdateManyWithWhereWithoutAreaInput | Prisma.PropertyUpdateManyWithWhereWithoutAreaInput[]
+  deleteMany?: Prisma.PropertyScalarWhereInput | Prisma.PropertyScalarWhereInput[]
 }
 
 export type PropertyCreateNestedOneWithoutFlatsInput = {
@@ -662,14 +684,12 @@ export type PropertyUncheckedUpdateManyWithoutCreatedByNestedInput = {
   deleteMany?: Prisma.PropertyScalarWhereInput | Prisma.PropertyScalarWhereInput[]
 }
 
-export type PropertyCreateWithoutFlatsInput = {
+export type PropertyCreateWithoutAreaInput = {
   id?: string
   name: string
   type: $Enums.PropertyType
   description?: string | null
   address: string
-  city: string
-  district: string
   postalCode?: string | null
   latitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   longitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -677,6 +697,86 @@ export type PropertyCreateWithoutFlatsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedPropertiesInput
+  flats?: Prisma.FlatCreateNestedManyWithoutPropertyInput
+  stays?: Prisma.StayCreateNestedManyWithoutPropertyInput
+}
+
+export type PropertyUncheckedCreateWithoutAreaInput = {
+  id?: string
+  name: string
+  type: $Enums.PropertyType
+  description?: string | null
+  address: string
+  postalCode?: string | null
+  latitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  longitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: $Enums.PropertyStatus
+  createdById: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  flats?: Prisma.FlatUncheckedCreateNestedManyWithoutPropertyInput
+  stays?: Prisma.StayUncheckedCreateNestedManyWithoutPropertyInput
+}
+
+export type PropertyCreateOrConnectWithoutAreaInput = {
+  where: Prisma.PropertyWhereUniqueInput
+  create: Prisma.XOR<Prisma.PropertyCreateWithoutAreaInput, Prisma.PropertyUncheckedCreateWithoutAreaInput>
+}
+
+export type PropertyCreateManyAreaInputEnvelope = {
+  data: Prisma.PropertyCreateManyAreaInput | Prisma.PropertyCreateManyAreaInput[]
+  skipDuplicates?: boolean
+}
+
+export type PropertyUpsertWithWhereUniqueWithoutAreaInput = {
+  where: Prisma.PropertyWhereUniqueInput
+  update: Prisma.XOR<Prisma.PropertyUpdateWithoutAreaInput, Prisma.PropertyUncheckedUpdateWithoutAreaInput>
+  create: Prisma.XOR<Prisma.PropertyCreateWithoutAreaInput, Prisma.PropertyUncheckedCreateWithoutAreaInput>
+}
+
+export type PropertyUpdateWithWhereUniqueWithoutAreaInput = {
+  where: Prisma.PropertyWhereUniqueInput
+  data: Prisma.XOR<Prisma.PropertyUpdateWithoutAreaInput, Prisma.PropertyUncheckedUpdateWithoutAreaInput>
+}
+
+export type PropertyUpdateManyWithWhereWithoutAreaInput = {
+  where: Prisma.PropertyScalarWhereInput
+  data: Prisma.XOR<Prisma.PropertyUpdateManyMutationInput, Prisma.PropertyUncheckedUpdateManyWithoutAreaInput>
+}
+
+export type PropertyScalarWhereInput = {
+  AND?: Prisma.PropertyScalarWhereInput | Prisma.PropertyScalarWhereInput[]
+  OR?: Prisma.PropertyScalarWhereInput[]
+  NOT?: Prisma.PropertyScalarWhereInput | Prisma.PropertyScalarWhereInput[]
+  id?: Prisma.StringFilter<"Property"> | string
+  name?: Prisma.StringFilter<"Property"> | string
+  type?: Prisma.EnumPropertyTypeFilter<"Property"> | $Enums.PropertyType
+  description?: Prisma.StringNullableFilter<"Property"> | string | null
+  address?: Prisma.StringFilter<"Property"> | string
+  postalCode?: Prisma.StringNullableFilter<"Property"> | string | null
+  areaId?: Prisma.StringFilter<"Property"> | string
+  latitude?: Prisma.DecimalNullableFilter<"Property"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  longitude?: Prisma.DecimalNullableFilter<"Property"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: Prisma.EnumPropertyStatusFilter<"Property"> | $Enums.PropertyStatus
+  createdById?: Prisma.StringFilter<"Property"> | string
+  createdAt?: Prisma.DateTimeFilter<"Property"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Property"> | Date | string
+}
+
+export type PropertyCreateWithoutFlatsInput = {
+  id?: string
+  name: string
+  type: $Enums.PropertyType
+  description?: string | null
+  address: string
+  postalCode?: string | null
+  latitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  longitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: $Enums.PropertyStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdBy: Prisma.UserCreateNestedOneWithoutCreatedPropertiesInput
+  area: Prisma.AreaCreateNestedOneWithoutPropertiesInput
   stays?: Prisma.StayCreateNestedManyWithoutPropertyInput
 }
 
@@ -686,9 +786,8 @@ export type PropertyUncheckedCreateWithoutFlatsInput = {
   type: $Enums.PropertyType
   description?: string | null
   address: string
-  city: string
-  district: string
   postalCode?: string | null
+  areaId: string
   latitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   longitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.PropertyStatus
@@ -720,8 +819,6 @@ export type PropertyUpdateWithoutFlatsInput = {
   type?: Prisma.EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  district?: Prisma.StringFieldUpdateOperationsInput | string
   postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   longitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -729,6 +826,7 @@ export type PropertyUpdateWithoutFlatsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedPropertiesNestedInput
+  area?: Prisma.AreaUpdateOneRequiredWithoutPropertiesNestedInput
   stays?: Prisma.StayUpdateManyWithoutPropertyNestedInput
 }
 
@@ -738,9 +836,8 @@ export type PropertyUncheckedUpdateWithoutFlatsInput = {
   type?: Prisma.EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  district?: Prisma.StringFieldUpdateOperationsInput | string
   postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  areaId?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   longitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
@@ -756,8 +853,6 @@ export type PropertyCreateWithoutStaysInput = {
   type: $Enums.PropertyType
   description?: string | null
   address: string
-  city: string
-  district: string
   postalCode?: string | null
   latitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   longitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -765,6 +860,7 @@ export type PropertyCreateWithoutStaysInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedPropertiesInput
+  area: Prisma.AreaCreateNestedOneWithoutPropertiesInput
   flats?: Prisma.FlatCreateNestedManyWithoutPropertyInput
 }
 
@@ -774,9 +870,8 @@ export type PropertyUncheckedCreateWithoutStaysInput = {
   type: $Enums.PropertyType
   description?: string | null
   address: string
-  city: string
-  district: string
   postalCode?: string | null
+  areaId: string
   latitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   longitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.PropertyStatus
@@ -808,8 +903,6 @@ export type PropertyUpdateWithoutStaysInput = {
   type?: Prisma.EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  district?: Prisma.StringFieldUpdateOperationsInput | string
   postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   longitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -817,6 +910,7 @@ export type PropertyUpdateWithoutStaysInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedPropertiesNestedInput
+  area?: Prisma.AreaUpdateOneRequiredWithoutPropertiesNestedInput
   flats?: Prisma.FlatUpdateManyWithoutPropertyNestedInput
 }
 
@@ -826,9 +920,8 @@ export type PropertyUncheckedUpdateWithoutStaysInput = {
   type?: Prisma.EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  district?: Prisma.StringFieldUpdateOperationsInput | string
   postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  areaId?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   longitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
@@ -844,14 +937,13 @@ export type PropertyCreateWithoutCreatedByInput = {
   type: $Enums.PropertyType
   description?: string | null
   address: string
-  city: string
-  district: string
   postalCode?: string | null
   latitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   longitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.PropertyStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  area: Prisma.AreaCreateNestedOneWithoutPropertiesInput
   flats?: Prisma.FlatCreateNestedManyWithoutPropertyInput
   stays?: Prisma.StayCreateNestedManyWithoutPropertyInput
 }
@@ -862,9 +954,8 @@ export type PropertyUncheckedCreateWithoutCreatedByInput = {
   type: $Enums.PropertyType
   description?: string | null
   address: string
-  city: string
-  district: string
   postalCode?: string | null
+  areaId: string
   latitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   longitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.PropertyStatus
@@ -900,24 +991,68 @@ export type PropertyUpdateManyWithWhereWithoutCreatedByInput = {
   data: Prisma.XOR<Prisma.PropertyUpdateManyMutationInput, Prisma.PropertyUncheckedUpdateManyWithoutCreatedByInput>
 }
 
-export type PropertyScalarWhereInput = {
-  AND?: Prisma.PropertyScalarWhereInput | Prisma.PropertyScalarWhereInput[]
-  OR?: Prisma.PropertyScalarWhereInput[]
-  NOT?: Prisma.PropertyScalarWhereInput | Prisma.PropertyScalarWhereInput[]
-  id?: Prisma.StringFilter<"Property"> | string
-  name?: Prisma.StringFilter<"Property"> | string
-  type?: Prisma.EnumPropertyTypeFilter<"Property"> | $Enums.PropertyType
-  description?: Prisma.StringNullableFilter<"Property"> | string | null
-  address?: Prisma.StringFilter<"Property"> | string
-  city?: Prisma.StringFilter<"Property"> | string
-  district?: Prisma.StringFilter<"Property"> | string
-  postalCode?: Prisma.StringNullableFilter<"Property"> | string | null
-  latitude?: Prisma.DecimalNullableFilter<"Property"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  longitude?: Prisma.DecimalNullableFilter<"Property"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  status?: Prisma.EnumPropertyStatusFilter<"Property"> | $Enums.PropertyStatus
-  createdById?: Prisma.StringFilter<"Property"> | string
-  createdAt?: Prisma.DateTimeFilter<"Property"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Property"> | Date | string
+export type PropertyCreateManyAreaInput = {
+  id?: string
+  name: string
+  type: $Enums.PropertyType
+  description?: string | null
+  address: string
+  postalCode?: string | null
+  latitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  longitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: $Enums.PropertyStatus
+  createdById: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type PropertyUpdateWithoutAreaInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  longitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: Prisma.EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedPropertiesNestedInput
+  flats?: Prisma.FlatUpdateManyWithoutPropertyNestedInput
+  stays?: Prisma.StayUpdateManyWithoutPropertyNestedInput
+}
+
+export type PropertyUncheckedUpdateWithoutAreaInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  longitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: Prisma.EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  flats?: Prisma.FlatUncheckedUpdateManyWithoutPropertyNestedInput
+  stays?: Prisma.StayUncheckedUpdateManyWithoutPropertyNestedInput
+}
+
+export type PropertyUncheckedUpdateManyWithoutAreaInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  longitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: Prisma.EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PropertyCreateManyCreatedByInput = {
@@ -926,9 +1061,8 @@ export type PropertyCreateManyCreatedByInput = {
   type: $Enums.PropertyType
   description?: string | null
   address: string
-  city: string
-  district: string
   postalCode?: string | null
+  areaId: string
   latitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   longitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.PropertyStatus
@@ -942,14 +1076,13 @@ export type PropertyUpdateWithoutCreatedByInput = {
   type?: Prisma.EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  district?: Prisma.StringFieldUpdateOperationsInput | string
   postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   longitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  area?: Prisma.AreaUpdateOneRequiredWithoutPropertiesNestedInput
   flats?: Prisma.FlatUpdateManyWithoutPropertyNestedInput
   stays?: Prisma.StayUpdateManyWithoutPropertyNestedInput
 }
@@ -960,9 +1093,8 @@ export type PropertyUncheckedUpdateWithoutCreatedByInput = {
   type?: Prisma.EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  district?: Prisma.StringFieldUpdateOperationsInput | string
   postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  areaId?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   longitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
@@ -978,9 +1110,8 @@ export type PropertyUncheckedUpdateManyWithoutCreatedByInput = {
   type?: Prisma.EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
-  district?: Prisma.StringFieldUpdateOperationsInput | string
   postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  areaId?: Prisma.StringFieldUpdateOperationsInput | string
   latitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   longitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
@@ -1034,9 +1165,8 @@ export type PropertySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   type?: boolean
   description?: boolean
   address?: boolean
-  city?: boolean
-  district?: boolean
   postalCode?: boolean
+  areaId?: boolean
   latitude?: boolean
   longitude?: boolean
   status?: boolean
@@ -1044,6 +1174,7 @@ export type PropertySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   createdAt?: boolean
   updatedAt?: boolean
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  area?: boolean | Prisma.AreaDefaultArgs<ExtArgs>
   flats?: boolean | Prisma.Property$flatsArgs<ExtArgs>
   stays?: boolean | Prisma.Property$staysArgs<ExtArgs>
   _count?: boolean | Prisma.PropertyCountOutputTypeDefaultArgs<ExtArgs>
@@ -1055,9 +1186,8 @@ export type PropertySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   type?: boolean
   description?: boolean
   address?: boolean
-  city?: boolean
-  district?: boolean
   postalCode?: boolean
+  areaId?: boolean
   latitude?: boolean
   longitude?: boolean
   status?: boolean
@@ -1065,6 +1195,7 @@ export type PropertySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   createdAt?: boolean
   updatedAt?: boolean
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  area?: boolean | Prisma.AreaDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["property"]>
 
 export type PropertySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1073,9 +1204,8 @@ export type PropertySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   type?: boolean
   description?: boolean
   address?: boolean
-  city?: boolean
-  district?: boolean
   postalCode?: boolean
+  areaId?: boolean
   latitude?: boolean
   longitude?: boolean
   status?: boolean
@@ -1083,6 +1213,7 @@ export type PropertySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   createdAt?: boolean
   updatedAt?: boolean
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  area?: boolean | Prisma.AreaDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["property"]>
 
 export type PropertySelectScalar = {
@@ -1091,9 +1222,8 @@ export type PropertySelectScalar = {
   type?: boolean
   description?: boolean
   address?: boolean
-  city?: boolean
-  district?: boolean
   postalCode?: boolean
+  areaId?: boolean
   latitude?: boolean
   longitude?: boolean
   status?: boolean
@@ -1102,24 +1232,28 @@ export type PropertySelectScalar = {
   updatedAt?: boolean
 }
 
-export type PropertyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "type" | "description" | "address" | "city" | "district" | "postalCode" | "latitude" | "longitude" | "status" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["property"]>
+export type PropertyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "type" | "description" | "address" | "postalCode" | "areaId" | "latitude" | "longitude" | "status" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["property"]>
 export type PropertyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  area?: boolean | Prisma.AreaDefaultArgs<ExtArgs>
   flats?: boolean | Prisma.Property$flatsArgs<ExtArgs>
   stays?: boolean | Prisma.Property$staysArgs<ExtArgs>
   _count?: boolean | Prisma.PropertyCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PropertyIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  area?: boolean | Prisma.AreaDefaultArgs<ExtArgs>
 }
 export type PropertyIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  area?: boolean | Prisma.AreaDefaultArgs<ExtArgs>
 }
 
 export type $PropertyPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Property"
   objects: {
     createdBy: Prisma.$UserPayload<ExtArgs>
+    area: Prisma.$AreaPayload<ExtArgs>
     flats: Prisma.$FlatPayload<ExtArgs>[]
     stays: Prisma.$StayPayload<ExtArgs>[]
   }
@@ -1129,9 +1263,8 @@ export type $PropertyPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     type: $Enums.PropertyType
     description: string | null
     address: string
-    city: string
-    district: string
     postalCode: string | null
+    areaId: string
     latitude: runtime.Decimal | null
     longitude: runtime.Decimal | null
     status: $Enums.PropertyStatus
@@ -1533,6 +1666,7 @@ readonly fields: PropertyFieldRefs;
 export interface Prisma__PropertyClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  area<T extends Prisma.AreaDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AreaDefaultArgs<ExtArgs>>): Prisma.Prisma__AreaClient<runtime.Types.Result.GetResult<Prisma.$AreaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   flats<T extends Prisma.Property$flatsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Property$flatsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FlatPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   stays<T extends Prisma.Property$staysArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Property$staysArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -1569,9 +1703,8 @@ export interface PropertyFieldRefs {
   readonly type: Prisma.FieldRef<"Property", 'PropertyType'>
   readonly description: Prisma.FieldRef<"Property", 'String'>
   readonly address: Prisma.FieldRef<"Property", 'String'>
-  readonly city: Prisma.FieldRef<"Property", 'String'>
-  readonly district: Prisma.FieldRef<"Property", 'String'>
   readonly postalCode: Prisma.FieldRef<"Property", 'String'>
+  readonly areaId: Prisma.FieldRef<"Property", 'String'>
   readonly latitude: Prisma.FieldRef<"Property", 'Decimal'>
   readonly longitude: Prisma.FieldRef<"Property", 'Decimal'>
   readonly status: Prisma.FieldRef<"Property", 'PropertyStatus'>

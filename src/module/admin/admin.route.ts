@@ -35,4 +35,16 @@ router.patch(
 //     catchAsync(AdminController.deleteUser),
 // );
 
+router.post(
+    "/cities",
+    validateRequest(AdminValidation.createCity),
+    catchAsync(AdminController.createCity),
+);
+
+router.post(
+    "/areas",
+    validateRequest(AdminValidation.createArea),
+    catchAsync(AdminController.createArea),
+);
+
 export const AdminRoutes = router;

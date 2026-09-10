@@ -59,10 +59,34 @@ const deleteUser = async (req: Request, res: Response) => {
     });
 };
 
+const createCity = async (req: Request, res: Response) => {
+    const result = await AdminService.createCity(req.body);
+
+    sendResponse(res, {
+        statusCode: httpStatus.CREATED,
+        success: true,
+        message: "City created successfully",
+        data: result,
+    });
+};
+
+const createArea = async (req: Request, res: Response) => {
+    const result = await AdminService.createArea(req.body);
+
+    sendResponse(res, {
+        statusCode: httpStatus.CREATED,
+        success: true,
+        message: "Area created successfully",
+        data: result,
+    });
+};
+
 export const AdminController = {
     getAllUsers,
     getUserById,
     updateUserStatus,
     updateUserRole,
     deleteUser,
+    createCity,
+    createArea,
 };
