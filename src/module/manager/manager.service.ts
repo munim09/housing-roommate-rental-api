@@ -1,9 +1,10 @@
+import { ManagerAssignmentStatus } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 
 const getMyAdvertisements = async (managerId: string) => {
     const assignedFlatIds = (
         await prisma.managerAssignment.findMany({
-            where: { managerId, status: "ACTIVE" },
+            where: { managerId, status: ManagerAssignmentStatus.ACTIVE },
             select: { flatId: true },
         })
     ).map((assignment) => assignment.flatId);

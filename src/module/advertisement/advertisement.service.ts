@@ -3,6 +3,9 @@ import {
     AdvertisementCategory,
     AdvertisementStatus,
     AdvertisementTarget,
+    FlatStatus,
+    Role,
+    RoomStatus,
     StayStatus,
 } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
@@ -37,7 +40,7 @@ const assertAdvertiserPermission = async (
     role: string,
     flatId: string,
 ) => {
-    if (role === "OWNER") {
+    if (role === Role.OWNER) {
         const ownership = await prisma.propertyOwnership.findFirst({
             where: { flatId, ownerId: userId, status: "ACTIVE" },
         });
@@ -91,7 +94,7 @@ const createFlatAdvertisement = async (
         throw new AppError(httpStatus.NOT_FOUND, "Flat not found");
     }
 
-    if (flat.status !== "ACTIVE") {
+    if (flat.status !== FlatStatus.ACTIVE) {
         throw new AppError(httpStatus.BAD_REQUEST, "Flat is not active");
     }
 
@@ -183,13 +186,13 @@ const createRoomAdvertisement = async (
         throw new AppError(httpStatus.NOT_FOUND, "Room not found");
     }
 
-    if (room.status !== "ACTIVE") {
+    if (room.status !== RoomStatus.ACTIVE) {
         throw new AppError(httpStatus.BAD_REQUEST, "Room is not active");
     }
 
     const flat = await prisma.flat.findUnique({ where: { id: room.flatId } });
 
-    if (!flat || flat.status !== "ACTIVE") {
+    if (!flat || flat.status !== FlatStatus.ACTIVE) {
         throw new AppError(httpStatus.BAD_REQUEST, "Flat is not active");
     }
 

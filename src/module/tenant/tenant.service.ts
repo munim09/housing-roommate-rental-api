@@ -1,9 +1,16 @@
 import httpStatus from "http-status";
 import {
+    AdvertisementCategory,
+    AdvertisementStatus,
+    ApplicationStatus,
     BillStatus,
+    FlatStatus,
+    InvoiceType,
     Prisma,
     Role,
     StayStatus,
+    StayType,
+    ViewingRequestStatus,
 } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
@@ -30,7 +37,7 @@ const createViewingRequest = async (
         throw new AppError(httpStatus.NOT_FOUND, "Advertisement not found");
     }
 
-    if (advertisement.status !== "PUBLISHED") {
+    if (advertisement.status !== AdvertisementStatus.PUBLISHED) {
         throw new AppError(
             httpStatus.BAD_REQUEST,
             "Advertisement is not available for viewing",
@@ -44,11 +51,17 @@ const createViewingRequest = async (
         );
     }
 
-    if (advertisement.flatId && advertisement.flat?.status !== "ACTIVE") {
+    if (
+        advertisement.flatId &&
+        advertisement.flat?.status !== FlatStatus.ACTIVE
+    ) {
         throw new AppError(httpStatus.BAD_REQUEST, "Flat is not active");
     }
 
-    if (advertisement.roomId && advertisement.room?.status !== "ACTIVE") {
+    if (
+        advertisement.roomId &&
+        advertisement.room?.status !== FlatStatus.ACTIVE
+    ) {
         throw new AppError(httpStatus.BAD_REQUEST, "Room is not active");
     }
 
@@ -288,9 +301,18 @@ const getViewingRequestById = async (
     return viewingRequest;
 };
 
-const REVIEWER_STATUSES = ["APPROVED", "REJECTED", "COMPLETED", "NO_SHOW"];
+const REVIEWER_STATUSES: ViewingRequestStatus[] = [
+    ViewingRequestStatus.APPROVED,
+    ViewingRequestStatus.REJECTED,
+    ViewingRequestStatus.COMPLETED,
+    ViewingRequestStatus.NO_SHOW,
+];
 
-const CLOSED_STATUSES = ["COMPLETED", "NO_SHOW", "CANCELLED"];
+const CLOSED_STATUSES: ViewingRequestStatus[] = [
+    ViewingRequestStatus.CANCELLED,
+    ViewingRequestStatus.COMPLETED,
+    ViewingRequestStatus.NO_SHOW,
+];
 
 const updateViewingRequestStatus = async (
     userId: string,
@@ -311,21 +333,21 @@ const updateViewingRequestStatus = async (
     }
 
     if (role === Role.TENANT) {
-        if (status !== "CANCELLED") {
+        if (status !== ViewingRequestStatus.CANCELLED) {
             throw new AppError(
                 httpStatus.FORBIDDEN,
                 "Tenant can only cancel a viewing request",
             );
         }
 
-        if (existing.status !== "PENDING") {
+        if (existing.status !== ViewingRequestStatus.PENDING) {
             throw new AppError(
                 httpStatus.BAD_REQUEST,
                 "Only pending viewing requests can be cancelled",
             );
         }
     } else {
-        if (!REVIEWER_STATUSES.includes(status)) {
+        if (!REVIEWER_STATUSES.includes(status as ViewingRequestStatus)) {
             throw new AppError(
                 httpStatus.BAD_REQUEST,
                 "Owner/manager can only set status to APPROVED, REJECTED, COMPLETED, or NO_SHOW",
@@ -387,7 +409,9 @@ const updateViewingRequest = async (
     let status = existing.status;
 
     if (payload.status) {
-        if (!REVIEWER_STATUSES.includes(payload.status)) {
+        if (
+            !REVIEWER_STATUSES.includes(payload.status as ViewingRequestStatus)
+        ) {
             throw new AppError(
                 httpStatus.BAD_REQUEST,
                 "Status must be APPROVED, REJECTED, COMPLETED, or NO_SHOW",
@@ -397,7 +421,7 @@ const updateViewingRequest = async (
         status = payload.status;
     }
 
-    if (payload.approvedDate && status !== "APPROVED") {
+    if (payload.approvedDate && status !== ViewingRequestStatus.APPROVED) {
         throw new AppError(
             httpStatus.BAD_REQUEST,
             "approvedDate can only be set when the request is APPROVED",
@@ -443,14 +467,14 @@ const createApplication = async (
         throw new AppError(httpStatus.NOT_FOUND, "Advertisement not found");
     }
 
-    if (advertisement.category !== "RENTAL") {
+    if (advertisement.category !== AdvertisementCategory.RENTAL) {
         throw new AppError(
             httpStatus.BAD_REQUEST,
             "Only rental advertisements can be applied to with this API",
         );
     }
 
-    if (advertisement.status !== "PUBLISHED") {
+    if (advertisement.status !== AdvertisementStatus.PUBLISHED) {
         throw new AppError(
             httpStatus.BAD_REQUEST,
             "Advertisement is not available for application",
@@ -464,11 +488,17 @@ const createApplication = async (
         );
     }
 
-    if (advertisement.flatId && advertisement.flat?.status !== "ACTIVE") {
+    if (
+        advertisement.flatId &&
+        advertisement.flat?.status !== FlatStatus.ACTIVE
+    ) {
         throw new AppError(httpStatus.BAD_REQUEST, "Flat is not active");
     }
 
-    if (advertisement.roomId && advertisement.room?.status !== "ACTIVE") {
+    if (
+        advertisement.roomId &&
+        advertisement.room?.status !== FlatStatus.ACTIVE
+    ) {
         throw new AppError(httpStatus.BAD_REQUEST, "Room is not active");
     }
 
@@ -528,7 +558,9 @@ const createApplication = async (
     const overlappingApplication = await prisma.application.findFirst({
         where: {
             advertisementId: payload.advertisementId,
-            status: { in: ["PENDING", "APPROVED"] },
+            status: {
+                in: [ApplicationStatus.PENDING, ApplicationStatus.APPROVED],
+            },
             AND: [
                 {
                     requestedStartDate: {
@@ -553,7 +585,13 @@ const createApplication = async (
     }
 
     const stayConflictWhere: Prisma.StayWhereInput = {
-        status: { in: ["WAITING_FOR_PAYMENT", "CONFIRMED", "ACTIVE"] },
+        status: {
+            in: [
+                StayStatus.WAITING_FOR_PAYMENT,
+                StayStatus.CONFIRMED,
+                StayStatus.ACTIVE,
+            ],
+        },
         startDate: { lte: payload.requestedEndDate },
         endDate: { gte: payload.requestedStartDate },
     };
@@ -682,13 +720,13 @@ const calculateBillingPeriod = (
     monthlyRent: number,
 ) => {
     const billingEnd = new Date(startDate);
+    billingEnd.setDate(billingEnd.getDate() - 1);
     billingEnd.setMonth(billingEnd.getMonth() + 1);
 
     const finalEnd = billingEnd > endDate ? endDate : billingEnd;
 
-    const billedDays = Math.round(
-        (finalEnd.getTime() - startDate.getTime()) / MS_PER_DAY,
-    );
+    const billedDays =
+        Math.round((finalEnd.getTime() - startDate.getTime()) / MS_PER_DAY) + 1;
 
     const amount = Number(
         ((monthlyRent / 30) * Math.max(billedDays, 1)).toFixed(2),
@@ -705,10 +743,10 @@ const updateApplication = async (
     userId: string,
     role: Role,
     applicationId: string,
-    status: string,
+    status: ApplicationStatus,
 ) => {
     if (role === Role.TENANT) {
-        if (status !== "WITHDRAWN") {
+        if (status !== ApplicationStatus.WITHDRAWN) {
             throw new AppError(
                 httpStatus.FORBIDDEN,
                 "Tenant can only withdraw applications",
@@ -724,10 +762,10 @@ const updateApplication = async (
             throw new AppError(httpStatus.NOT_FOUND, "Application not found");
         }
 
-        if (application.status === "APPROVED") {
+        if (application.status === ApplicationStatus.APPROVED) {
             if (
                 !application.stay ||
-                application.stay.status !== "WAITING_FOR_PAYMENT"
+                application.stay.status !== StayStatus.WAITING_FOR_PAYMENT
             ) {
                 throw new AppError(
                     httpStatus.BAD_REQUEST,
@@ -753,7 +791,7 @@ const updateApplication = async (
                 where: { id: application.stay.id },
                 data: { status: StayStatus.CANCELLED },
             });
-        } else if (application.status !== "PENDING") {
+        } else if (application.status !== ApplicationStatus.PENDING) {
             throw new AppError(
                 httpStatus.BAD_REQUEST,
                 "Only pending or approved (waiting for payment) applications can be withdrawn",
@@ -762,7 +800,7 @@ const updateApplication = async (
 
         return prisma.application.update({
             where: { id: applicationId },
-            data: { status: "WITHDRAWN" },
+            data: { status: ApplicationStatus.WITHDRAWN },
             select: {
                 id: true,
                 type: true,
@@ -775,7 +813,10 @@ const updateApplication = async (
         });
     }
 
-    if (!["APPROVED", "REJECTED"].includes(status)) {
+    if (
+        status != ApplicationStatus.APPROVED &&
+        status != ApplicationStatus.REJECTED
+    ) {
         throw new AppError(
             httpStatus.FORBIDDEN,
             "Owner/manager can only approve or reject applications",
@@ -788,7 +829,7 @@ const updateApplication = async (
         applicationId,
     );
 
-    if (application.status !== "PENDING") {
+    if (application.status !== ApplicationStatus.PENDING) {
         throw new AppError(
             httpStatus.BAD_REQUEST,
             "Only pending applications can be reviewed",
@@ -815,7 +856,7 @@ const updateApplication = async (
             },
         });
 
-        if (status === "APPROVED" && !application.stay) {
+        if (status === ApplicationStatus.APPROVED && !application.stay) {
             const flatId =
                 application.advertisement.flatId ??
                 application.advertisement.room?.flatId;
@@ -838,8 +879,8 @@ const updateApplication = async (
                     propertyId: flat.propertyId,
                     flatId: flatId!,
                     roomId: application.advertisement.roomId || null,
-                    type: "PRIMARY",
-                    status: "WAITING_FOR_PAYMENT",
+                    type: StayType.PRIMARY,
+                    status: StayStatus.WAITING_FOR_PAYMENT,
                     startDate: application.requestedStartDate,
                     endDate: application.requestedEndDate,
                     monthlyRent: application.advertisement.monthlyRent,
@@ -857,12 +898,12 @@ const updateApplication = async (
                     stayId: stay.id,
                     payerId: application.applicantId,
                     receiverId: application.advertisement.createdById,
-                    type: "RENT",
+                    type: InvoiceType.RENT,
                     amount: new Prisma.Decimal(amount),
                     billingPeriodStart: billingStart,
                     billingPeriodEnd: billingEnd,
                     // dueDate: billingEnd,
-                    status: "PENDING",
+                    status: BillStatus.PENDING,
                     description: "First rent installment",
                 },
             });

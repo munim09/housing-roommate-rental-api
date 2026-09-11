@@ -8,14 +8,27 @@ const createViewingRequestValidation = z.object({
 
 const getViewingRequestsValidation = z.object({
     status: z
-        .enum(["PENDING", "APPROVED", "REJECTED", "CANCELLED", "COMPLETED", "NO_SHOW"])
+        .enum([
+            "PENDING",
+            "APPROVED",
+            "REJECTED",
+            "CANCELLED",
+            "COMPLETED",
+            "NO_SHOW",
+        ])
         .optional(),
     page: z.coerce.number().int().min(1).default(1),
     limit: z.coerce.number().int().min(1).max(100).default(10),
 });
 
 const updateViewingRequestStatusValidation = z.object({
-    status: z.enum(["APPROVED", "REJECTED", "COMPLETED", "NO_SHOW", "CANCELLED"]),
+    status: z.enum([
+        "APPROVED",
+        "REJECTED",
+        "COMPLETED",
+        "NO_SHOW",
+        "CANCELLED",
+    ]),
 });
 
 const updateViewingRequestValidation = z
@@ -29,19 +42,24 @@ const updateViewingRequestValidation = z
             .max(500, "Note must be at most 500 characters")
             .optional(),
     })
-    .refine(
-        (data) => data.status || data.approvedDate || data.noteByReviewer,
-        {
-            message:
-                "At least one of status, approvedDate, or noteByReviewer must be provided",
-        },
-    );
+    .refine((data) => data.status || data.approvedDate || data.noteByReviewer, {
+        message:
+            "At least one of status, approvedDate, or noteByReviewer must be provided",
+    });
+
+const dateOnly = z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be in YYYY-MM-DD format")
+    .refine((value) => !isNaN(Date.parse(value)), {
+        message: "Invalid date",
+    })
+    .transform((value) => new Date(`${value}T00:00:00.000Z`));
 
 const createApplicationValidation = z
     .object({
         advertisementId: z.string().uuid("Invalid advertisement id"),
-        requestedStartDate: z.coerce.date("Start date is required"),
-        requestedEndDate: z.coerce.date("End date is required"),
+        requestedStartDate: dateOnly,
+        requestedEndDate: dateOnly,
         note: z
             .string()
             .max(500, "Note must be at most 500 characters")

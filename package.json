@@ -29,11 +29,13 @@
     "dependencies": {
         "@prisma/adapter-pg": "^7.8.0",
         "@prisma/client": "^7.8.0",
+        "@types/date-fns": "^2.5.3",
         "axios": "^1.18.1",
         "bcryptjs": "^3.0.3",
         "cloudinary": "^2.11.0",
         "cookie-parser": "^1.4.7",
         "cors": "^2.8.6",
+        "date-fns": "^4.4.0",
         "dotenv": "^17.4.2",
         "express": "^5.2.1",
         "http-status": "^2.1.0",

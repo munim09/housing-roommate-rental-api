@@ -24,7 +24,7 @@ model Invoice {
   payerId    String
   receiverId String
 
-  type InvoiceType
+  type InvoiceType @default(RENT)
 
   amount Decimal @db.Decimal(12, 2)
 

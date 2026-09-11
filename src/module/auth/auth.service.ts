@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import httpStatus from "http-status";
 import { SignOptions } from "jsonwebtoken";
-import { Role } from "../../../generated/prisma/enums";
+import { Role, UserStatus } from "../../../generated/prisma/enums";
 import config from "../../config";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
@@ -40,14 +40,14 @@ const login = async (payload: { email: string; password: string }) => {
         );
     }
 
-    if (user.status === "SUSPENDED") {
+    if (user.status === UserStatus.SUSPENDED) {
         throw new AppError(
             httpStatus.FORBIDDEN,
             "Your account has been suspended. Please contact support.",
         );
     }
 
-    if (user.status === "REJECTED") {
+    if (user.status === UserStatus.REJECTED) {
         throw new AppError(
             httpStatus.FORBIDDEN,
             "Your account has been rejected. Please contact support.",
@@ -178,11 +178,11 @@ const verify = async (payload: { email: string; otp: string }) => {
             data: { emailVerified: true },
         });
 
-        if (user.role === "OWNER") {
+        if (user.role === Role.OWNER) {
             await tx.ownerProfile.create({ data: { userId: user.id } });
-        } else if (user.role === "MANAGER") {
+        } else if (user.role === Role.MANAGER) {
             await tx.managerProfile.create({ data: { userId: user.id } });
-        } else if (user.role === "TENANT") {
+        } else if (user.role === Role.TENANT) {
             await tx.tenantProfile.create({ data: { userId: user.id } });
         }
     });
@@ -204,7 +204,7 @@ const updateProfile = async (
         throw new AppError(httpStatus.NOT_FOUND, "User not found");
     }
 
-    if (user.role === "OWNER") {
+    if (user.role == Role.OWNER) {
         await prisma.ownerProfile.update({
             where: { userId },
             data: {
@@ -213,7 +213,7 @@ const updateProfile = async (
                 occupation: payload.occupation,
             },
         });
-    } else if (user.role === "MANAGER") {
+    } else if (user.role === Role.MANAGER) {
         await prisma.managerProfile.update({
             where: { userId },
             data: {
@@ -222,7 +222,7 @@ const updateProfile = async (
                 occupation: payload.occupation,
             },
         });
-    } else if (user.role === "TENANT") {
+    } else if (user.role === Role.TENANT) {
         await prisma.$transaction(async (tx) => {
             await tx.tenantProfile.update({
                 where: { userId },

@@ -1,5 +1,10 @@
 import httpStatus from "http-status";
-import { AdvertisementStatus } from "../../../generated/prisma/enums";
+import {
+    AdvertisementStatus,
+    ManagerAssignmentStatus,
+    Role,
+    UserStatus,
+} from "../../../generated/prisma/enums";
 import {
     deleteImageFromCloudinary,
     uploadImageToCloudinary,
@@ -604,11 +609,11 @@ const assignManager = async (
         where: { id: payload.managerId },
     });
 
-    if (!manager || manager.role !== "MANAGER") {
+    if (!manager || manager.role !== Role.MANAGER) {
         throw new AppError(httpStatus.BAD_REQUEST, "Manager does not exist");
     }
 
-    if (manager.status !== "ACTIVE") {
+    if (manager.status !== UserStatus.ACTIVE) {
         throw new AppError(
             httpStatus.BAD_REQUEST,
             "Manager account is not active",
@@ -617,15 +622,18 @@ const assignManager = async (
 
     const assignment = await prisma.$transaction(async (tx) => {
         await tx.managerAssignment.updateMany({
-            where: { flatId, status: "ACTIVE" },
-            data: { status: "ENDED", endedAt: new Date() },
+            where: { flatId, status: ManagerAssignmentStatus.ACTIVE },
+            data: {
+                status: ManagerAssignmentStatus.ENDED,
+                endedAt: new Date(),
+            },
         });
 
         return tx.managerAssignment.create({
             data: {
                 flatId,
                 managerId: manager.id,
-                status: "ACTIVE",
+                status: ManagerAssignmentStatus.ACTIVE,
             },
         });
     });

@@ -1,6 +1,12 @@
 import axios from "axios";
 import httpStatus from "http-status";
-import { PaymentStatus, Prisma } from "../../../generated/prisma/client";
+import {
+    BillStatus,
+    InvoiceType,
+    PaymentStatus,
+    Prisma,
+    StayStatus,
+} from "../../../generated/prisma/client";
 import config from "../../config";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
@@ -18,6 +24,73 @@ const ACTIVE_PAYMENT_STATUSES: PaymentStatus[] = [
     PaymentStatus.PENDING,
     PaymentStatus.PROCESSING,
 ];
+
+const MS_PER_DAY = 1000 * 60 * 60 * 24;
+
+const addOneMonth = (date: Date): Date => {
+    const result = new Date(date);
+    result.setDate(result.getDate() - 1);
+    result.setMonth(result.getMonth() + 1);
+    return result;
+};
+
+interface RentInvoiceData {
+    billingPeriodStart: Date;
+    billingPeriodEnd: Date;
+    amount: number;
+    dueDate: Date;
+}
+
+const buildRemainingRentInvoices = (
+    stay: {
+        startDate: Date;
+        endDate: Date;
+        monthlyRent: Prisma.Decimal | number;
+    },
+    existingBillingStarts: Set<string>,
+): RentInvoiceData[] => {
+    const monthlyRent = Number(stay.monthlyRent);
+    const invoices: RentInvoiceData[] = [];
+
+    let cursor = new Date(stay.startDate);
+    let isFirst = true;
+
+    while (cursor <= stay.endDate) {
+        const blockEnd = addOneMonth(cursor);
+        const finalEnd = blockEnd > stay.endDate ? stay.endDate : blockEnd;
+
+        const billedDays =
+            Math.round((finalEnd.getTime() - cursor.getTime()) / MS_PER_DAY) +
+            1;
+
+        const amount = Number(
+            ((monthlyRent / 30) * Math.max(billedDays, 1)).toFixed(2),
+        );
+
+        if (!isFirst && !existingBillingStarts.has(cursor.toISOString())) {
+            const dueDate = new Date(cursor);
+            dueDate.setDate(dueDate.getDate() - 1);
+
+            invoices.push({
+                billingPeriodStart: cursor,
+                billingPeriodEnd: finalEnd,
+                amount,
+                dueDate,
+            });
+        }
+
+        isFirst = false;
+
+        if (finalEnd >= stay.endDate) {
+            break;
+        }
+
+        cursor = finalEnd;
+        cursor.setDate(cursor.getDate() + 1);
+    }
+
+    return invoices;
+};
 
 const markPaymentSuccess = async (paymentId: string, gatewayResponse: any) => {
     return prisma.$transaction(async (tx) => {
@@ -48,19 +121,69 @@ const markPaymentSuccess = async (paymentId: string, gatewayResponse: any) => {
                 where: { id: current.invoiceId },
             });
 
-            if (invoice && invoice.status !== "PAID") {
-                await tx.invoice.update({
-                    where: { id: invoice.id },
-                    data: { status: "PAID" },
-                });
-
-                if (invoice.type === "RENT" && invoice.stayId) {
-                    await tx.stay.update({
-                        where: { id: invoice.stayId },
-                        data: { status: "CONFIRMED" },
+            await prisma.$transaction(async (tx) => {
+                if (invoice && invoice.status !== BillStatus.PAID) {
+                    await tx.invoice.update({
+                        where: { id: invoice.id },
+                        data: { status: BillStatus.PAID },
                     });
+
+                    if (invoice.type === InvoiceType.RENT && invoice.stayId) {
+                        const stay = await tx.stay.findFirst({
+                            where: {
+                                id: invoice.stayId,
+                                status: StayStatus.WAITING_FOR_PAYMENT,
+                            },
+                        });
+
+                        if (stay) {
+                            await tx.stay.update({
+                                where: { id: stay.id },
+                                data: { status: StayStatus.CONFIRMED },
+                            });
+
+                            const existingInvoices = await tx.invoice.findMany({
+                                where: { stayId: stay.id },
+                                select: {
+                                    billingPeriodStart: true,
+                                },
+                            });
+
+                            const existingBillingStarts = new Set(
+                                existingInvoices.map((existing) =>
+                                    existing.billingPeriodStart.toISOString(),
+                                ),
+                            );
+
+                            const rentInvoices = buildRemainingRentInvoices(
+                                stay,
+                                existingBillingStarts,
+                            );
+
+                            if (rentInvoices.length > 0) {
+                                await tx.invoice.createMany({
+                                    data: rentInvoices.map((rentInvoice) => ({
+                                        stayId: stay.id,
+                                        payerId: invoice.payerId,
+                                        receiverId: invoice.receiverId,
+                                        type: InvoiceType.RENT,
+                                        amount: new Prisma.Decimal(
+                                            rentInvoice.amount,
+                                        ),
+                                        billingPeriodStart:
+                                            rentInvoice.billingPeriodStart,
+                                        billingPeriodEnd:
+                                            rentInvoice.billingPeriodEnd,
+                                        dueDate: rentInvoice.dueDate,
+                                        status: BillStatus.PENDING,
+                                        description: "Rent installment",
+                                    })),
+                                });
+                            }
+                        }
+                    }
                 }
-            }
+            });
         }
 
         return updated;
@@ -92,7 +215,7 @@ const initiatePayment = async (tenantId: string, invoiceId: string) => {
         throw new AppError(httpStatus.NOT_FOUND, "Invoice not found");
     }
 
-    if (invoice.status !== "PENDING") {
+    if (invoice.status !== BillStatus.PENDING) {
         throw new AppError(httpStatus.BAD_REQUEST, "Invoice is not payable");
     }
 
