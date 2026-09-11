@@ -6,8 +6,7 @@ import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
 import { IPaymentQuery } from "./payment.interface";
 
-const SSL_PAYMENT_API =
-    "https://sandbox.sslcommerz.com/gwprocess/v4/api.php";
+const SSL_PAYMENT_API = "https://sandbox.sslcommerz.com/gwprocess/v4/api.php";
 
 const SSL_VALIDATION_API =
     "https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php";
@@ -94,10 +93,7 @@ const initiatePayment = async (tenantId: string, invoiceId: string) => {
     }
 
     if (invoice.status !== "PENDING") {
-        throw new AppError(
-            httpStatus.BAD_REQUEST,
-            "Invoice is not payable",
-        );
+        throw new AppError(httpStatus.BAD_REQUEST, "Invoice is not payable");
     }
 
     const existing = await prisma.payment.findFirst({
@@ -140,6 +136,7 @@ const initiatePayment = async (tenantId: string, invoiceId: string) => {
         cus_postcode: "1207",
         cus_country: "Bangladesh",
         cus_phone: invoice.payer.phone || "01700000000",
+        cus_fax: "01700000000",
     };
 
     const response = await axios.post(SSL_PAYMENT_API, paymentData, {
@@ -273,10 +270,7 @@ const checkPayment = async (tranId: string) => {
     }
 
     if (transaction.status === "PROCESSING") {
-        throw new AppError(
-            httpStatus.BAD_REQUEST,
-            "Transaction is in process",
-        );
+        throw new AppError(httpStatus.BAD_REQUEST, "Transaction is in process");
     }
 
     return markPaymentFailed(
