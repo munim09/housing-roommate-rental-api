@@ -9,6 +9,7 @@ import { AdminRoutes } from "./module/admin/admin.route";
 import { AdvertisementRoutes } from "./module/advertisement/advertisement.route";
 import { ManagerRoutes } from "./module/manager/manager.route";
 import { OwnerRoutes } from "./module/owner/owner.route";
+import { PaymentRoutes } from "./module/payment/payment.route";
 import { PublicRoutes } from "./module/public/public.route";
 import { TenantRoutes } from "./module/tenant/tenant.route";
 import { catchAsync } from "./utils/catchAsync";
@@ -50,6 +51,7 @@ app.use("/api/v1/owner", OwnerRoutes);
 app.use("/api/v1/manager", ManagerRoutes);
 app.use("/api/v1/advertisements", AdvertisementRoutes);
 app.use("/api/v1/tenant", TenantRoutes);
+app.use("/api/v1/payments", PaymentRoutes);
 app.use("/api/v1", PublicRoutes);
 
 app.use(notFound);

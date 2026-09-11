@@ -375,7 +375,7 @@ export type InvoiceCreateInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   billingPeriodStart: Date | string
   billingPeriodEnd: Date | string
-  dueDate: Date | string
+  dueDate?: Date | string
   status?: $Enums.BillStatus
   description?: string | null
   createdAt?: Date | string
@@ -395,7 +395,7 @@ export type InvoiceUncheckedCreateInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   billingPeriodStart: Date | string
   billingPeriodEnd: Date | string
-  dueDate: Date | string
+  dueDate?: Date | string
   status?: $Enums.BillStatus
   description?: string | null
   createdAt?: Date | string
@@ -446,7 +446,7 @@ export type InvoiceCreateManyInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   billingPeriodStart: Date | string
   billingPeriodEnd: Date | string
-  dueDate: Date | string
+  dueDate?: Date | string
   status?: $Enums.BillStatus
   description?: string | null
   createdAt?: Date | string
@@ -709,7 +709,7 @@ export type InvoiceCreateWithoutPaymentsInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   billingPeriodStart: Date | string
   billingPeriodEnd: Date | string
-  dueDate: Date | string
+  dueDate?: Date | string
   status?: $Enums.BillStatus
   description?: string | null
   createdAt?: Date | string
@@ -728,7 +728,7 @@ export type InvoiceUncheckedCreateWithoutPaymentsInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   billingPeriodStart: Date | string
   billingPeriodEnd: Date | string
-  dueDate: Date | string
+  dueDate?: Date | string
   status?: $Enums.BillStatus
   description?: string | null
   createdAt?: Date | string
@@ -789,7 +789,7 @@ export type InvoiceCreateWithoutStayInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   billingPeriodStart: Date | string
   billingPeriodEnd: Date | string
-  dueDate: Date | string
+  dueDate?: Date | string
   status?: $Enums.BillStatus
   description?: string | null
   createdAt?: Date | string
@@ -807,7 +807,7 @@ export type InvoiceUncheckedCreateWithoutStayInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   billingPeriodStart: Date | string
   billingPeriodEnd: Date | string
-  dueDate: Date | string
+  dueDate?: Date | string
   status?: $Enums.BillStatus
   description?: string | null
   createdAt?: Date | string
@@ -866,7 +866,7 @@ export type InvoiceCreateWithoutPayerInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   billingPeriodStart: Date | string
   billingPeriodEnd: Date | string
-  dueDate: Date | string
+  dueDate?: Date | string
   status?: $Enums.BillStatus
   description?: string | null
   createdAt?: Date | string
@@ -884,7 +884,7 @@ export type InvoiceUncheckedCreateWithoutPayerInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   billingPeriodStart: Date | string
   billingPeriodEnd: Date | string
-  dueDate: Date | string
+  dueDate?: Date | string
   status?: $Enums.BillStatus
   description?: string | null
   createdAt?: Date | string
@@ -908,7 +908,7 @@ export type InvoiceCreateWithoutReceiverInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   billingPeriodStart: Date | string
   billingPeriodEnd: Date | string
-  dueDate: Date | string
+  dueDate?: Date | string
   status?: $Enums.BillStatus
   description?: string | null
   createdAt?: Date | string
@@ -926,7 +926,7 @@ export type InvoiceUncheckedCreateWithoutReceiverInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   billingPeriodStart: Date | string
   billingPeriodEnd: Date | string
-  dueDate: Date | string
+  dueDate?: Date | string
   status?: $Enums.BillStatus
   description?: string | null
   createdAt?: Date | string
@@ -984,7 +984,7 @@ export type InvoiceCreateManyStayInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   billingPeriodStart: Date | string
   billingPeriodEnd: Date | string
-  dueDate: Date | string
+  dueDate?: Date | string
   status?: $Enums.BillStatus
   description?: string | null
   createdAt?: Date | string
@@ -1046,7 +1046,7 @@ export type InvoiceCreateManyPayerInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   billingPeriodStart: Date | string
   billingPeriodEnd: Date | string
-  dueDate: Date | string
+  dueDate?: Date | string
   status?: $Enums.BillStatus
   description?: string | null
   createdAt?: Date | string
@@ -1061,7 +1061,7 @@ export type InvoiceCreateManyReceiverInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   billingPeriodStart: Date | string
   billingPeriodEnd: Date | string
-  dueDate: Date | string
+  dueDate?: Date | string
   status?: $Enums.BillStatus
   description?: string | null
   createdAt?: Date | string

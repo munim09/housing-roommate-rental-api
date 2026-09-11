@@ -1,8 +1,9 @@
-import { Prisma, Role } from "../../../generated/prisma/client";
 import httpStatus from "http-status";
+import { Prisma, Role } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
 import {
+    ICreateApplication,
     ICreateViewingRequest,
     IUpdateViewingRequest,
     IViewingRequestQuery,
@@ -406,9 +407,7 @@ const updateViewingRequest = async (
             noteByReviewer: payload.noteByReviewer,
             reviewedById: payload.status ? userId : undefined,
             reviewedAt:
-                payload.status || payload.approvedDate
-                    ? new Date()
-                    : undefined,
+                payload.status || payload.approvedDate ? new Date() : undefined,
         },
         select: {
             id: true,
@@ -423,10 +422,442 @@ const updateViewingRequest = async (
     });
 };
 
+const createApplication = async (
+    tenantId: string,
+    payload: ICreateApplication,
+) => {
+    const advertisement = await prisma.advertisement.findUnique({
+        where: { id: payload.advertisementId },
+        include: {
+            flat: { select: { id: true, status: true } },
+            room: { select: { id: true, status: true, flatId: true } },
+        },
+    });
+
+    if (!advertisement) {
+        throw new AppError(httpStatus.NOT_FOUND, "Advertisement not found");
+    }
+
+    if (advertisement.category !== "RENTAL") {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Only rental advertisements can be applied to with this API",
+        );
+    }
+
+    if (advertisement.status !== "PUBLISHED") {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Advertisement is not available for application",
+        );
+    }
+
+    if (!advertisement.flatId && !advertisement.roomId) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Advertisement must be linked to a flat or a room",
+        );
+    }
+
+    if (advertisement.flatId && advertisement.flat?.status !== "ACTIVE") {
+        throw new AppError(httpStatus.BAD_REQUEST, "Flat is not active");
+    }
+
+    if (advertisement.roomId && advertisement.room?.status !== "ACTIVE") {
+        throw new AppError(httpStatus.BAD_REQUEST, "Room is not active");
+    }
+
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+
+    if (payload.requestedStartDate < now) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Start date cannot be in the past",
+        );
+    }
+
+    if (payload.requestedEndDate <= payload.requestedStartDate) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "End date must be after start date",
+        );
+    }
+
+    if (
+        advertisement.availableFrom &&
+        payload.requestedStartDate < advertisement.availableFrom
+    ) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Start date is outside the advertisement availability",
+        );
+    }
+
+    if (
+        advertisement.availableTo &&
+        payload.requestedEndDate > advertisement.availableTo
+    ) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "End date is outside the advertisement availability",
+        );
+    }
+
+    const existingTenantApplication = await prisma.application.findFirst({
+        where: {
+            advertisementId: payload.advertisementId,
+            applicantId: tenantId,
+            status: "PENDING",
+        },
+        select: { id: true },
+    });
+
+    if (existingTenantApplication) {
+        throw new AppError(
+            httpStatus.CONFLICT,
+            "You already have a pending application for this advertisement",
+        );
+    }
+
+    const overlappingApplication = await prisma.application.findFirst({
+        where: {
+            advertisementId: payload.advertisementId,
+            status: { in: ["PENDING", "APPROVED"] },
+            AND: [
+                {
+                    requestedStartDate: {
+                        lte: payload.requestedEndDate,
+                    },
+                },
+                {
+                    requestedEndDate: {
+                        gte: payload.requestedStartDate,
+                    },
+                },
+            ],
+        },
+        select: { id: true },
+    });
+
+    if (overlappingApplication) {
+        throw new AppError(
+            httpStatus.CONFLICT,
+            "There is already an application for this advertisement with an overlapping stay period",
+        );
+    }
+
+    const stayConflictWhere: Prisma.StayWhereInput = {
+        status: { in: ["WAITING_FOR_PAYMENT", "CONFIRMED", "ACTIVE"] },
+        startDate: { lte: payload.requestedEndDate },
+        endDate: { gte: payload.requestedStartDate },
+    };
+
+    const advertisementFlatId =
+        advertisement.flatId ?? advertisement.room?.flatId;
+
+    if (advertisement.roomId) {
+        stayConflictWhere.OR = [
+            { flatId: advertisementFlatId, roomId: null },
+            { roomId: advertisement.roomId },
+        ];
+    } else {
+        stayConflictWhere.flatId = advertisementFlatId;
+    }
+
+    const conflictingStay = await prisma.stay.findFirst({
+        where: stayConflictWhere,
+        select: { id: true },
+    });
+
+    if (conflictingStay) {
+        throw new AppError(
+            httpStatus.CONFLICT,
+            "There is already a booking in this period for this property",
+        );
+    }
+
+    const application = await prisma.application.create({
+        data: {
+            advertisementId: payload.advertisementId,
+            applicantId: tenantId,
+            type: "RENTAL",
+            requestedStartDate: payload.requestedStartDate,
+            requestedEndDate: payload.requestedEndDate,
+            note: payload.note || null,
+        },
+        select: {
+            id: true,
+            type: true,
+            status: true,
+            requestedStartDate: true,
+            requestedEndDate: true,
+            note: true,
+            createdAt: true,
+            advertisement: {
+                select: {
+                    id: true,
+                    title: true,
+                    category: true,
+                    target: true,
+                    monthlyRent: true,
+                },
+            },
+        },
+    });
+
+    return application;
+};
+
+const assertApplicationAccess = async (
+    userId: string,
+    role: Role,
+    applicationId: string,
+) => {
+    const application = await prisma.application.findUnique({
+        where: { id: applicationId },
+        include: {
+            advertisement: {
+                include: {
+                    flat: { select: { id: true, propertyId: true } },
+                    room: { select: { id: true, flatId: true } },
+                },
+            },
+            stay: true,
+        },
+    });
+
+    if (!application) {
+        throw new AppError(httpStatus.NOT_FOUND, "Application not found");
+    }
+
+    const flatId =
+        application.advertisement.flatId ??
+        application.advertisement.room?.flatId;
+
+    if (!flatId) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Application is not linked to any flat",
+        );
+    }
+
+    if (role === Role.OWNER) {
+        const ownership = await prisma.propertyOwnership.findFirst({
+            where: { flatId, ownerId: userId, status: "ACTIVE" },
+        });
+
+        if (!ownership && application.advertisement.createdById !== userId) {
+            throw new AppError(
+                httpStatus.FORBIDDEN,
+                "You do not have access to this application",
+            );
+        }
+    } else {
+        const assignment = await prisma.managerAssignment.findFirst({
+            where: { flatId, managerId: userId, status: "ACTIVE" },
+        });
+
+        if (!assignment && application.advertisement.createdById !== userId) {
+            throw new AppError(
+                httpStatus.FORBIDDEN,
+                "You do not have access to this application",
+            );
+        }
+    }
+
+    return application;
+};
+
+const MS_PER_DAY = 1000 * 60 * 60 * 24;
+
+const calculateBillingPeriod = (
+    startDate: Date,
+    endDate: Date,
+    monthlyRent: number,
+) => {
+    const billingEnd = new Date(startDate);
+    billingEnd.setMonth(billingEnd.getMonth() + 1);
+
+    const finalEnd = billingEnd > endDate ? endDate : billingEnd;
+
+    const billedDays = Math.round(
+        (finalEnd.getTime() - startDate.getTime()) / MS_PER_DAY,
+    );
+
+    const amount = Number(
+        ((monthlyRent / 30) * Math.max(billedDays, 1)).toFixed(2),
+    );
+
+    return {
+        billingStart: startDate,
+        billingEnd: finalEnd,
+        amount,
+    };
+};
+
+const updateApplication = async (
+    userId: string,
+    role: Role,
+    applicationId: string,
+    status: string,
+) => {
+    if (role === Role.TENANT) {
+        if (status !== "WITHDRAWN") {
+            throw new AppError(
+                httpStatus.FORBIDDEN,
+                "Tenant can only withdraw applications",
+            );
+        }
+
+        const application = await prisma.application.findFirst({
+            where: { id: applicationId, applicantId: userId },
+            include: { stay: true },
+        });
+
+        if (!application) {
+            throw new AppError(httpStatus.NOT_FOUND, "Application not found");
+        }
+
+        if (application.status === "APPROVED") {
+            if (
+                !application.stay ||
+                application.stay.status !== "WAITING_FOR_PAYMENT"
+            ) {
+                throw new AppError(
+                    httpStatus.BAD_REQUEST,
+                    "Approved applications can only be withdrawn when the stay is waiting for payment",
+                );
+            }
+
+            await prisma.stay.delete({
+                where: { id: application.stay.id },
+            });
+        } else if (application.status !== "PENDING") {
+            throw new AppError(
+                httpStatus.BAD_REQUEST,
+                "Only pending or approved (waiting for payment) applications can be withdrawn",
+            );
+        }
+
+        return prisma.application.update({
+            where: { id: applicationId },
+            data: { status: "WITHDRAWN" },
+            select: {
+                id: true,
+                type: true,
+                status: true,
+                requestedStartDate: true,
+                requestedEndDate: true,
+                note: true,
+                updatedAt: true,
+            },
+        });
+    }
+
+    if (!["APPROVED", "REJECTED"].includes(status)) {
+        throw new AppError(
+            httpStatus.FORBIDDEN,
+            "Owner/manager can only approve or reject applications",
+        );
+    }
+
+    const application = await assertApplicationAccess(
+        userId,
+        role,
+        applicationId,
+    );
+
+    if (application.status !== "PENDING") {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Only pending applications can be reviewed",
+        );
+    }
+
+    return prisma.$transaction(async (tx) => {
+        const updated = await tx.application.update({
+            where: { id: applicationId },
+            data: {
+                status: status as any,
+                reviewedById: userId,
+                reviewedAt: new Date(),
+            },
+            select: {
+                id: true,
+                type: true,
+                status: true,
+                requestedStartDate: true,
+                requestedEndDate: true,
+                note: true,
+                reviewedById: true,
+                reviewedAt: true,
+            },
+        });
+
+        if (status === "APPROVED" && !application.stay) {
+            const flatId =
+                application.advertisement.flatId ??
+                application.advertisement.room?.flatId;
+
+            const flat = await tx.flat.findUnique({
+                where: { id: flatId! },
+                select: { propertyId: true },
+            });
+
+            if (!flat) {
+                throw new AppError(httpStatus.NOT_FOUND, "Flat not found");
+            }
+
+            const monthlyRent = Number(application.advertisement.monthlyRent);
+
+            const stay = await tx.stay.create({
+                data: {
+                    applicationId: application.id,
+                    occupantId: application.applicantId,
+                    propertyId: flat.propertyId,
+                    flatId: flatId!,
+                    roomId: application.advertisement.roomId || null,
+                    type: "PRIMARY",
+                    status: "WAITING_FOR_PAYMENT",
+                    startDate: application.requestedStartDate,
+                    endDate: application.requestedEndDate,
+                    monthlyRent: application.advertisement.monthlyRent,
+                },
+            });
+
+            const { billingStart, billingEnd, amount } = calculateBillingPeriod(
+                application.requestedStartDate,
+                application.requestedEndDate,
+                monthlyRent,
+            );
+
+            await tx.invoice.create({
+                data: {
+                    stayId: stay.id,
+                    payerId: application.applicantId,
+                    receiverId: application.advertisement.createdById,
+                    type: "RENT",
+                    amount: new Prisma.Decimal(amount),
+                    billingPeriodStart: billingStart,
+                    billingPeriodEnd: billingEnd,
+                    // dueDate: billingEnd,
+                    status: "PENDING",
+                    description: "First rent installment",
+                },
+            });
+        }
+
+        return updated;
+    });
+};
+
 export const TenantService = {
     createViewingRequest,
     getViewingRequests,
     getViewingRequestById,
     updateViewingRequestStatus,
     updateViewingRequest,
+    createApplication,
+    updateApplication,
 };

@@ -17,3 +17,10 @@ export interface IUpdateViewingRequest {
     approvedDate?: Date;
     noteByReviewer?: string;
 }
+
+export interface ICreateApplication {
+    advertisementId: string;
+    requestedStartDate: Date;
+    requestedEndDate: Date;
+    note?: string;
+}

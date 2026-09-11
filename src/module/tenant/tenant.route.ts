@@ -42,4 +42,18 @@ router.patch(
     catchAsync(TenantController.updateViewingRequest),
 );
 
+router.post(
+    "/applications",
+    auth(Role.TENANT),
+    validateRequest(TenantValidation.createApplication),
+    catchAsync(TenantController.createApplication),
+);
+
+router.patch(
+    "/applications/:id",
+    auth(Role.TENANT, Role.OWNER, Role.MANAGER),
+    validateRequest(TenantValidation.updateApplication),
+    catchAsync(TenantController.updateApplication),
+);
+
 export const TenantRoutes = router;

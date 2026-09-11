@@ -91,6 +91,7 @@ enum ApplicationStatus {
   WITHDRAWN
   EXPIRED
 }
+// No need EXPIRED
 
 // ------------------------------------------------------------
 // Stay

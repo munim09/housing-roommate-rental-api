@@ -31,7 +31,7 @@ model Invoice {
   billingPeriodStart DateTime
   billingPeriodEnd   DateTime
 
-  dueDate DateTime
+  dueDate DateTime @default(dbgenerated("CURRENT_TIMESTAMP + INTERVAL '12 hours'"))
 
   status BillStatus @default(PENDING)
 

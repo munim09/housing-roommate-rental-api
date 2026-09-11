@@ -80,10 +80,42 @@ const updateViewingRequest = async (req: Request, res: Response) => {
     });
 };
 
+const createApplication = async (req: Request, res: Response) => {
+    const result = await TenantService.createApplication(
+        req.user!.userId,
+        req.body,
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.CREATED,
+        success: true,
+        message: "Application created successfully",
+        data: result,
+    });
+};
+
+const updateApplication = async (req: Request, res: Response) => {
+    const result = await TenantService.updateApplication(
+        req.user!.userId,
+        req.user!.role,
+        req.params.id as string,
+        req.body.status,
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Application updated successfully",
+        data: result,
+    });
+};
+
 export const TenantController = {
     createViewingRequest,
     getViewingRequests,
     getViewingRequestById,
     updateViewingRequestStatus,
     updateViewingRequest,
+    createApplication,
+    updateApplication,
 };

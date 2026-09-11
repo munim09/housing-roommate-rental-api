@@ -37,9 +37,31 @@ const updateViewingRequestValidation = z
         },
     );
 
+const createApplicationValidation = z
+    .object({
+        advertisementId: z.string().uuid("Invalid advertisement id"),
+        requestedStartDate: z.coerce.date("Start date is required"),
+        requestedEndDate: z.coerce.date("End date is required"),
+        note: z
+            .string()
+            .max(500, "Note must be at most 500 characters")
+            .optional(),
+    })
+    .refine((data) => data.requestedEndDate > data.requestedStartDate, {
+        message: "End date must be after start date",
+    });
+
+const updateApplicationValidation = z.object({
+    status: z.enum(["APPROVED", "REJECTED", "WITHDRAWN"], {
+        message: "Status must be APPROVED, REJECTED, or WITHDRAWN",
+    }),
+});
+
 export const TenantValidation = {
     createViewingRequest: createViewingRequestValidation,
     getViewingRequests: getViewingRequestsValidation,
     updateViewingRequestStatus: updateViewingRequestStatusValidation,
     updateViewingRequest: updateViewingRequestValidation,
+    createApplication: createApplicationValidation,
+    updateApplication: updateApplicationValidation,
 };

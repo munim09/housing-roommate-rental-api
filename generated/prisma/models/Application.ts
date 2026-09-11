@@ -323,7 +323,7 @@ export type ApplicationScalarWhereWithAggregatesInput = {
 
 export type ApplicationCreateInput = {
   id?: string
-  type: $Enums.ApplicationType
+  type?: $Enums.ApplicationType
   status?: $Enums.ApplicationStatus
   requestedStartDate: Date | string
   requestedEndDate: Date | string
@@ -341,7 +341,7 @@ export type ApplicationUncheckedCreateInput = {
   id?: string
   advertisementId: string
   applicantId: string
-  type: $Enums.ApplicationType
+  type?: $Enums.ApplicationType
   status?: $Enums.ApplicationStatus
   requestedStartDate: Date | string
   requestedEndDate: Date | string
@@ -389,7 +389,7 @@ export type ApplicationCreateManyInput = {
   id?: string
   advertisementId: string
   applicantId: string
-  type: $Enums.ApplicationType
+  type?: $Enums.ApplicationType
   status?: $Enums.ApplicationStatus
   requestedStartDate: Date | string
   requestedEndDate: Date | string
@@ -637,7 +637,7 @@ export type ApplicationUncheckedUpdateManyWithoutReviewedByNestedInput = {
 
 export type ApplicationCreateWithoutAdvertisementInput = {
   id?: string
-  type: $Enums.ApplicationType
+  type?: $Enums.ApplicationType
   status?: $Enums.ApplicationStatus
   requestedStartDate: Date | string
   requestedEndDate: Date | string
@@ -653,7 +653,7 @@ export type ApplicationCreateWithoutAdvertisementInput = {
 export type ApplicationUncheckedCreateWithoutAdvertisementInput = {
   id?: string
   applicantId: string
-  type: $Enums.ApplicationType
+  type?: $Enums.ApplicationType
   status?: $Enums.ApplicationStatus
   requestedStartDate: Date | string
   requestedEndDate: Date | string
@@ -711,7 +711,7 @@ export type ApplicationScalarWhereInput = {
 
 export type ApplicationCreateWithoutStayInput = {
   id?: string
-  type: $Enums.ApplicationType
+  type?: $Enums.ApplicationType
   status?: $Enums.ApplicationStatus
   requestedStartDate: Date | string
   requestedEndDate: Date | string
@@ -728,7 +728,7 @@ export type ApplicationUncheckedCreateWithoutStayInput = {
   id?: string
   advertisementId: string
   applicantId: string
-  type: $Enums.ApplicationType
+  type?: $Enums.ApplicationType
   status?: $Enums.ApplicationStatus
   requestedStartDate: Date | string
   requestedEndDate: Date | string
@@ -787,7 +787,7 @@ export type ApplicationUncheckedUpdateWithoutStayInput = {
 
 export type ApplicationCreateWithoutApplicantInput = {
   id?: string
-  type: $Enums.ApplicationType
+  type?: $Enums.ApplicationType
   status?: $Enums.ApplicationStatus
   requestedStartDate: Date | string
   requestedEndDate: Date | string
@@ -803,7 +803,7 @@ export type ApplicationCreateWithoutApplicantInput = {
 export type ApplicationUncheckedCreateWithoutApplicantInput = {
   id?: string
   advertisementId: string
-  type: $Enums.ApplicationType
+  type?: $Enums.ApplicationType
   status?: $Enums.ApplicationStatus
   requestedStartDate: Date | string
   requestedEndDate: Date | string
@@ -827,7 +827,7 @@ export type ApplicationCreateManyApplicantInputEnvelope = {
 
 export type ApplicationCreateWithoutReviewedByInput = {
   id?: string
-  type: $Enums.ApplicationType
+  type?: $Enums.ApplicationType
   status?: $Enums.ApplicationStatus
   requestedStartDate: Date | string
   requestedEndDate: Date | string
@@ -844,7 +844,7 @@ export type ApplicationUncheckedCreateWithoutReviewedByInput = {
   id?: string
   advertisementId: string
   applicantId: string
-  type: $Enums.ApplicationType
+  type?: $Enums.ApplicationType
   status?: $Enums.ApplicationStatus
   requestedStartDate: Date | string
   requestedEndDate: Date | string
@@ -900,7 +900,7 @@ export type ApplicationUpdateManyWithWhereWithoutReviewedByInput = {
 export type ApplicationCreateManyAdvertisementInput = {
   id?: string
   applicantId: string
-  type: $Enums.ApplicationType
+  type?: $Enums.ApplicationType
   status?: $Enums.ApplicationStatus
   requestedStartDate: Date | string
   requestedEndDate: Date | string
@@ -958,7 +958,7 @@ export type ApplicationUncheckedUpdateManyWithoutAdvertisementInput = {
 export type ApplicationCreateManyApplicantInput = {
   id?: string
   advertisementId: string
-  type: $Enums.ApplicationType
+  type?: $Enums.ApplicationType
   status?: $Enums.ApplicationStatus
   requestedStartDate: Date | string
   requestedEndDate: Date | string
@@ -973,7 +973,7 @@ export type ApplicationCreateManyReviewedByInput = {
   id?: string
   advertisementId: string
   applicantId: string
-  type: $Enums.ApplicationType
+  type?: $Enums.ApplicationType
   status?: $Enums.ApplicationStatus
   requestedStartDate: Date | string
   requestedEndDate: Date | string
