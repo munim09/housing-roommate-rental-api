@@ -1,5 +1,6 @@
 import app from "./app";
 import config from "./config";
+import { startCronJobs } from "./lib/cronJob";
 import { prisma } from "./lib/prisma";
 import { redisClient } from "./lib/redisClient";
 
@@ -15,6 +16,8 @@ async function main() {
 
         await redisClient.connect();
         console.log("Redis Connected Successfully.");
+
+        await startCronJobs();
     } catch (error) {
         console.error("Error starting the server:", error);
         await prisma.$disconnect();

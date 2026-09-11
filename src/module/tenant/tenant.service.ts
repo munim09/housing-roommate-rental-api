@@ -1,5 +1,10 @@
 import httpStatus from "http-status";
-import { Prisma, Role } from "../../../generated/prisma/client";
+import {
+    BillStatus,
+    Prisma,
+    Role,
+    StayStatus,
+} from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
 import {
@@ -729,9 +734,24 @@ const updateApplication = async (
                     "Approved applications can only be withdrawn when the stay is waiting for payment",
                 );
             }
+            // await prisma.invoice.deleteMany({
+            //     where: { stayId: application.stay.id },
+            // });
 
-            await prisma.stay.delete({
+            // await prisma.stay.delete({
+            //     where: { id: application.stay.id },
+            // });
+
+            await prisma.invoice.updateMany({
+                where: {
+                    stayId: application.stay.id,
+                    status: BillStatus.PENDING,
+                },
+                data: { BillStatus: BillStatus.CANCELLED },
+            });
+            await prisma.stay.update({
                 where: { id: application.stay.id },
+                data: { status: StayStatus.CANCELLED },
             });
         } else if (application.status !== "PENDING") {
             throw new AppError(
