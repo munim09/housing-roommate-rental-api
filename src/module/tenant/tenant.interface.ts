@@ -11,3 +11,9 @@ export interface IViewingRequestQuery {
     page?: number;
     limit?: number;
 }
+
+export interface IUpdateViewingRequest {
+    status?: "APPROVED" | "REJECTED" | "COMPLETED" | "NO_SHOW";
+    approvedDate?: Date;
+    noteByReviewer?: string;
+}

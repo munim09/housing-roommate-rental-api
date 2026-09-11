@@ -4,6 +4,7 @@ import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
 import {
     ICreateViewingRequest,
+    IUpdateViewingRequest,
     IViewingRequestQuery,
 } from "./tenant.interface";
 
@@ -352,9 +353,80 @@ const updateViewingRequestStatus = async (
     });
 };
 
+const updateViewingRequest = async (
+    userId: string,
+    role: Role,
+    viewingRequestId: string,
+    payload: IUpdateViewingRequest,
+) => {
+    const where: Prisma.ViewingRequestWhereInput = {
+        id: viewingRequestId,
+    };
+
+    applyRoleScope(where, userId, role);
+
+    const existing = await prisma.viewingRequest.findFirst({ where });
+
+    if (!existing) {
+        throw new AppError(httpStatus.NOT_FOUND, "Viewing request not found");
+    }
+
+    if (CLOSED_STATUSES.includes(existing.status)) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "This viewing request is already closed and cannot be updated",
+        );
+    }
+
+    let status = existing.status;
+
+    if (payload.status) {
+        if (!REVIEWER_STATUSES.includes(payload.status)) {
+            throw new AppError(
+                httpStatus.BAD_REQUEST,
+                "Status must be APPROVED, REJECTED, COMPLETED, or NO_SHOW",
+            );
+        }
+
+        status = payload.status;
+    }
+
+    if (payload.approvedDate && status !== "APPROVED") {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "approvedDate can only be set when the request is APPROVED",
+        );
+    }
+
+    return prisma.viewingRequest.update({
+        where: { id: viewingRequestId },
+        data: {
+            status: status !== existing.status ? status : undefined,
+            approvedDate: payload.approvedDate,
+            noteByReviewer: payload.noteByReviewer,
+            reviewedById: payload.status ? userId : undefined,
+            reviewedAt:
+                payload.status || payload.approvedDate
+                    ? new Date()
+                    : undefined,
+        },
+        select: {
+            id: true,
+            advertisementId: true,
+            requestedDate: true,
+            approvedDate: true,
+            status: true,
+            noteByReviewer: true,
+            reviewedById: true,
+            reviewedAt: true,
+        },
+    });
+};
+
 export const TenantService = {
     createViewingRequest,
     getViewingRequests,
     getViewingRequestById,
     updateViewingRequestStatus,
+    updateViewingRequest,
 };

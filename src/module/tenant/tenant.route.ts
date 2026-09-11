@@ -35,4 +35,11 @@ router.patch(
     catchAsync(TenantController.updateViewingRequestStatus),
 );
 
+router.patch(
+    "/viewing-requests/:id",
+    auth(Role.OWNER, Role.MANAGER),
+    validateRequest(TenantValidation.updateViewingRequest),
+    catchAsync(TenantController.updateViewingRequest),
+);
+
 export const TenantRoutes = router;

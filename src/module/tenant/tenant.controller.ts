@@ -64,9 +64,26 @@ const updateViewingRequestStatus = async (req: Request, res: Response) => {
     });
 };
 
+const updateViewingRequest = async (req: Request, res: Response) => {
+    const result = await TenantService.updateViewingRequest(
+        req.user!.userId,
+        req.user!.role,
+        req.params.id as string,
+        req.body,
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Viewing request updated successfully",
+        data: result,
+    });
+};
+
 export const TenantController = {
     createViewingRequest,
     getViewingRequests,
     getViewingRequestById,
     updateViewingRequestStatus,
+    updateViewingRequest,
 };

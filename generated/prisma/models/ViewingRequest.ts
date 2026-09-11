@@ -29,10 +29,12 @@ export type ViewingRequestMinAggregateOutputType = {
   advertisementId: string | null
   requesterId: string | null
   requestedDate: Date | null
+  approvedDate: Date | null
   status: $Enums.ViewingRequestStatus | null
   reviewedById: string | null
   reviewedAt: Date | null
   note: string | null
+  noteByReviewer: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -42,10 +44,12 @@ export type ViewingRequestMaxAggregateOutputType = {
   advertisementId: string | null
   requesterId: string | null
   requestedDate: Date | null
+  approvedDate: Date | null
   status: $Enums.ViewingRequestStatus | null
   reviewedById: string | null
   reviewedAt: Date | null
   note: string | null
+  noteByReviewer: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -55,10 +59,12 @@ export type ViewingRequestCountAggregateOutputType = {
   advertisementId: number
   requesterId: number
   requestedDate: number
+  approvedDate: number
   status: number
   reviewedById: number
   reviewedAt: number
   note: number
+  noteByReviewer: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -70,10 +76,12 @@ export type ViewingRequestMinAggregateInputType = {
   advertisementId?: true
   requesterId?: true
   requestedDate?: true
+  approvedDate?: true
   status?: true
   reviewedById?: true
   reviewedAt?: true
   note?: true
+  noteByReviewer?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -83,10 +91,12 @@ export type ViewingRequestMaxAggregateInputType = {
   advertisementId?: true
   requesterId?: true
   requestedDate?: true
+  approvedDate?: true
   status?: true
   reviewedById?: true
   reviewedAt?: true
   note?: true
+  noteByReviewer?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -96,10 +106,12 @@ export type ViewingRequestCountAggregateInputType = {
   advertisementId?: true
   requesterId?: true
   requestedDate?: true
+  approvedDate?: true
   status?: true
   reviewedById?: true
   reviewedAt?: true
   note?: true
+  noteByReviewer?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -182,10 +194,12 @@ export type ViewingRequestGroupByOutputType = {
   advertisementId: string
   requesterId: string
   requestedDate: Date
+  approvedDate: Date | null
   status: $Enums.ViewingRequestStatus
   reviewedById: string | null
   reviewedAt: Date | null
   note: string | null
+  noteByReviewer: string | null
   createdAt: Date
   updatedAt: Date
   _count: ViewingRequestCountAggregateOutputType | null
@@ -216,10 +230,12 @@ export type ViewingRequestWhereInput = {
   advertisementId?: Prisma.StringFilter<"ViewingRequest"> | string
   requesterId?: Prisma.StringFilter<"ViewingRequest"> | string
   requestedDate?: Prisma.DateTimeFilter<"ViewingRequest"> | Date | string
+  approvedDate?: Prisma.DateTimeNullableFilter<"ViewingRequest"> | Date | string | null
   status?: Prisma.EnumViewingRequestStatusFilter<"ViewingRequest"> | $Enums.ViewingRequestStatus
   reviewedById?: Prisma.StringNullableFilter<"ViewingRequest"> | string | null
   reviewedAt?: Prisma.DateTimeNullableFilter<"ViewingRequest"> | Date | string | null
   note?: Prisma.StringNullableFilter<"ViewingRequest"> | string | null
+  noteByReviewer?: Prisma.StringNullableFilter<"ViewingRequest"> | string | null
   createdAt?: Prisma.DateTimeFilter<"ViewingRequest"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ViewingRequest"> | Date | string
   advertisement?: Prisma.XOR<Prisma.AdvertisementScalarRelationFilter, Prisma.AdvertisementWhereInput>
@@ -232,10 +248,12 @@ export type ViewingRequestOrderByWithRelationInput = {
   advertisementId?: Prisma.SortOrder
   requesterId?: Prisma.SortOrder
   requestedDate?: Prisma.SortOrder
+  approvedDate?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   reviewedById?: Prisma.SortOrderInput | Prisma.SortOrder
   reviewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   note?: Prisma.SortOrderInput | Prisma.SortOrder
+  noteByReviewer?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   advertisement?: Prisma.AdvertisementOrderByWithRelationInput
@@ -251,10 +269,12 @@ export type ViewingRequestWhereUniqueInput = Prisma.AtLeast<{
   advertisementId?: Prisma.StringFilter<"ViewingRequest"> | string
   requesterId?: Prisma.StringFilter<"ViewingRequest"> | string
   requestedDate?: Prisma.DateTimeFilter<"ViewingRequest"> | Date | string
+  approvedDate?: Prisma.DateTimeNullableFilter<"ViewingRequest"> | Date | string | null
   status?: Prisma.EnumViewingRequestStatusFilter<"ViewingRequest"> | $Enums.ViewingRequestStatus
   reviewedById?: Prisma.StringNullableFilter<"ViewingRequest"> | string | null
   reviewedAt?: Prisma.DateTimeNullableFilter<"ViewingRequest"> | Date | string | null
   note?: Prisma.StringNullableFilter<"ViewingRequest"> | string | null
+  noteByReviewer?: Prisma.StringNullableFilter<"ViewingRequest"> | string | null
   createdAt?: Prisma.DateTimeFilter<"ViewingRequest"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ViewingRequest"> | Date | string
   advertisement?: Prisma.XOR<Prisma.AdvertisementScalarRelationFilter, Prisma.AdvertisementWhereInput>
@@ -267,10 +287,12 @@ export type ViewingRequestOrderByWithAggregationInput = {
   advertisementId?: Prisma.SortOrder
   requesterId?: Prisma.SortOrder
   requestedDate?: Prisma.SortOrder
+  approvedDate?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   reviewedById?: Prisma.SortOrderInput | Prisma.SortOrder
   reviewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   note?: Prisma.SortOrderInput | Prisma.SortOrder
+  noteByReviewer?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ViewingRequestCountOrderByAggregateInput
@@ -286,10 +308,12 @@ export type ViewingRequestScalarWhereWithAggregatesInput = {
   advertisementId?: Prisma.StringWithAggregatesFilter<"ViewingRequest"> | string
   requesterId?: Prisma.StringWithAggregatesFilter<"ViewingRequest"> | string
   requestedDate?: Prisma.DateTimeWithAggregatesFilter<"ViewingRequest"> | Date | string
+  approvedDate?: Prisma.DateTimeNullableWithAggregatesFilter<"ViewingRequest"> | Date | string | null
   status?: Prisma.EnumViewingRequestStatusWithAggregatesFilter<"ViewingRequest"> | $Enums.ViewingRequestStatus
   reviewedById?: Prisma.StringNullableWithAggregatesFilter<"ViewingRequest"> | string | null
   reviewedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"ViewingRequest"> | Date | string | null
   note?: Prisma.StringNullableWithAggregatesFilter<"ViewingRequest"> | string | null
+  noteByReviewer?: Prisma.StringNullableWithAggregatesFilter<"ViewingRequest"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ViewingRequest"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"ViewingRequest"> | Date | string
 }
@@ -297,9 +321,11 @@ export type ViewingRequestScalarWhereWithAggregatesInput = {
 export type ViewingRequestCreateInput = {
   id?: string
   requestedDate: Date | string
+  approvedDate?: Date | string | null
   status?: $Enums.ViewingRequestStatus
   reviewedAt?: Date | string | null
   note?: string | null
+  noteByReviewer?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   advertisement: Prisma.AdvertisementCreateNestedOneWithoutViewingRequestsInput
@@ -312,10 +338,12 @@ export type ViewingRequestUncheckedCreateInput = {
   advertisementId: string
   requesterId: string
   requestedDate: Date | string
+  approvedDate?: Date | string | null
   status?: $Enums.ViewingRequestStatus
   reviewedById?: string | null
   reviewedAt?: Date | string | null
   note?: string | null
+  noteByReviewer?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -323,9 +351,11 @@ export type ViewingRequestUncheckedCreateInput = {
 export type ViewingRequestUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   requestedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  approvedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumViewingRequestStatusFieldUpdateOperationsInput | $Enums.ViewingRequestStatus
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noteByReviewer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   advertisement?: Prisma.AdvertisementUpdateOneRequiredWithoutViewingRequestsNestedInput
@@ -338,10 +368,12 @@ export type ViewingRequestUncheckedUpdateInput = {
   advertisementId?: Prisma.StringFieldUpdateOperationsInput | string
   requesterId?: Prisma.StringFieldUpdateOperationsInput | string
   requestedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  approvedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumViewingRequestStatusFieldUpdateOperationsInput | $Enums.ViewingRequestStatus
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noteByReviewer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -351,10 +383,12 @@ export type ViewingRequestCreateManyInput = {
   advertisementId: string
   requesterId: string
   requestedDate: Date | string
+  approvedDate?: Date | string | null
   status?: $Enums.ViewingRequestStatus
   reviewedById?: string | null
   reviewedAt?: Date | string | null
   note?: string | null
+  noteByReviewer?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -362,9 +396,11 @@ export type ViewingRequestCreateManyInput = {
 export type ViewingRequestUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   requestedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  approvedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumViewingRequestStatusFieldUpdateOperationsInput | $Enums.ViewingRequestStatus
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noteByReviewer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -374,10 +410,12 @@ export type ViewingRequestUncheckedUpdateManyInput = {
   advertisementId?: Prisma.StringFieldUpdateOperationsInput | string
   requesterId?: Prisma.StringFieldUpdateOperationsInput | string
   requestedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  approvedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumViewingRequestStatusFieldUpdateOperationsInput | $Enums.ViewingRequestStatus
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noteByReviewer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -397,10 +435,12 @@ export type ViewingRequestCountOrderByAggregateInput = {
   advertisementId?: Prisma.SortOrder
   requesterId?: Prisma.SortOrder
   requestedDate?: Prisma.SortOrder
+  approvedDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
   reviewedById?: Prisma.SortOrder
   reviewedAt?: Prisma.SortOrder
   note?: Prisma.SortOrder
+  noteByReviewer?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -410,10 +450,12 @@ export type ViewingRequestMaxOrderByAggregateInput = {
   advertisementId?: Prisma.SortOrder
   requesterId?: Prisma.SortOrder
   requestedDate?: Prisma.SortOrder
+  approvedDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
   reviewedById?: Prisma.SortOrder
   reviewedAt?: Prisma.SortOrder
   note?: Prisma.SortOrder
+  noteByReviewer?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -423,10 +465,12 @@ export type ViewingRequestMinOrderByAggregateInput = {
   advertisementId?: Prisma.SortOrder
   requesterId?: Prisma.SortOrder
   requestedDate?: Prisma.SortOrder
+  approvedDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
   reviewedById?: Prisma.SortOrder
   reviewedAt?: Prisma.SortOrder
   note?: Prisma.SortOrder
+  noteByReviewer?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -564,9 +608,11 @@ export type EnumViewingRequestStatusFieldUpdateOperationsInput = {
 export type ViewingRequestCreateWithoutAdvertisementInput = {
   id?: string
   requestedDate: Date | string
+  approvedDate?: Date | string | null
   status?: $Enums.ViewingRequestStatus
   reviewedAt?: Date | string | null
   note?: string | null
+  noteByReviewer?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   requester: Prisma.UserCreateNestedOneWithoutViewingRequestsInput
@@ -577,10 +623,12 @@ export type ViewingRequestUncheckedCreateWithoutAdvertisementInput = {
   id?: string
   requesterId: string
   requestedDate: Date | string
+  approvedDate?: Date | string | null
   status?: $Enums.ViewingRequestStatus
   reviewedById?: string | null
   reviewedAt?: Date | string | null
   note?: string | null
+  noteByReviewer?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -619,10 +667,12 @@ export type ViewingRequestScalarWhereInput = {
   advertisementId?: Prisma.StringFilter<"ViewingRequest"> | string
   requesterId?: Prisma.StringFilter<"ViewingRequest"> | string
   requestedDate?: Prisma.DateTimeFilter<"ViewingRequest"> | Date | string
+  approvedDate?: Prisma.DateTimeNullableFilter<"ViewingRequest"> | Date | string | null
   status?: Prisma.EnumViewingRequestStatusFilter<"ViewingRequest"> | $Enums.ViewingRequestStatus
   reviewedById?: Prisma.StringNullableFilter<"ViewingRequest"> | string | null
   reviewedAt?: Prisma.DateTimeNullableFilter<"ViewingRequest"> | Date | string | null
   note?: Prisma.StringNullableFilter<"ViewingRequest"> | string | null
+  noteByReviewer?: Prisma.StringNullableFilter<"ViewingRequest"> | string | null
   createdAt?: Prisma.DateTimeFilter<"ViewingRequest"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ViewingRequest"> | Date | string
 }
@@ -630,9 +680,11 @@ export type ViewingRequestScalarWhereInput = {
 export type ViewingRequestCreateWithoutRequesterInput = {
   id?: string
   requestedDate: Date | string
+  approvedDate?: Date | string | null
   status?: $Enums.ViewingRequestStatus
   reviewedAt?: Date | string | null
   note?: string | null
+  noteByReviewer?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   advertisement: Prisma.AdvertisementCreateNestedOneWithoutViewingRequestsInput
@@ -643,10 +695,12 @@ export type ViewingRequestUncheckedCreateWithoutRequesterInput = {
   id?: string
   advertisementId: string
   requestedDate: Date | string
+  approvedDate?: Date | string | null
   status?: $Enums.ViewingRequestStatus
   reviewedById?: string | null
   reviewedAt?: Date | string | null
   note?: string | null
+  noteByReviewer?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -664,9 +718,11 @@ export type ViewingRequestCreateManyRequesterInputEnvelope = {
 export type ViewingRequestCreateWithoutReviewedByInput = {
   id?: string
   requestedDate: Date | string
+  approvedDate?: Date | string | null
   status?: $Enums.ViewingRequestStatus
   reviewedAt?: Date | string | null
   note?: string | null
+  noteByReviewer?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   advertisement: Prisma.AdvertisementCreateNestedOneWithoutViewingRequestsInput
@@ -678,9 +734,11 @@ export type ViewingRequestUncheckedCreateWithoutReviewedByInput = {
   advertisementId: string
   requesterId: string
   requestedDate: Date | string
+  approvedDate?: Date | string | null
   status?: $Enums.ViewingRequestStatus
   reviewedAt?: Date | string | null
   note?: string | null
+  noteByReviewer?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -731,10 +789,12 @@ export type ViewingRequestCreateManyAdvertisementInput = {
   id?: string
   requesterId: string
   requestedDate: Date | string
+  approvedDate?: Date | string | null
   status?: $Enums.ViewingRequestStatus
   reviewedById?: string | null
   reviewedAt?: Date | string | null
   note?: string | null
+  noteByReviewer?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -742,9 +802,11 @@ export type ViewingRequestCreateManyAdvertisementInput = {
 export type ViewingRequestUpdateWithoutAdvertisementInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   requestedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  approvedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumViewingRequestStatusFieldUpdateOperationsInput | $Enums.ViewingRequestStatus
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noteByReviewer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   requester?: Prisma.UserUpdateOneRequiredWithoutViewingRequestsNestedInput
@@ -755,10 +817,12 @@ export type ViewingRequestUncheckedUpdateWithoutAdvertisementInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   requesterId?: Prisma.StringFieldUpdateOperationsInput | string
   requestedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  approvedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumViewingRequestStatusFieldUpdateOperationsInput | $Enums.ViewingRequestStatus
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noteByReviewer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -767,10 +831,12 @@ export type ViewingRequestUncheckedUpdateManyWithoutAdvertisementInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   requesterId?: Prisma.StringFieldUpdateOperationsInput | string
   requestedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  approvedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumViewingRequestStatusFieldUpdateOperationsInput | $Enums.ViewingRequestStatus
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noteByReviewer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -779,10 +845,12 @@ export type ViewingRequestCreateManyRequesterInput = {
   id?: string
   advertisementId: string
   requestedDate: Date | string
+  approvedDate?: Date | string | null
   status?: $Enums.ViewingRequestStatus
   reviewedById?: string | null
   reviewedAt?: Date | string | null
   note?: string | null
+  noteByReviewer?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -792,9 +860,11 @@ export type ViewingRequestCreateManyReviewedByInput = {
   advertisementId: string
   requesterId: string
   requestedDate: Date | string
+  approvedDate?: Date | string | null
   status?: $Enums.ViewingRequestStatus
   reviewedAt?: Date | string | null
   note?: string | null
+  noteByReviewer?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -802,9 +872,11 @@ export type ViewingRequestCreateManyReviewedByInput = {
 export type ViewingRequestUpdateWithoutRequesterInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   requestedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  approvedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumViewingRequestStatusFieldUpdateOperationsInput | $Enums.ViewingRequestStatus
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noteByReviewer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   advertisement?: Prisma.AdvertisementUpdateOneRequiredWithoutViewingRequestsNestedInput
@@ -815,10 +887,12 @@ export type ViewingRequestUncheckedUpdateWithoutRequesterInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   advertisementId?: Prisma.StringFieldUpdateOperationsInput | string
   requestedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  approvedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumViewingRequestStatusFieldUpdateOperationsInput | $Enums.ViewingRequestStatus
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noteByReviewer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -827,10 +901,12 @@ export type ViewingRequestUncheckedUpdateManyWithoutRequesterInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   advertisementId?: Prisma.StringFieldUpdateOperationsInput | string
   requestedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  approvedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumViewingRequestStatusFieldUpdateOperationsInput | $Enums.ViewingRequestStatus
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noteByReviewer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -838,9 +914,11 @@ export type ViewingRequestUncheckedUpdateManyWithoutRequesterInput = {
 export type ViewingRequestUpdateWithoutReviewedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   requestedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  approvedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumViewingRequestStatusFieldUpdateOperationsInput | $Enums.ViewingRequestStatus
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noteByReviewer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   advertisement?: Prisma.AdvertisementUpdateOneRequiredWithoutViewingRequestsNestedInput
@@ -852,9 +930,11 @@ export type ViewingRequestUncheckedUpdateWithoutReviewedByInput = {
   advertisementId?: Prisma.StringFieldUpdateOperationsInput | string
   requesterId?: Prisma.StringFieldUpdateOperationsInput | string
   requestedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  approvedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumViewingRequestStatusFieldUpdateOperationsInput | $Enums.ViewingRequestStatus
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noteByReviewer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -864,9 +944,11 @@ export type ViewingRequestUncheckedUpdateManyWithoutReviewedByInput = {
   advertisementId?: Prisma.StringFieldUpdateOperationsInput | string
   requesterId?: Prisma.StringFieldUpdateOperationsInput | string
   requestedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  approvedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumViewingRequestStatusFieldUpdateOperationsInput | $Enums.ViewingRequestStatus
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  noteByReviewer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -878,10 +960,12 @@ export type ViewingRequestSelect<ExtArgs extends runtime.Types.Extensions.Intern
   advertisementId?: boolean
   requesterId?: boolean
   requestedDate?: boolean
+  approvedDate?: boolean
   status?: boolean
   reviewedById?: boolean
   reviewedAt?: boolean
   note?: boolean
+  noteByReviewer?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   advertisement?: boolean | Prisma.AdvertisementDefaultArgs<ExtArgs>
@@ -894,10 +978,12 @@ export type ViewingRequestSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   advertisementId?: boolean
   requesterId?: boolean
   requestedDate?: boolean
+  approvedDate?: boolean
   status?: boolean
   reviewedById?: boolean
   reviewedAt?: boolean
   note?: boolean
+  noteByReviewer?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   advertisement?: boolean | Prisma.AdvertisementDefaultArgs<ExtArgs>
@@ -910,10 +996,12 @@ export type ViewingRequestSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   advertisementId?: boolean
   requesterId?: boolean
   requestedDate?: boolean
+  approvedDate?: boolean
   status?: boolean
   reviewedById?: boolean
   reviewedAt?: boolean
   note?: boolean
+  noteByReviewer?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   advertisement?: boolean | Prisma.AdvertisementDefaultArgs<ExtArgs>
@@ -926,15 +1014,17 @@ export type ViewingRequestSelectScalar = {
   advertisementId?: boolean
   requesterId?: boolean
   requestedDate?: boolean
+  approvedDate?: boolean
   status?: boolean
   reviewedById?: boolean
   reviewedAt?: boolean
   note?: boolean
+  noteByReviewer?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ViewingRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "advertisementId" | "requesterId" | "requestedDate" | "status" | "reviewedById" | "reviewedAt" | "note" | "createdAt" | "updatedAt", ExtArgs["result"]["viewingRequest"]>
+export type ViewingRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "advertisementId" | "requesterId" | "requestedDate" | "approvedDate" | "status" | "reviewedById" | "reviewedAt" | "note" | "noteByReviewer" | "createdAt" | "updatedAt", ExtArgs["result"]["viewingRequest"]>
 export type ViewingRequestInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   advertisement?: boolean | Prisma.AdvertisementDefaultArgs<ExtArgs>
   requester?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -963,10 +1053,12 @@ export type $ViewingRequestPayload<ExtArgs extends runtime.Types.Extensions.Inte
     advertisementId: string
     requesterId: string
     requestedDate: Date
+    approvedDate: Date | null
     status: $Enums.ViewingRequestStatus
     reviewedById: string | null
     reviewedAt: Date | null
     note: string | null
+    noteByReviewer: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["viewingRequest"]>
@@ -1399,10 +1491,12 @@ export interface ViewingRequestFieldRefs {
   readonly advertisementId: Prisma.FieldRef<"ViewingRequest", 'String'>
   readonly requesterId: Prisma.FieldRef<"ViewingRequest", 'String'>
   readonly requestedDate: Prisma.FieldRef<"ViewingRequest", 'DateTime'>
+  readonly approvedDate: Prisma.FieldRef<"ViewingRequest", 'DateTime'>
   readonly status: Prisma.FieldRef<"ViewingRequest", 'ViewingRequestStatus'>
   readonly reviewedById: Prisma.FieldRef<"ViewingRequest", 'String'>
   readonly reviewedAt: Prisma.FieldRef<"ViewingRequest", 'DateTime'>
   readonly note: Prisma.FieldRef<"ViewingRequest", 'String'>
+  readonly noteByReviewer: Prisma.FieldRef<"ViewingRequest", 'String'>
   readonly createdAt: Prisma.FieldRef<"ViewingRequest", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"ViewingRequest", 'DateTime'>
 }

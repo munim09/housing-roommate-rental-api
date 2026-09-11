@@ -14,12 +14,16 @@ model ViewingRequest {
 
   requestedDate DateTime
 
+  approvedDate DateTime?
+
   status ViewingRequestStatus @default(PENDING)
 
   reviewedById String?
   reviewedAt   DateTime?
 
   note String?
+
+  noteByReviewer String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

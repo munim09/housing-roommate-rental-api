@@ -373,10 +373,12 @@ export const ViewingRequestScalarFieldEnum = {
   advertisementId: 'advertisementId',
   requesterId: 'requesterId',
   requestedDate: 'requestedDate',
+  approvedDate: 'approvedDate',
   status: 'status',
   reviewedById: 'reviewedById',
   reviewedAt: 'reviewedAt',
   note: 'note',
+  noteByReviewer: 'noteByReviewer',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
