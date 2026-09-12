@@ -16,6 +16,11 @@ enum UserStatus {
   SUSPENDED
 }
 
+enum AuthProvider {
+  GOOGLE
+  CREDENTIAL
+}
+
 enum PropertyType {
   SINGLE_FLAT
   MULTI_FLAT

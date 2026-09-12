@@ -35,6 +35,8 @@ export type UserMinAggregateOutputType = {
   emailVerified: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
+  googleId: string | null
+  authProvider: $Enums.AuthProvider | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -48,6 +50,8 @@ export type UserMaxAggregateOutputType = {
   emailVerified: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
+  googleId: string | null
+  authProvider: $Enums.AuthProvider | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -61,6 +65,8 @@ export type UserCountAggregateOutputType = {
   emailVerified: number
   createdAt: number
   updatedAt: number
+  googleId: number
+  authProvider: number
   _all: number
 }
 
@@ -76,6 +82,8 @@ export type UserMinAggregateInputType = {
   emailVerified?: true
   createdAt?: true
   updatedAt?: true
+  googleId?: true
+  authProvider?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -89,6 +97,8 @@ export type UserMaxAggregateInputType = {
   emailVerified?: true
   createdAt?: true
   updatedAt?: true
+  googleId?: true
+  authProvider?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -102,6 +112,8 @@ export type UserCountAggregateInputType = {
   emailVerified?: true
   createdAt?: true
   updatedAt?: true
+  googleId?: true
+  authProvider?: true
   _all?: true
 }
 
@@ -182,12 +194,14 @@ export type UserGroupByOutputType = {
   name: string
   email: string
   phone: string
-  password: string
+  password: string | null
   role: $Enums.Role
   status: $Enums.UserStatus
   emailVerified: boolean
   createdAt: Date
   updatedAt: Date
+  googleId: string | null
+  authProvider: $Enums.AuthProvider | null
   _count: UserCountAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
@@ -216,12 +230,14 @@ export type UserWhereInput = {
   name?: Prisma.StringFilter<"User"> | string
   email?: Prisma.StringFilter<"User"> | string
   phone?: Prisma.StringFilter<"User"> | string
-  password?: Prisma.StringFilter<"User"> | string
+  password?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   status?: Prisma.EnumUserStatusFilter<"User"> | $Enums.UserStatus
   emailVerified?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  googleId?: Prisma.StringNullableFilter<"User"> | string | null
+  authProvider?: Prisma.EnumAuthProviderNullableFilter<"User"> | $Enums.AuthProvider | null
   ownerProfile?: Prisma.XOR<Prisma.OwnerProfileNullableScalarRelationFilter, Prisma.OwnerProfileWhereInput> | null
   managerProfile?: Prisma.XOR<Prisma.ManagerProfileNullableScalarRelationFilter, Prisma.ManagerProfileWhereInput> | null
   tenantProfile?: Prisma.XOR<Prisma.TenantProfileNullableScalarRelationFilter, Prisma.TenantProfileWhereInput> | null
@@ -246,12 +262,14 @@ export type UserOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
-  password?: Prisma.SortOrder
+  password?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
   status?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  googleId?: Prisma.SortOrderInput | Prisma.SortOrder
+  authProvider?: Prisma.SortOrderInput | Prisma.SortOrder
   ownerProfile?: Prisma.OwnerProfileOrderByWithRelationInput
   managerProfile?: Prisma.ManagerProfileOrderByWithRelationInput
   tenantProfile?: Prisma.TenantProfileOrderByWithRelationInput
@@ -274,17 +292,19 @@ export type UserOrderByWithRelationInput = {
 export type UserWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   email?: string
+  googleId?: string
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   name?: Prisma.StringFilter<"User"> | string
   phone?: Prisma.StringFilter<"User"> | string
-  password?: Prisma.StringFilter<"User"> | string
+  password?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   status?: Prisma.EnumUserStatusFilter<"User"> | $Enums.UserStatus
   emailVerified?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  authProvider?: Prisma.EnumAuthProviderNullableFilter<"User"> | $Enums.AuthProvider | null
   ownerProfile?: Prisma.XOR<Prisma.OwnerProfileNullableScalarRelationFilter, Prisma.OwnerProfileWhereInput> | null
   managerProfile?: Prisma.XOR<Prisma.ManagerProfileNullableScalarRelationFilter, Prisma.ManagerProfileWhereInput> | null
   tenantProfile?: Prisma.XOR<Prisma.TenantProfileNullableScalarRelationFilter, Prisma.TenantProfileWhereInput> | null
@@ -302,19 +322,21 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   viewingRequests?: Prisma.ViewingRequestListRelationFilter
   reviewedViewingRequests?: Prisma.ViewingRequestListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
-}, "id" | "email">
+}, "id" | "email" | "googleId">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
-  password?: Prisma.SortOrder
+  password?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
   status?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  googleId?: Prisma.SortOrderInput | Prisma.SortOrder
+  authProvider?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
   _min?: Prisma.UserMinOrderByAggregateInput
@@ -328,12 +350,14 @@ export type UserScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"User"> | string
   email?: Prisma.StringWithAggregatesFilter<"User"> | string
   phone?: Prisma.StringWithAggregatesFilter<"User"> | string
-  password?: Prisma.StringWithAggregatesFilter<"User"> | string
+  password?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   role?: Prisma.EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
   status?: Prisma.EnumUserStatusWithAggregatesFilter<"User"> | $Enums.UserStatus
   emailVerified?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
+  googleId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  authProvider?: Prisma.EnumAuthProviderNullableWithAggregatesFilter<"User"> | $Enums.AuthProvider | null
 }
 
 export type UserCreateInput = {
@@ -341,12 +365,14 @@ export type UserCreateInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileCreateNestedOneWithoutUserInput
   managerProfile?: Prisma.ManagerProfileCreateNestedOneWithoutUserInput
   tenantProfile?: Prisma.TenantProfileCreateNestedOneWithoutUserInput
@@ -371,12 +397,14 @@ export type UserUncheckedCreateInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUncheckedCreateNestedOneWithoutUserInput
   managerProfile?: Prisma.ManagerProfileUncheckedCreateNestedOneWithoutUserInput
   tenantProfile?: Prisma.TenantProfileUncheckedCreateNestedOneWithoutUserInput
@@ -401,12 +429,14 @@ export type UserUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUpdateOneWithoutUserNestedInput
   managerProfile?: Prisma.ManagerProfileUpdateOneWithoutUserNestedInput
   tenantProfile?: Prisma.TenantProfileUpdateOneWithoutUserNestedInput
@@ -431,12 +461,14 @@ export type UserUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUncheckedUpdateOneWithoutUserNestedInput
   managerProfile?: Prisma.ManagerProfileUncheckedUpdateOneWithoutUserNestedInput
   tenantProfile?: Prisma.TenantProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -461,12 +493,14 @@ export type UserCreateManyInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
 }
 
 export type UserUpdateManyMutationInput = {
@@ -474,12 +508,14 @@ export type UserUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
 }
 
 export type UserUncheckedUpdateManyInput = {
@@ -487,12 +523,14 @@ export type UserUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
 }
 
 export type UserScalarRelationFilter = {
@@ -516,6 +554,8 @@ export type UserCountOrderByAggregateInput = {
   emailVerified?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  googleId?: Prisma.SortOrder
+  authProvider?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -529,6 +569,8 @@ export type UserMaxOrderByAggregateInput = {
   emailVerified?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  googleId?: Prisma.SortOrder
+  authProvider?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -542,6 +584,8 @@ export type UserMinOrderByAggregateInput = {
   emailVerified?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  googleId?: Prisma.SortOrder
+  authProvider?: Prisma.SortOrder
 }
 
 export type UserCreateNestedOneWithoutAdvertisementsInput = {
@@ -764,6 +808,10 @@ export type EnumUserStatusFieldUpdateOperationsInput = {
   set?: $Enums.UserStatus
 }
 
+export type NullableEnumAuthProviderFieldUpdateOperationsInput = {
+  set?: $Enums.AuthProvider | null
+}
+
 export type UserCreateNestedOneWithoutViewingRequestsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutViewingRequestsInput, Prisma.UserUncheckedCreateWithoutViewingRequestsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutViewingRequestsInput
@@ -799,12 +847,14 @@ export type UserCreateWithoutAdvertisementsInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileCreateNestedOneWithoutUserInput
   managerProfile?: Prisma.ManagerProfileCreateNestedOneWithoutUserInput
   tenantProfile?: Prisma.TenantProfileCreateNestedOneWithoutUserInput
@@ -828,12 +878,14 @@ export type UserUncheckedCreateWithoutAdvertisementsInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUncheckedCreateNestedOneWithoutUserInput
   managerProfile?: Prisma.ManagerProfileUncheckedCreateNestedOneWithoutUserInput
   tenantProfile?: Prisma.TenantProfileUncheckedCreateNestedOneWithoutUserInput
@@ -873,12 +925,14 @@ export type UserUpdateWithoutAdvertisementsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUpdateOneWithoutUserNestedInput
   managerProfile?: Prisma.ManagerProfileUpdateOneWithoutUserNestedInput
   tenantProfile?: Prisma.TenantProfileUpdateOneWithoutUserNestedInput
@@ -902,12 +956,14 @@ export type UserUncheckedUpdateWithoutAdvertisementsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUncheckedUpdateOneWithoutUserNestedInput
   managerProfile?: Prisma.ManagerProfileUncheckedUpdateOneWithoutUserNestedInput
   tenantProfile?: Prisma.TenantProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -931,12 +987,14 @@ export type UserCreateWithoutApplicationsInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileCreateNestedOneWithoutUserInput
   managerProfile?: Prisma.ManagerProfileCreateNestedOneWithoutUserInput
   tenantProfile?: Prisma.TenantProfileCreateNestedOneWithoutUserInput
@@ -960,12 +1018,14 @@ export type UserUncheckedCreateWithoutApplicationsInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUncheckedCreateNestedOneWithoutUserInput
   managerProfile?: Prisma.ManagerProfileUncheckedCreateNestedOneWithoutUserInput
   tenantProfile?: Prisma.TenantProfileUncheckedCreateNestedOneWithoutUserInput
@@ -994,12 +1054,14 @@ export type UserCreateWithoutReviewedApplicationsInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileCreateNestedOneWithoutUserInput
   managerProfile?: Prisma.ManagerProfileCreateNestedOneWithoutUserInput
   tenantProfile?: Prisma.TenantProfileCreateNestedOneWithoutUserInput
@@ -1023,12 +1085,14 @@ export type UserUncheckedCreateWithoutReviewedApplicationsInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUncheckedCreateNestedOneWithoutUserInput
   managerProfile?: Prisma.ManagerProfileUncheckedCreateNestedOneWithoutUserInput
   tenantProfile?: Prisma.TenantProfileUncheckedCreateNestedOneWithoutUserInput
@@ -1068,12 +1132,14 @@ export type UserUpdateWithoutApplicationsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUpdateOneWithoutUserNestedInput
   managerProfile?: Prisma.ManagerProfileUpdateOneWithoutUserNestedInput
   tenantProfile?: Prisma.TenantProfileUpdateOneWithoutUserNestedInput
@@ -1097,12 +1163,14 @@ export type UserUncheckedUpdateWithoutApplicationsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUncheckedUpdateOneWithoutUserNestedInput
   managerProfile?: Prisma.ManagerProfileUncheckedUpdateOneWithoutUserNestedInput
   tenantProfile?: Prisma.TenantProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -1137,12 +1205,14 @@ export type UserUpdateWithoutReviewedApplicationsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUpdateOneWithoutUserNestedInput
   managerProfile?: Prisma.ManagerProfileUpdateOneWithoutUserNestedInput
   tenantProfile?: Prisma.TenantProfileUpdateOneWithoutUserNestedInput
@@ -1166,12 +1236,14 @@ export type UserUncheckedUpdateWithoutReviewedApplicationsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUncheckedUpdateOneWithoutUserNestedInput
   managerProfile?: Prisma.ManagerProfileUncheckedUpdateOneWithoutUserNestedInput
   tenantProfile?: Prisma.TenantProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -1195,12 +1267,14 @@ export type UserCreateWithoutInvoicesAsPayerInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileCreateNestedOneWithoutUserInput
   managerProfile?: Prisma.ManagerProfileCreateNestedOneWithoutUserInput
   tenantProfile?: Prisma.TenantProfileCreateNestedOneWithoutUserInput
@@ -1224,12 +1298,14 @@ export type UserUncheckedCreateWithoutInvoicesAsPayerInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUncheckedCreateNestedOneWithoutUserInput
   managerProfile?: Prisma.ManagerProfileUncheckedCreateNestedOneWithoutUserInput
   tenantProfile?: Prisma.TenantProfileUncheckedCreateNestedOneWithoutUserInput
@@ -1258,12 +1334,14 @@ export type UserCreateWithoutInvoicesAsReceiverInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileCreateNestedOneWithoutUserInput
   managerProfile?: Prisma.ManagerProfileCreateNestedOneWithoutUserInput
   tenantProfile?: Prisma.TenantProfileCreateNestedOneWithoutUserInput
@@ -1287,12 +1365,14 @@ export type UserUncheckedCreateWithoutInvoicesAsReceiverInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUncheckedCreateNestedOneWithoutUserInput
   managerProfile?: Prisma.ManagerProfileUncheckedCreateNestedOneWithoutUserInput
   tenantProfile?: Prisma.TenantProfileUncheckedCreateNestedOneWithoutUserInput
@@ -1332,12 +1412,14 @@ export type UserUpdateWithoutInvoicesAsPayerInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUpdateOneWithoutUserNestedInput
   managerProfile?: Prisma.ManagerProfileUpdateOneWithoutUserNestedInput
   tenantProfile?: Prisma.TenantProfileUpdateOneWithoutUserNestedInput
@@ -1361,12 +1443,14 @@ export type UserUncheckedUpdateWithoutInvoicesAsPayerInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUncheckedUpdateOneWithoutUserNestedInput
   managerProfile?: Prisma.ManagerProfileUncheckedUpdateOneWithoutUserNestedInput
   tenantProfile?: Prisma.TenantProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -1401,12 +1485,14 @@ export type UserUpdateWithoutInvoicesAsReceiverInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUpdateOneWithoutUserNestedInput
   managerProfile?: Prisma.ManagerProfileUpdateOneWithoutUserNestedInput
   tenantProfile?: Prisma.TenantProfileUpdateOneWithoutUserNestedInput
@@ -1430,12 +1516,14 @@ export type UserUncheckedUpdateWithoutInvoicesAsReceiverInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUncheckedUpdateOneWithoutUserNestedInput
   managerProfile?: Prisma.ManagerProfileUncheckedUpdateOneWithoutUserNestedInput
   tenantProfile?: Prisma.TenantProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -1459,12 +1547,14 @@ export type UserCreateWithoutManagedFlatsInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileCreateNestedOneWithoutUserInput
   managerProfile?: Prisma.ManagerProfileCreateNestedOneWithoutUserInput
   tenantProfile?: Prisma.TenantProfileCreateNestedOneWithoutUserInput
@@ -1488,12 +1578,14 @@ export type UserUncheckedCreateWithoutManagedFlatsInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUncheckedCreateNestedOneWithoutUserInput
   managerProfile?: Prisma.ManagerProfileUncheckedCreateNestedOneWithoutUserInput
   tenantProfile?: Prisma.TenantProfileUncheckedCreateNestedOneWithoutUserInput
@@ -1533,12 +1625,14 @@ export type UserUpdateWithoutManagedFlatsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUpdateOneWithoutUserNestedInput
   managerProfile?: Prisma.ManagerProfileUpdateOneWithoutUserNestedInput
   tenantProfile?: Prisma.TenantProfileUpdateOneWithoutUserNestedInput
@@ -1562,12 +1656,14 @@ export type UserUncheckedUpdateWithoutManagedFlatsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUncheckedUpdateOneWithoutUserNestedInput
   managerProfile?: Prisma.ManagerProfileUncheckedUpdateOneWithoutUserNestedInput
   tenantProfile?: Prisma.TenantProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -1591,12 +1687,14 @@ export type UserCreateWithoutManagerProfileInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileCreateNestedOneWithoutUserInput
   tenantProfile?: Prisma.TenantProfileCreateNestedOneWithoutUserInput
   createdProperties?: Prisma.PropertyCreateNestedManyWithoutCreatedByInput
@@ -1620,12 +1718,14 @@ export type UserUncheckedCreateWithoutManagerProfileInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUncheckedCreateNestedOneWithoutUserInput
   tenantProfile?: Prisma.TenantProfileUncheckedCreateNestedOneWithoutUserInput
   createdProperties?: Prisma.PropertyUncheckedCreateNestedManyWithoutCreatedByInput
@@ -1665,12 +1765,14 @@ export type UserUpdateWithoutManagerProfileInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUpdateOneWithoutUserNestedInput
   tenantProfile?: Prisma.TenantProfileUpdateOneWithoutUserNestedInput
   createdProperties?: Prisma.PropertyUpdateManyWithoutCreatedByNestedInput
@@ -1694,12 +1796,14 @@ export type UserUncheckedUpdateWithoutManagerProfileInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUncheckedUpdateOneWithoutUserNestedInput
   tenantProfile?: Prisma.TenantProfileUncheckedUpdateOneWithoutUserNestedInput
   createdProperties?: Prisma.PropertyUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -1723,12 +1827,14 @@ export type UserCreateWithoutOwnerProfileInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   managerProfile?: Prisma.ManagerProfileCreateNestedOneWithoutUserInput
   tenantProfile?: Prisma.TenantProfileCreateNestedOneWithoutUserInput
   createdProperties?: Prisma.PropertyCreateNestedManyWithoutCreatedByInput
@@ -1752,12 +1858,14 @@ export type UserUncheckedCreateWithoutOwnerProfileInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   managerProfile?: Prisma.ManagerProfileUncheckedCreateNestedOneWithoutUserInput
   tenantProfile?: Prisma.TenantProfileUncheckedCreateNestedOneWithoutUserInput
   createdProperties?: Prisma.PropertyUncheckedCreateNestedManyWithoutCreatedByInput
@@ -1797,12 +1905,14 @@ export type UserUpdateWithoutOwnerProfileInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   managerProfile?: Prisma.ManagerProfileUpdateOneWithoutUserNestedInput
   tenantProfile?: Prisma.TenantProfileUpdateOneWithoutUserNestedInput
   createdProperties?: Prisma.PropertyUpdateManyWithoutCreatedByNestedInput
@@ -1826,12 +1936,14 @@ export type UserUncheckedUpdateWithoutOwnerProfileInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   managerProfile?: Prisma.ManagerProfileUncheckedUpdateOneWithoutUserNestedInput
   tenantProfile?: Prisma.TenantProfileUncheckedUpdateOneWithoutUserNestedInput
   createdProperties?: Prisma.PropertyUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -1855,12 +1967,14 @@ export type UserCreateWithoutPaymentsAsPayerInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileCreateNestedOneWithoutUserInput
   managerProfile?: Prisma.ManagerProfileCreateNestedOneWithoutUserInput
   tenantProfile?: Prisma.TenantProfileCreateNestedOneWithoutUserInput
@@ -1884,12 +1998,14 @@ export type UserUncheckedCreateWithoutPaymentsAsPayerInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUncheckedCreateNestedOneWithoutUserInput
   managerProfile?: Prisma.ManagerProfileUncheckedCreateNestedOneWithoutUserInput
   tenantProfile?: Prisma.TenantProfileUncheckedCreateNestedOneWithoutUserInput
@@ -1918,12 +2034,14 @@ export type UserCreateWithoutPaymentsAsReceiverInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileCreateNestedOneWithoutUserInput
   managerProfile?: Prisma.ManagerProfileCreateNestedOneWithoutUserInput
   tenantProfile?: Prisma.TenantProfileCreateNestedOneWithoutUserInput
@@ -1947,12 +2065,14 @@ export type UserUncheckedCreateWithoutPaymentsAsReceiverInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUncheckedCreateNestedOneWithoutUserInput
   managerProfile?: Prisma.ManagerProfileUncheckedCreateNestedOneWithoutUserInput
   tenantProfile?: Prisma.TenantProfileUncheckedCreateNestedOneWithoutUserInput
@@ -1992,12 +2112,14 @@ export type UserUpdateWithoutPaymentsAsPayerInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUpdateOneWithoutUserNestedInput
   managerProfile?: Prisma.ManagerProfileUpdateOneWithoutUserNestedInput
   tenantProfile?: Prisma.TenantProfileUpdateOneWithoutUserNestedInput
@@ -2021,12 +2143,14 @@ export type UserUncheckedUpdateWithoutPaymentsAsPayerInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUncheckedUpdateOneWithoutUserNestedInput
   managerProfile?: Prisma.ManagerProfileUncheckedUpdateOneWithoutUserNestedInput
   tenantProfile?: Prisma.TenantProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -2061,12 +2185,14 @@ export type UserUpdateWithoutPaymentsAsReceiverInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUpdateOneWithoutUserNestedInput
   managerProfile?: Prisma.ManagerProfileUpdateOneWithoutUserNestedInput
   tenantProfile?: Prisma.TenantProfileUpdateOneWithoutUserNestedInput
@@ -2090,12 +2216,14 @@ export type UserUncheckedUpdateWithoutPaymentsAsReceiverInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUncheckedUpdateOneWithoutUserNestedInput
   managerProfile?: Prisma.ManagerProfileUncheckedUpdateOneWithoutUserNestedInput
   tenantProfile?: Prisma.TenantProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -2119,12 +2247,14 @@ export type UserCreateWithoutCreatedPropertiesInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileCreateNestedOneWithoutUserInput
   managerProfile?: Prisma.ManagerProfileCreateNestedOneWithoutUserInput
   tenantProfile?: Prisma.TenantProfileCreateNestedOneWithoutUserInput
@@ -2148,12 +2278,14 @@ export type UserUncheckedCreateWithoutCreatedPropertiesInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUncheckedCreateNestedOneWithoutUserInput
   managerProfile?: Prisma.ManagerProfileUncheckedCreateNestedOneWithoutUserInput
   tenantProfile?: Prisma.TenantProfileUncheckedCreateNestedOneWithoutUserInput
@@ -2193,12 +2325,14 @@ export type UserUpdateWithoutCreatedPropertiesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUpdateOneWithoutUserNestedInput
   managerProfile?: Prisma.ManagerProfileUpdateOneWithoutUserNestedInput
   tenantProfile?: Prisma.TenantProfileUpdateOneWithoutUserNestedInput
@@ -2222,12 +2356,14 @@ export type UserUncheckedUpdateWithoutCreatedPropertiesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUncheckedUpdateOneWithoutUserNestedInput
   managerProfile?: Prisma.ManagerProfileUncheckedUpdateOneWithoutUserNestedInput
   tenantProfile?: Prisma.TenantProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -2251,12 +2387,14 @@ export type UserCreateWithoutOwnedFlatsInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileCreateNestedOneWithoutUserInput
   managerProfile?: Prisma.ManagerProfileCreateNestedOneWithoutUserInput
   tenantProfile?: Prisma.TenantProfileCreateNestedOneWithoutUserInput
@@ -2280,12 +2418,14 @@ export type UserUncheckedCreateWithoutOwnedFlatsInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUncheckedCreateNestedOneWithoutUserInput
   managerProfile?: Prisma.ManagerProfileUncheckedCreateNestedOneWithoutUserInput
   tenantProfile?: Prisma.TenantProfileUncheckedCreateNestedOneWithoutUserInput
@@ -2325,12 +2465,14 @@ export type UserUpdateWithoutOwnedFlatsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUpdateOneWithoutUserNestedInput
   managerProfile?: Prisma.ManagerProfileUpdateOneWithoutUserNestedInput
   tenantProfile?: Prisma.TenantProfileUpdateOneWithoutUserNestedInput
@@ -2354,12 +2496,14 @@ export type UserUncheckedUpdateWithoutOwnedFlatsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUncheckedUpdateOneWithoutUserNestedInput
   managerProfile?: Prisma.ManagerProfileUncheckedUpdateOneWithoutUserNestedInput
   tenantProfile?: Prisma.TenantProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -2383,12 +2527,14 @@ export type UserCreateWithoutTenantProfileInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileCreateNestedOneWithoutUserInput
   managerProfile?: Prisma.ManagerProfileCreateNestedOneWithoutUserInput
   createdProperties?: Prisma.PropertyCreateNestedManyWithoutCreatedByInput
@@ -2412,12 +2558,14 @@ export type UserUncheckedCreateWithoutTenantProfileInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUncheckedCreateNestedOneWithoutUserInput
   managerProfile?: Prisma.ManagerProfileUncheckedCreateNestedOneWithoutUserInput
   createdProperties?: Prisma.PropertyUncheckedCreateNestedManyWithoutCreatedByInput
@@ -2457,12 +2605,14 @@ export type UserUpdateWithoutTenantProfileInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUpdateOneWithoutUserNestedInput
   managerProfile?: Prisma.ManagerProfileUpdateOneWithoutUserNestedInput
   createdProperties?: Prisma.PropertyUpdateManyWithoutCreatedByNestedInput
@@ -2486,12 +2636,14 @@ export type UserUncheckedUpdateWithoutTenantProfileInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUncheckedUpdateOneWithoutUserNestedInput
   managerProfile?: Prisma.ManagerProfileUncheckedUpdateOneWithoutUserNestedInput
   createdProperties?: Prisma.PropertyUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -2515,12 +2667,14 @@ export type UserCreateWithoutNotificationsInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileCreateNestedOneWithoutUserInput
   managerProfile?: Prisma.ManagerProfileCreateNestedOneWithoutUserInput
   tenantProfile?: Prisma.TenantProfileCreateNestedOneWithoutUserInput
@@ -2544,12 +2698,14 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUncheckedCreateNestedOneWithoutUserInput
   managerProfile?: Prisma.ManagerProfileUncheckedCreateNestedOneWithoutUserInput
   tenantProfile?: Prisma.TenantProfileUncheckedCreateNestedOneWithoutUserInput
@@ -2589,12 +2745,14 @@ export type UserUpdateWithoutNotificationsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUpdateOneWithoutUserNestedInput
   managerProfile?: Prisma.ManagerProfileUpdateOneWithoutUserNestedInput
   tenantProfile?: Prisma.TenantProfileUpdateOneWithoutUserNestedInput
@@ -2618,12 +2776,14 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUncheckedUpdateOneWithoutUserNestedInput
   managerProfile?: Prisma.ManagerProfileUncheckedUpdateOneWithoutUserNestedInput
   tenantProfile?: Prisma.TenantProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -2647,12 +2807,14 @@ export type UserCreateWithoutStaysInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileCreateNestedOneWithoutUserInput
   managerProfile?: Prisma.ManagerProfileCreateNestedOneWithoutUserInput
   tenantProfile?: Prisma.TenantProfileCreateNestedOneWithoutUserInput
@@ -2676,12 +2838,14 @@ export type UserUncheckedCreateWithoutStaysInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUncheckedCreateNestedOneWithoutUserInput
   managerProfile?: Prisma.ManagerProfileUncheckedCreateNestedOneWithoutUserInput
   tenantProfile?: Prisma.TenantProfileUncheckedCreateNestedOneWithoutUserInput
@@ -2721,12 +2885,14 @@ export type UserUpdateWithoutStaysInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUpdateOneWithoutUserNestedInput
   managerProfile?: Prisma.ManagerProfileUpdateOneWithoutUserNestedInput
   tenantProfile?: Prisma.TenantProfileUpdateOneWithoutUserNestedInput
@@ -2750,12 +2916,14 @@ export type UserUncheckedUpdateWithoutStaysInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUncheckedUpdateOneWithoutUserNestedInput
   managerProfile?: Prisma.ManagerProfileUncheckedUpdateOneWithoutUserNestedInput
   tenantProfile?: Prisma.TenantProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -2779,12 +2947,14 @@ export type UserCreateWithoutViewingRequestsInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileCreateNestedOneWithoutUserInput
   managerProfile?: Prisma.ManagerProfileCreateNestedOneWithoutUserInput
   tenantProfile?: Prisma.TenantProfileCreateNestedOneWithoutUserInput
@@ -2808,12 +2978,14 @@ export type UserUncheckedCreateWithoutViewingRequestsInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUncheckedCreateNestedOneWithoutUserInput
   managerProfile?: Prisma.ManagerProfileUncheckedCreateNestedOneWithoutUserInput
   tenantProfile?: Prisma.TenantProfileUncheckedCreateNestedOneWithoutUserInput
@@ -2842,12 +3014,14 @@ export type UserCreateWithoutReviewedViewingRequestsInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileCreateNestedOneWithoutUserInput
   managerProfile?: Prisma.ManagerProfileCreateNestedOneWithoutUserInput
   tenantProfile?: Prisma.TenantProfileCreateNestedOneWithoutUserInput
@@ -2871,12 +3045,14 @@ export type UserUncheckedCreateWithoutReviewedViewingRequestsInput = {
   name: string
   email: string
   phone: string
-  password: string
-  role: $Enums.Role
+  password?: string | null
+  role?: $Enums.Role
   status?: $Enums.UserStatus
   emailVerified?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUncheckedCreateNestedOneWithoutUserInput
   managerProfile?: Prisma.ManagerProfileUncheckedCreateNestedOneWithoutUserInput
   tenantProfile?: Prisma.TenantProfileUncheckedCreateNestedOneWithoutUserInput
@@ -2916,12 +3092,14 @@ export type UserUpdateWithoutViewingRequestsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUpdateOneWithoutUserNestedInput
   managerProfile?: Prisma.ManagerProfileUpdateOneWithoutUserNestedInput
   tenantProfile?: Prisma.TenantProfileUpdateOneWithoutUserNestedInput
@@ -2945,12 +3123,14 @@ export type UserUncheckedUpdateWithoutViewingRequestsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUncheckedUpdateOneWithoutUserNestedInput
   managerProfile?: Prisma.ManagerProfileUncheckedUpdateOneWithoutUserNestedInput
   tenantProfile?: Prisma.TenantProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -2985,12 +3165,14 @@ export type UserUpdateWithoutReviewedViewingRequestsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUpdateOneWithoutUserNestedInput
   managerProfile?: Prisma.ManagerProfileUpdateOneWithoutUserNestedInput
   tenantProfile?: Prisma.TenantProfileUpdateOneWithoutUserNestedInput
@@ -3014,12 +3196,14 @@ export type UserUncheckedUpdateWithoutReviewedViewingRequestsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  password?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
   ownerProfile?: Prisma.OwnerProfileUncheckedUpdateOneWithoutUserNestedInput
   managerProfile?: Prisma.ManagerProfileUncheckedUpdateOneWithoutUserNestedInput
   tenantProfile?: Prisma.TenantProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -3197,6 +3381,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   emailVerified?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  googleId?: boolean
+  authProvider?: boolean
   ownerProfile?: boolean | Prisma.User$ownerProfileArgs<ExtArgs>
   managerProfile?: boolean | Prisma.User$managerProfileArgs<ExtArgs>
   tenantProfile?: boolean | Prisma.User$tenantProfileArgs<ExtArgs>
@@ -3228,6 +3414,8 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   emailVerified?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  googleId?: boolean
+  authProvider?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -3241,6 +3429,8 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   emailVerified?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  googleId?: boolean
+  authProvider?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -3254,9 +3444,11 @@ export type UserSelectScalar = {
   emailVerified?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  googleId?: boolean
+  authProvider?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "phone" | "password" | "role" | "status" | "emailVerified" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "phone" | "password" | "role" | "status" | "emailVerified" | "createdAt" | "updatedAt" | "googleId" | "authProvider", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   ownerProfile?: boolean | Prisma.User$ownerProfileArgs<ExtArgs>
   managerProfile?: boolean | Prisma.User$managerProfileArgs<ExtArgs>
@@ -3306,12 +3498,14 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     name: string
     email: string
     phone: string
-    password: string
+    password: string | null
     role: $Enums.Role
     status: $Enums.UserStatus
     emailVerified: boolean
     createdAt: Date
     updatedAt: Date
+    googleId: string | null
+    authProvider: $Enums.AuthProvider | null
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -3762,6 +3956,8 @@ export interface UserFieldRefs {
   readonly emailVerified: Prisma.FieldRef<"User", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly googleId: Prisma.FieldRef<"User", 'String'>
+  readonly authProvider: Prisma.FieldRef<"User", 'AuthProvider'>
 }
     
 

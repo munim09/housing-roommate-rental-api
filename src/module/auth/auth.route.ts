@@ -33,4 +33,17 @@ router.patch(
     catchAsync(AuthController.updateProfile),
 );
 
+router.post("/refresh-token", catchAsync(AuthController.refreshToken));
+router.post("/google", catchAsync(AuthController.googleLogin));
+router.post(
+    "/forgot-password",
+    validateRequest(AuthValidation.ForgotPasswordZodSchema),
+    catchAsync(AuthController.forgotPassword),
+);
+router.post(
+    "/reset-password",
+    validateRequest(AuthValidation.ResetPasswordZodSchema),
+    AuthController.resetPassword,
+);
+
 export const AuthRoutes = router;
