@@ -94,6 +94,21 @@ const createApplication = async (req: Request, res: Response) => {
     });
 };
 
+const getApplications = async (req: Request, res: Response) => {
+    const result = await TenantService.getApplications(
+        req.user!.userId,
+        req.query as any,
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Applications retrieved successfully",
+        data: result.applications,
+        meta: result.meta,
+    });
+};
+
 const updateApplication = async (req: Request, res: Response) => {
     const result = await TenantService.updateApplication(
         req.user!.userId,
@@ -117,5 +132,6 @@ export const TenantController = {
     updateViewingRequestStatus,
     updateViewingRequest,
     createApplication,
+    getApplications,
     updateApplication,
 };

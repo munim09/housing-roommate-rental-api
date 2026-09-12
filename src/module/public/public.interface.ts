@@ -10,3 +10,11 @@ export interface IPublicAreaQuery {
     page?: number;
     limit?: number;
 }
+
+export interface IPublicAvailableAdvertisementQuery {
+    areaId: string;
+    from: string;
+    to: string;
+    page?: number;
+    limit?: number;
+}

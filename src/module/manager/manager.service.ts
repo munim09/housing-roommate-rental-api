@@ -1,5 +1,10 @@
-import { ManagerAssignmentStatus } from "../../../generated/prisma/enums";
+import {
+    ManagerAssignmentStatus,
+    Prisma,
+    Role,
+} from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
+import { IManagerApplicationQuery } from "./manager.interface";
 
 const getMyAdvertisements = async (managerId: string) => {
     const assignedFlatIds = (
@@ -72,6 +77,135 @@ const getMyAdvertisements = async (managerId: string) => {
     return advertisements;
 };
 
+const getApplications = async (
+    userId: string,
+    role: Role,
+    query: IManagerApplicationQuery,
+) => {
+    const { status, page = 1, limit = 10 } = query;
+
+    const where: Prisma.ApplicationWhereInput = {};
+
+    if (status) {
+        where.status = status;
+    }
+
+    if (role === Role.OWNER) {
+        where.advertisement = {
+            OR: [
+                { createdById: userId },
+                {
+                    flat: {
+                        ownerships: {
+                            some: { ownerId: userId, status: "ACTIVE" },
+                        },
+                    },
+                },
+                {
+                    room: {
+                        flat: {
+                            ownerships: {
+                                some: { ownerId: userId, status: "ACTIVE" },
+                            },
+                        },
+                    },
+                },
+            ],
+        };
+    } else {
+        where.advertisement = {
+            OR: [
+                { createdById: userId },
+                {
+                    flat: {
+                        managerAssignments: {
+                            some: { managerId: userId, status: "ACTIVE" },
+                        },
+                    },
+                },
+                {
+                    room: {
+                        flat: {
+                            managerAssignments: {
+                                some: { managerId: userId, status: "ACTIVE" },
+                            },
+                        },
+                    },
+                },
+            ],
+        };
+    }
+
+    const total = await prisma.application.count({ where });
+
+    const applications = await prisma.application.findMany({
+        where,
+        select: {
+            id: true,
+            type: true,
+            status: true,
+            requestedStartDate: true,
+            requestedEndDate: true,
+            note: true,
+            reviewedById: true,
+            reviewedAt: true,
+            createdAt: true,
+            updatedAt: true,
+            applicant: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    phone: true,
+                },
+            },
+            advertisement: {
+                select: {
+                    id: true,
+                    title: true,
+                    description: true,
+                    category: true,
+                    target: true,
+                    monthlyRent: true,
+                    status: true,
+                    flatId: true,
+                    roomId: true,
+                    createdBy: {
+                        select: {
+                            id: true,
+                            name: true,
+                            email: true,
+                            phone: true,
+                        },
+                    },
+                },
+            },
+            stay: {
+                select: {
+                    id: true,
+                    status: true,
+                    startDate: true,
+                    endDate: true,
+                },
+            },
+        },
+        orderBy: { createdAt: "desc" },
+        skip: (page - 1) * limit,
+        take: limit,
+    });
+
+    return {
+        applications,
+        meta: {
+            page,
+            limit,
+            total,
+            totalPages: Math.ceil(total / limit),
+        },
+    };
+};
+
 export const ManagerService = {
     getMyAdvertisements,
+    getApplications,
 };

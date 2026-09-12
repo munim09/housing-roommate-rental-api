@@ -371,7 +371,7 @@ export type InvoiceScalarWhereWithAggregatesInput = {
 
 export type InvoiceCreateInput = {
   id?: string
-  type: $Enums.InvoiceType
+  type?: $Enums.InvoiceType
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   billingPeriodStart: Date | string
   billingPeriodEnd: Date | string
@@ -391,7 +391,7 @@ export type InvoiceUncheckedCreateInput = {
   stayId: string
   payerId: string
   receiverId: string
-  type: $Enums.InvoiceType
+  type?: $Enums.InvoiceType
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   billingPeriodStart: Date | string
   billingPeriodEnd: Date | string
@@ -442,7 +442,7 @@ export type InvoiceCreateManyInput = {
   stayId: string
   payerId: string
   receiverId: string
-  type: $Enums.InvoiceType
+  type?: $Enums.InvoiceType
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   billingPeriodStart: Date | string
   billingPeriodEnd: Date | string
@@ -705,7 +705,7 @@ export type InvoiceUncheckedUpdateManyWithoutReceiverNestedInput = {
 
 export type InvoiceCreateWithoutPaymentsInput = {
   id?: string
-  type: $Enums.InvoiceType
+  type?: $Enums.InvoiceType
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   billingPeriodStart: Date | string
   billingPeriodEnd: Date | string
@@ -724,7 +724,7 @@ export type InvoiceUncheckedCreateWithoutPaymentsInput = {
   stayId: string
   payerId: string
   receiverId: string
-  type: $Enums.InvoiceType
+  type?: $Enums.InvoiceType
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   billingPeriodStart: Date | string
   billingPeriodEnd: Date | string
@@ -785,7 +785,7 @@ export type InvoiceUncheckedUpdateWithoutPaymentsInput = {
 
 export type InvoiceCreateWithoutStayInput = {
   id?: string
-  type: $Enums.InvoiceType
+  type?: $Enums.InvoiceType
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   billingPeriodStart: Date | string
   billingPeriodEnd: Date | string
@@ -803,7 +803,7 @@ export type InvoiceUncheckedCreateWithoutStayInput = {
   id?: string
   payerId: string
   receiverId: string
-  type: $Enums.InvoiceType
+  type?: $Enums.InvoiceType
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   billingPeriodStart: Date | string
   billingPeriodEnd: Date | string
@@ -862,7 +862,7 @@ export type InvoiceScalarWhereInput = {
 
 export type InvoiceCreateWithoutPayerInput = {
   id?: string
-  type: $Enums.InvoiceType
+  type?: $Enums.InvoiceType
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   billingPeriodStart: Date | string
   billingPeriodEnd: Date | string
@@ -880,7 +880,7 @@ export type InvoiceUncheckedCreateWithoutPayerInput = {
   id?: string
   stayId: string
   receiverId: string
-  type: $Enums.InvoiceType
+  type?: $Enums.InvoiceType
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   billingPeriodStart: Date | string
   billingPeriodEnd: Date | string
@@ -904,7 +904,7 @@ export type InvoiceCreateManyPayerInputEnvelope = {
 
 export type InvoiceCreateWithoutReceiverInput = {
   id?: string
-  type: $Enums.InvoiceType
+  type?: $Enums.InvoiceType
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   billingPeriodStart: Date | string
   billingPeriodEnd: Date | string
@@ -922,7 +922,7 @@ export type InvoiceUncheckedCreateWithoutReceiverInput = {
   id?: string
   stayId: string
   payerId: string
-  type: $Enums.InvoiceType
+  type?: $Enums.InvoiceType
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   billingPeriodStart: Date | string
   billingPeriodEnd: Date | string
@@ -980,7 +980,7 @@ export type InvoiceCreateManyStayInput = {
   id?: string
   payerId: string
   receiverId: string
-  type: $Enums.InvoiceType
+  type?: $Enums.InvoiceType
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   billingPeriodStart: Date | string
   billingPeriodEnd: Date | string
@@ -1042,7 +1042,7 @@ export type InvoiceCreateManyPayerInput = {
   id?: string
   stayId: string
   receiverId: string
-  type: $Enums.InvoiceType
+  type?: $Enums.InvoiceType
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   billingPeriodStart: Date | string
   billingPeriodEnd: Date | string
@@ -1057,7 +1057,7 @@ export type InvoiceCreateManyReceiverInput = {
   id?: string
   stayId: string
   payerId: string
-  type: $Enums.InvoiceType
+  type?: $Enums.InvoiceType
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   billingPeriodStart: Date | string
   billingPeriodEnd: Date | string

@@ -69,6 +69,14 @@ const createApplicationValidation = z
         message: "End date must be after start date",
     });
 
+const getApplicationsValidation = z.object({
+    status: z
+        .enum(["PENDING", "APPROVED", "REJECTED", "WITHDRAWN", "EXPIRED"])
+        .optional(),
+    page: z.coerce.number().int().min(1).default(1),
+    limit: z.coerce.number().int().min(1).max(100).default(10),
+});
+
 const updateApplicationValidation = z.object({
     status: z.enum(["APPROVED", "REJECTED", "WITHDRAWN"], {
         message: "Status must be APPROVED, REJECTED, or WITHDRAWN",
@@ -81,5 +89,6 @@ export const TenantValidation = {
     updateViewingRequestStatus: updateViewingRequestStatusValidation,
     updateViewingRequest: updateViewingRequestValidation,
     createApplication: createApplicationValidation,
+    getApplications: getApplicationsValidation,
     updateApplication: updateApplicationValidation,
 };

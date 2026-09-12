@@ -14,6 +14,23 @@ const getMyAdvertisements = async (req: Request, res: Response) => {
     });
 };
 
+const getApplications = async (req: Request, res: Response) => {
+    const result = await ManagerService.getApplications(
+        req.user!.userId,
+        req.user!.role,
+        req.query as any,
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Applications retrieved successfully",
+        data: result.applications,
+        meta: result.meta,
+    });
+};
+
 export const ManagerController = {
     getMyAdvertisements,
+    getApplications,
 };

@@ -141,7 +141,8 @@ const register = async (payload: {
     );
 
     return {
-        message: "Registration successful. OTP sent to your email.",
+        message:
+            "Registration successful. OTP sent to your email. It will be valid for 50 minutes",
         email: payload.email,
     };
 };

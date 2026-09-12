@@ -15,6 +15,7 @@ import {
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
 import {
+    IApplicationQuery,
     ICreateApplication,
     ICreateViewingRequest,
     IUpdateViewingRequest,
@@ -456,7 +457,10 @@ const createApplication = async (
     payload: ICreateApplication,
 ) => {
     const advertisement = await prisma.advertisement.findUnique({
-        where: { id: payload.advertisementId },
+        where: {
+            id: payload.advertisementId,
+            status: AdvertisementStatus.PUBLISHED,
+        },
         include: {
             flat: { select: { id: true, status: true } },
             room: { select: { id: true, status: true, flatId: true } },
@@ -538,6 +542,8 @@ const createApplication = async (
             "End date is outside the advertisement availability",
         );
     }
+
+    // Check there is no stay record
 
     const existingTenantApplication = await prisma.application.findFirst({
         where: {
@@ -650,6 +656,78 @@ const createApplication = async (
     });
 
     return application;
+};
+
+const getApplications = async (userId: string, query: IApplicationQuery) => {
+    const { status, page = 1, limit = 10 } = query;
+
+    const where: Prisma.ApplicationWhereInput = {
+        applicantId: userId,
+    };
+
+    if (status) {
+        where.status = status;
+    }
+
+    const total = await prisma.application.count({ where });
+
+    const applications = await prisma.application.findMany({
+        where,
+        select: {
+            id: true,
+            type: true,
+            status: true,
+            requestedStartDate: true,
+            requestedEndDate: true,
+            note: true,
+            reviewedById: true,
+            reviewedAt: true,
+            createdAt: true,
+            updatedAt: true,
+            advertisement: {
+                select: {
+                    id: true,
+                    title: true,
+                    description: true,
+                    category: true,
+                    target: true,
+                    monthlyRent: true,
+                    status: true,
+                    flatId: true,
+                    roomId: true,
+                    createdBy: {
+                        select: {
+                            id: true,
+                            name: true,
+                            email: true,
+                            phone: true,
+                        },
+                    },
+                },
+            },
+            stay: {
+                select: {
+                    id: true,
+                    status: true,
+                    startDate: true,
+                    endDate: true,
+                },
+            },
+        },
+        orderBy: { createdAt: "desc" },
+        skip: (page - 1) * limit,
+        take: limit,
+    });
+
+    return {
+        applications,
+        meta: {
+            page,
+            limit,
+            total,
+            totalPages: Math.ceil(total / limit),
+        },
+    };
 };
 
 const assertApplicationAccess = async (
@@ -920,5 +998,6 @@ export const TenantService = {
     updateViewingRequestStatus,
     updateViewingRequest,
     createApplication,
+    getApplications,
     updateApplication,
 };

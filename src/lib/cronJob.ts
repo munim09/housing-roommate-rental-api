@@ -3,12 +3,15 @@ import {
     ApplicationStatus,
     BillStatus,
     StayStatus,
+    UserStatus,
 } from "../../generated/prisma/client";
 import { prisma } from "./prisma";
 
 const OVERDUE_GRACE_MS = 60 * 60 * 1000;
+const UNVERIFIED_USER_GRACE_MS = 2 * 60 * 60 * 1000;
 
 let isRunning = false;
+let isDeletingUnverifiedUsers = false;
 
 export const cancelOverdueStays = async () => {
     if (isRunning) {
@@ -80,10 +83,39 @@ export const cancelOverdueStays = async () => {
     }
 };
 
+export const deleteUnverifiedUsers = async () => {
+    if (isDeletingUnverifiedUsers) {
+        return;
+    }
+
+    isDeletingUnverifiedUsers = true;
+
+    try {
+        const cutoff = new Date(Date.now() - UNVERIFIED_USER_GRACE_MS);
+
+        const result = await prisma.user.deleteMany({
+            where: {
+                emailVerified: false,
+                status: UserStatus.PENDING_APPROVAL,
+                createdAt: { lt: cutoff },
+            },
+        });
+
+        console.log(
+            `[cron] Unverified user check completed. Deleted ${result.count} user(s).`,
+        );
+    } catch (error) {
+        console.error("[cron] Unverified user check failed:", error);
+    } finally {
+        isDeletingUnverifiedUsers = false;
+    }
+};
+
 export const startCronJobs = async () => {
     cron.schedule("0 * * * *", cancelOverdueStays);
+    cron.schedule("0 * * * *", deleteUnverifiedUsers);
 
     console.log(
-        "[cron] Cron jobs started. Overdue stay check runs every hour.",
+        "[cron] Cron jobs started. Overdue stay and unverified user checks run every hour.",
     );
 };
