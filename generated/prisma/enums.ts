@@ -147,7 +147,6 @@ export type StayType = (typeof StayType)[keyof typeof StayType]
 export const StayStatus = {
   WAITING_FOR_PAYMENT: 'WAITING_FOR_PAYMENT',
   CONFIRMED: 'CONFIRMED',
-  ACTIVE: 'ACTIVE',
   COMPLETED: 'COMPLETED',
   TERMINATED: 'TERMINATED',
   CANCELLED: 'CANCELLED',
@@ -168,8 +167,6 @@ export type InvoiceType = (typeof InvoiceType)[keyof typeof InvoiceType]
 export const BillStatus = {
   PENDING: 'PENDING',
   PAID: 'PAID',
-  PARTIALLY_PAID: 'PARTIALLY_PAID',
-  OVERDUE: 'OVERDUE',
   CANCELLED: 'CANCELLED'
 } as const
 

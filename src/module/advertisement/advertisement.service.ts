@@ -26,7 +26,6 @@ const AD_CONFLICT_STATUSES = [
 const STAY_CONFLICT_STATUSES = [
     StayStatus.WAITING_FOR_PAYMENT,
     StayStatus.CONFIRMED,
-    StayStatus.ACTIVE,
 ];
 
 const startOfToday = (): Date => {

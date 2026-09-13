@@ -18,6 +18,8 @@ import {
     IApplicationQuery,
     ICreateApplication,
     ICreateViewingRequest,
+    IInvoiceQuery,
+    IStayInvoiceQuery,
     IUpdateViewingRequest,
     IViewingRequestQuery,
 } from "./tenant.interface";
@@ -225,8 +227,8 @@ const getViewingRequests = async (
             },
         },
         orderBy: { createdAt: "desc" },
-        skip: (page - 1) * limit,
-        take: limit,
+        skip: (Number(page) - 1) * Number(limit),
+        take: Number(limit),
     });
 
     return {
@@ -235,7 +237,7 @@ const getViewingRequests = async (
             page,
             limit,
             total,
-            totalPages: Math.ceil(total / limit),
+            totalPages: Math.ceil(Number(total) / Number(limit)),
         },
     };
 };
@@ -592,11 +594,7 @@ const createApplication = async (
 
     const stayConflictWhere: Prisma.StayWhereInput = {
         status: {
-            in: [
-                StayStatus.WAITING_FOR_PAYMENT,
-                StayStatus.CONFIRMED,
-                StayStatus.ACTIVE,
-            ],
+            in: [StayStatus.WAITING_FOR_PAYMENT, StayStatus.CONFIRMED],
         },
         startDate: { lte: payload.requestedEndDate },
         endDate: { gte: payload.requestedStartDate },
@@ -715,8 +713,8 @@ const getApplications = async (userId: string, query: IApplicationQuery) => {
             },
         },
         orderBy: { createdAt: "desc" },
-        skip: (page - 1) * limit,
-        take: limit,
+        skip: (Number(page) - 1) * Number(limit),
+        take: Number(limit),
     });
 
     return {
@@ -725,9 +723,152 @@ const getApplications = async (userId: string, query: IApplicationQuery) => {
             page,
             limit,
             total,
-            totalPages: Math.ceil(total / limit),
+            totalPages: Math.ceil(Number(total) / Number(limit)),
         },
     };
+};
+
+const applyApplicationRoleScope = (
+    where: Prisma.ApplicationWhereInput,
+    userId: string,
+    role: Role,
+) => {
+    if (role === Role.TENANT) {
+        where.applicantId = userId;
+    } else if (role === Role.OWNER) {
+        where.advertisement = {
+            OR: [
+                { createdById: userId },
+                {
+                    flat: {
+                        ownerships: {
+                            some: { ownerId: userId, status: "ACTIVE" },
+                        },
+                    },
+                },
+                {
+                    room: {
+                        flat: {
+                            ownerships: {
+                                some: { ownerId: userId, status: "ACTIVE" },
+                            },
+                        },
+                    },
+                },
+            ],
+        };
+    } else {
+        where.advertisement = {
+            OR: [
+                { createdById: userId },
+                {
+                    flat: {
+                        managerAssignments: {
+                            some: { managerId: userId, status: "ACTIVE" },
+                        },
+                    },
+                },
+                {
+                    room: {
+                        flat: {
+                            managerAssignments: {
+                                some: { managerId: userId, status: "ACTIVE" },
+                            },
+                        },
+                    },
+                },
+            ],
+        };
+    }
+};
+
+const getApplicationById = async (
+    userId: string,
+    role: Role,
+    applicationId: string,
+) => {
+    const where: Prisma.ApplicationWhereInput = {
+        id: applicationId,
+    };
+
+    applyApplicationRoleScope(where, userId, role);
+
+    const application = await prisma.application.findFirst({
+        where,
+        select: {
+            id: true,
+            advertisementId: true,
+            applicantId: true,
+            type: true,
+            status: true,
+            requestedStartDate: true,
+            requestedEndDate: true,
+            note: true,
+            reviewedById: true,
+            reviewedAt: true,
+            createdAt: true,
+            updatedAt: true,
+            advertisement: {
+                select: {
+                    id: true,
+                    title: true,
+                    description: true,
+                    category: true,
+                    target: true,
+                    monthlyRent: true,
+                    status: true,
+                    flatId: true,
+                    roomId: true,
+                    createdBy: {
+                        select: {
+                            id: true,
+                            name: true,
+                            email: true,
+                            phone: true,
+                        },
+                    },
+                },
+            },
+            applicant: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    phone: true,
+                    tenantProfile: {
+                        select: {
+                            nid: true,
+                            address: true,
+                            occupation: true,
+                        },
+                    },
+                },
+            },
+            reviewedBy: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    phone: true,
+                },
+            },
+            stay: {
+                select: {
+                    id: true,
+                    status: true,
+                    startDate: true,
+                    endDate: true,
+                    monthlyRent: true,
+                },
+            },
+        },
+    });
+
+    if (!application) {
+        throw new AppError(httpStatus.NOT_FOUND, "Application not found");
+    }
+
+    return application;
 };
 
 const assertApplicationAccess = async (
@@ -798,8 +939,8 @@ const calculateBillingPeriod = (
     monthlyRent: number,
 ) => {
     const billingEnd = new Date(startDate);
-    billingEnd.setDate(billingEnd.getDate() - 1);
-    billingEnd.setMonth(billingEnd.getMonth() + 1);
+    billingEnd.setDate(billingEnd.getDate() + 29);
+    // billingEnd.setMonth(billingEnd.getMonth() + 1);
 
     const finalEnd = billingEnd > endDate ? endDate : billingEnd;
 
@@ -991,6 +1132,427 @@ const updateApplication = async (
     });
 };
 
+const getInvoices = async (
+    userId: string,
+    role: Role,
+    query: IInvoiceQuery,
+) => {
+    const { status, page = 1, limit = 10 } = query;
+
+    const where: Prisma.InvoiceWhereInput = {};
+
+    applyInvoiceAccessScope(where, userId, role);
+
+    if (status) {
+        where.status = status;
+    }
+
+    const total = await prisma.invoice.count({ where });
+
+    const invoices = await prisma.invoice.findMany({
+        where,
+        select: {
+            id: true,
+            stayId: true,
+            payerId: true,
+            receiverId: true,
+            type: true,
+            amount: true,
+            billingPeriodStart: true,
+            billingPeriodEnd: true,
+            dueDate: true,
+            status: true,
+            description: true,
+            createdAt: true,
+            updatedAt: true,
+            receiver: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    phone: true,
+                },
+            },
+            stay: {
+                select: {
+                    id: true,
+                    status: true,
+                    startDate: true,
+                    endDate: true,
+                    monthlyRent: true,
+                    property: {
+                        select: {
+                            id: true,
+                            name: true,
+                            address: true,
+                        },
+                    },
+                    flat: {
+                        select: {
+                            id: true,
+                            flatNumber: true,
+                        },
+                    },
+                    room: {
+                        select: {
+                            id: true,
+                            roomNumber: true,
+                        },
+                    },
+                },
+            },
+            payments: {
+                select: {
+                    id: true,
+                    amount: true,
+                    status: true,
+                    transactionReference: true,
+                    paidAt: true,
+                },
+                orderBy: { createdAt: "desc" },
+            },
+        },
+        orderBy: { createdAt: "desc" },
+        skip: (Number(page) - 1) * Number(limit),
+        take: Number(limit),
+    });
+
+    return {
+        invoices,
+        meta: {
+            page,
+            limit,
+            total,
+            totalPages: Math.ceil(Number(total) / Number(limit)),
+        },
+    };
+};
+
+const applyStayAccessScope = (
+    where: Prisma.StayWhereInput,
+    userId: string,
+    role: Role,
+) => {
+    if (role === Role.TENANT) {
+        where.occupantId = userId;
+    } else if (role === Role.OWNER) {
+        where.flat = {
+            ownerships: {
+                some: { ownerId: userId, status: "ACTIVE" },
+            },
+        };
+    } else {
+        where.flat = {
+            managerAssignments: {
+                some: { managerId: userId, status: "ACTIVE" },
+            },
+        };
+    }
+};
+
+const getInvoicesByStay = async (
+    userId: string,
+    role: Role,
+    query: IStayInvoiceQuery,
+) => {
+    const { applicationId, stayId, status } = query;
+
+    const stayWhere: Prisma.StayWhereInput = {};
+
+    if (stayId) {
+        stayWhere.id = stayId;
+    }
+
+    if (applicationId) {
+        stayWhere.applicationId = applicationId;
+    }
+
+    applyStayAccessScope(stayWhere, userId, role);
+
+    const stay = await prisma.stay.findFirst({
+        where: stayWhere,
+        select: { id: true },
+    });
+
+    if (!stay) {
+        throw new AppError(httpStatus.NOT_FOUND, "Stay not found");
+    }
+
+    const invoiceWhere: Prisma.InvoiceWhereInput = {
+        stayId: stay.id,
+    };
+
+    if (status) {
+        invoiceWhere.status = status;
+    }
+
+    const total = await prisma.invoice.count({ where: invoiceWhere });
+
+    const invoices = await prisma.invoice.findMany({
+        where: invoiceWhere,
+        select: {
+            id: true,
+            stayId: true,
+            payerId: true,
+            receiverId: true,
+            type: true,
+            amount: true,
+            billingPeriodStart: true,
+            billingPeriodEnd: true,
+            dueDate: true,
+            status: true,
+            description: true,
+            createdAt: true,
+            updatedAt: true,
+            receiver: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    phone: true,
+                },
+            },
+            stay: {
+                select: {
+                    id: true,
+                    applicationId: true,
+                    status: true,
+                    startDate: true,
+                    endDate: true,
+                    monthlyRent: true,
+                    property: {
+                        select: {
+                            id: true,
+                            name: true,
+                            address: true,
+                        },
+                    },
+                    flat: {
+                        select: {
+                            id: true,
+                            flatNumber: true,
+                        },
+                    },
+                    room: {
+                        select: {
+                            id: true,
+                            roomNumber: true,
+                        },
+                    },
+                },
+            },
+            payments: {
+                select: {
+                    id: true,
+                    amount: true,
+                    status: true,
+                    transactionReference: true,
+                    paidAt: true,
+                },
+                orderBy: { createdAt: "desc" },
+            },
+        },
+        orderBy: { createdAt: "desc" },
+    });
+
+    return {
+        invoices,
+    };
+};
+
+const applyInvoiceAccessScope = (
+    where: Prisma.InvoiceWhereInput,
+    userId: string,
+    role: Role,
+) => {
+    if (role === Role.TENANT) {
+        where.payerId = userId;
+    } else if (role === Role.OWNER) {
+        where.stay = {
+            flat: {
+                ownerships: {
+                    some: { ownerId: userId, status: "ACTIVE" },
+                },
+            },
+        };
+    } else {
+        where.stay = {
+            flat: {
+                managerAssignments: {
+                    some: { managerId: userId, status: "ACTIVE" },
+                },
+            },
+        };
+    }
+};
+
+const getInvoiceById = async (
+    userId: string,
+    role: Role,
+    invoiceId: string,
+) => {
+    const where: Prisma.InvoiceWhereInput = {
+        id: invoiceId,
+    };
+
+    applyInvoiceAccessScope(where, userId, role);
+
+    const invoice = await prisma.invoice.findFirst({
+        where,
+        select: {
+            id: true,
+            stayId: true,
+            payerId: true,
+            receiverId: true,
+            type: true,
+            amount: true,
+            billingPeriodStart: true,
+            billingPeriodEnd: true,
+            dueDate: true,
+            status: true,
+            description: true,
+            createdAt: true,
+            updatedAt: true,
+            receiver: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    phone: true,
+                },
+            },
+            stay: {
+                select: {
+                    id: true,
+                    status: true,
+                    startDate: true,
+                    endDate: true,
+                    monthlyRent: true,
+                    property: {
+                        select: {
+                            id: true,
+                            name: true,
+                            address: true,
+                        },
+                    },
+                    flat: {
+                        select: {
+                            id: true,
+                            flatNumber: true,
+                        },
+                    },
+                    room: {
+                        select: {
+                            id: true,
+                            roomNumber: true,
+                        },
+                    },
+                },
+            },
+            payments: {
+                select: {
+                    id: true,
+                    amount: true,
+                    status: true,
+                    transactionReference: true,
+                    paidAt: true,
+                },
+                orderBy: { createdAt: "desc" },
+            },
+        },
+    });
+
+    if (!invoice) {
+        throw new AppError(httpStatus.NOT_FOUND, "Invoice not found");
+    }
+
+    return invoice;
+};
+
+const getStays = async (userId: string, role: Role) => {
+    const where: Prisma.StayWhereInput = {};
+
+    applyStayAccessScope(where, userId, role);
+
+    const stays = await prisma.stay.findMany({
+        where,
+        select: {
+            id: true,
+            applicationId: true,
+            occupantId: true,
+            propertyId: true,
+            flatId: true,
+            roomId: true,
+            type: true,
+            status: true,
+            startDate: true,
+            endDate: true,
+            monthlyRent: true,
+            createdAt: true,
+            updatedAt: true,
+            application: {
+                select: {
+                    id: true,
+                    status: true,
+                    requestedStartDate: true,
+                    requestedEndDate: true,
+                    advertisement: {
+                        select: {
+                            id: true,
+                            title: true,
+                            monthlyRent: true,
+                        },
+                    },
+                },
+            },
+            occupant: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    phone: true,
+                },
+            },
+            property: {
+                select: {
+                    id: true,
+                    name: true,
+                    address: true,
+                },
+            },
+            flat: {
+                select: {
+                    id: true,
+                    flatNumber: true,
+                },
+            },
+            room: {
+                select: {
+                    id: true,
+                    roomNumber: true,
+                },
+            },
+            invoices: {
+                select: {
+                    id: true,
+                    type: true,
+                    amount: true,
+                    billingPeriodStart: true,
+                    billingPeriodEnd: true,
+                    dueDate: true,
+                    status: true,
+                },
+                orderBy: { createdAt: "desc" },
+            },
+        },
+        orderBy: { createdAt: "desc" },
+    });
+
+    return {
+        stays,
+    };
+};
+
 export const TenantService = {
     createViewingRequest,
     getViewingRequests,
@@ -999,5 +1561,10 @@ export const TenantService = {
     updateViewingRequest,
     createApplication,
     getApplications,
+    getApplicationById,
     updateApplication,
+    getInvoices,
+    getInvoicesByStay,
+    getInvoiceById,
+    getStays,
 };

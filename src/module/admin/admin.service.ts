@@ -1,11 +1,23 @@
-import { Prisma, UserStatus } from "../../../generated/prisma/client";
 import httpStatus from "http-status";
+import { Prisma, UserStatus } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
-import { IAdminCreateArea, IAdminCreateCity, IAdminUserQuery } from "./admin.interface";
+import {
+    IAdminCreateArea,
+    IAdminCreateCity,
+    IAdminUserQuery,
+} from "./admin.interface";
 
 const getAllUsers = async (query: IAdminUserQuery) => {
-    const { role, status, search, page = 1, limit = 10, sortBy = "createdAt", sortOrder = "desc" } = query;
+    const {
+        role,
+        status,
+        search,
+        page = 1,
+        limit = 10,
+        sortBy = "createdAt",
+        sortOrder = "desc",
+    } = query;
 
     const where: Prisma.UserWhereInput = {};
 
@@ -40,8 +52,8 @@ const getAllUsers = async (query: IAdminUserQuery) => {
             updatedAt: true,
         },
         orderBy: { [sortBy]: sortOrder },
-        skip: (page - 1) * limit,
-        take: limit,
+        skip: (Number(page) - 1) * Number(limit),
+        take: Number(limit),
     });
 
     return {
@@ -50,7 +62,7 @@ const getAllUsers = async (query: IAdminUserQuery) => {
             page,
             limit,
             total,
-            totalPages: Math.ceil(total / limit),
+            totalPages: Math.ceil(Number(total) / Number(limit)),
         },
     };
 };
@@ -91,7 +103,10 @@ const updateUserStatus = async (userId: string, status: UserStatus) => {
     }
 
     if (user.role === "ADMIN") {
-        throw new AppError(httpStatus.FORBIDDEN, "Cannot change status of an admin user");
+        throw new AppError(
+            httpStatus.FORBIDDEN,
+            "Cannot change status of an admin user",
+        );
     }
 
     const updated = await prisma.user.update({
@@ -119,7 +134,10 @@ const updateUserRole = async (userId: string, role: string) => {
     }
 
     if (user.role === "ADMIN") {
-        throw new AppError(httpStatus.FORBIDDEN, "Cannot change role of an admin user");
+        throw new AppError(
+            httpStatus.FORBIDDEN,
+            "Cannot change role of an admin user",
+        );
     }
 
     const updated = await prisma.user.update({

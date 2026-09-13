@@ -190,8 +190,8 @@ const getApplications = async (
             },
         },
         orderBy: { createdAt: "desc" },
-        skip: (page - 1) * limit,
-        take: limit,
+        skip: (Number(page) - 1) * Number(limit),
+        take: Number(limit),
     });
 
     return {
@@ -200,7 +200,7 @@ const getApplications = async (
             page,
             limit,
             total,
-            totalPages: Math.ceil(total / limit),
+            totalPages: Math.ceil(Number(total) / Number(limit)),
         },
     };
 };

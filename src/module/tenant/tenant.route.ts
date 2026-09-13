@@ -1,7 +1,10 @@
 import { Router } from "express";
 import { Role } from "../../../generated/prisma/enums";
 import { auth } from "../../middlewares/checkAuth";
-import { validateRequest } from "../../middlewares/validateRequest";
+import {
+    validateRequest,
+    validateRequestNew,
+} from "../../middlewares/validateRequest";
 import { catchAsync } from "../../utils/catchAsync";
 import { TenantController } from "./tenant.controller";
 import { TenantValidation } from "./tenant.validation";
@@ -56,11 +59,43 @@ router.get(
     catchAsync(TenantController.getApplications),
 );
 
+router.get(
+    "/applications/:id",
+    auth(Role.TENANT, Role.OWNER, Role.MANAGER),
+    catchAsync(TenantController.getApplicationById),
+);
+
 router.patch(
     "/applications/:id",
     auth(Role.TENANT, Role.OWNER, Role.MANAGER),
     validateRequest(TenantValidation.updateApplication),
     catchAsync(TenantController.updateApplication),
+);
+
+router.get(
+    "/invoices",
+    auth(Role.TENANT, Role.OWNER, Role.MANAGER),
+    validateRequest(TenantValidation.getInvoices),
+    catchAsync(TenantController.getInvoices),
+);
+
+router.get(
+    "/invoices/by-stay",
+    auth(Role.TENANT, Role.OWNER, Role.MANAGER),
+    validateRequestNew(TenantValidation.getStayInvoices),
+    catchAsync(TenantController.getInvoicesByStay),
+);
+
+router.get(
+    "/invoices/:id",
+    auth(Role.TENANT, Role.OWNER, Role.MANAGER),
+    catchAsync(TenantController.getInvoiceById),
+);
+
+router.get(
+    "/stays",
+    auth(Role.TENANT, Role.OWNER, Role.MANAGER),
+    catchAsync(TenantController.getStays),
 );
 
 export const TenantRoutes = router;

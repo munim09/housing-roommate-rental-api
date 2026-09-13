@@ -149,11 +149,7 @@ const getAvailableAdvertisements = async (
 
     const conflictingStayFilter: Prisma.StayWhereInput = {
         status: {
-            in: [
-                StayStatus.WAITING_FOR_PAYMENT,
-                StayStatus.CONFIRMED,
-                StayStatus.ACTIVE,
-            ],
+            in: [StayStatus.WAITING_FOR_PAYMENT, StayStatus.CONFIRMED],
         },
         startDate: { lte: endDate },
         endDate: { gte: startDate },
@@ -440,10 +436,7 @@ const getAdvertisementById = async (advertisementId: string) => {
     });
 
     if (!advertisement) {
-        throw new AppError(
-            httpStatus.NOT_FOUND,
-            "Advertisement not found",
-        );
+        throw new AppError(httpStatus.NOT_FOUND, "Advertisement not found");
     }
 
     if (advertisement.target === AdvertisementTarget.ENTIRE_FLAT) {

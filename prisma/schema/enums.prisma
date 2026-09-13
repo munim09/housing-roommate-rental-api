@@ -110,7 +110,6 @@ enum StayType {
 enum StayStatus {
   WAITING_FOR_PAYMENT
   CONFIRMED
-  ACTIVE
   COMPLETED
   TERMINATED
   CANCELLED
@@ -131,8 +130,6 @@ enum InvoiceType {
 enum BillStatus {
   PENDING
   PAID
-  PARTIALLY_PAID
-  OVERDUE
   CANCELLED
 }
 

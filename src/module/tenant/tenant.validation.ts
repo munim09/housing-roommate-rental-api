@@ -83,6 +83,25 @@ const updateApplicationValidation = z.object({
     }),
 });
 
+const getInvoicesValidation = z.object({
+    status: z
+        .enum(["PENDING", "PAID", "PARTIALLY_PAID", "OVERDUE", "CANCELLED"])
+        .optional(),
+    page: z.coerce.number().int().min(1).default(1),
+    limit: z.coerce.number().int().min(1).max(100).default(10),
+});
+
+const getStayInvoicesValidation = z.object({
+    query: z
+        .object({
+            applicationId: z.string().uuid("Invalid application id").optional(),
+            stayId: z.string().uuid("Invalid stay id").optional(),
+        })
+        .refine((data) => data.applicationId || data.stayId, {
+            message: "Either applicationId or stayId is required",
+        }),
+});
+
 export const TenantValidation = {
     createViewingRequest: createViewingRequestValidation,
     getViewingRequests: getViewingRequestsValidation,
@@ -91,4 +110,6 @@ export const TenantValidation = {
     createApplication: createApplicationValidation,
     getApplications: getApplicationsValidation,
     updateApplication: updateApplicationValidation,
+    getInvoices: getInvoicesValidation,
+    getStayInvoices: getStayInvoicesValidation,
 };

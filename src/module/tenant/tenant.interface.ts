@@ -1,5 +1,6 @@
 import {
     ApplicationStatus,
+    BillStatus,
     ViewingRequestStatus,
 } from "../../../generated/prisma/enums";
 
@@ -30,6 +31,20 @@ export interface ICreateApplication {
 
 export interface IApplicationQuery {
     status?: ApplicationStatus;
+    page?: number;
+    limit?: number;
+}
+
+export interface IInvoiceQuery {
+    status?: BillStatus;
+    page?: number;
+    limit?: number;
+}
+
+export interface IStayInvoiceQuery {
+    applicationId?: string;
+    stayId?: string;
+    status?: BillStatus;
     page?: number;
     limit?: number;
 }

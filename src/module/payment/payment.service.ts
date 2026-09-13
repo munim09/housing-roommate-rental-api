@@ -29,8 +29,8 @@ const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
 const addOneMonth = (date: Date): Date => {
     const result = new Date(date);
-    result.setDate(result.getDate() - 1);
-    result.setMonth(result.getMonth() + 1);
+    result.setDate(result.getDate() + 29);
+    // result.setMonth(result.getMonth() + 1);
     return result;
 };
 
@@ -217,6 +217,43 @@ const initiatePayment = async (tenantId: string, invoiceId: string) => {
 
     if (invoice.status !== BillStatus.PENDING) {
         throw new AppError(httpStatus.BAD_REQUEST, "Invoice is not payable");
+    }
+
+    if (invoice.type === InvoiceType.RENT) {
+        const earlierInvoice = await prisma.invoice.findFirst({
+            where: {
+                stayId: invoice.stayId,
+                id: { not: invoice.id },
+                type: InvoiceType.RENT,
+                status: {
+                    in: [BillStatus.PENDING],
+                },
+                dueDate: { lt: invoice.dueDate },
+            },
+            select: { id: true, dueDate: true },
+            orderBy: { dueDate: "asc" },
+        });
+
+        if (earlierInvoice) {
+            throw new AppError(
+                httpStatus.BAD_REQUEST,
+                "An earlier rent installment for this stay must be paid first",
+            );
+        }
+    }
+
+    const stay = await prisma.stay.findFirst({
+        where: { id: invoice.stayId },
+        select: { status: true },
+    });
+
+    if (stay?.status === StayStatus.WAITING_FOR_PAYMENT) {
+        if (invoice.dueDate < new Date()) {
+            throw new AppError(
+                httpStatus.BAD_REQUEST,
+                "Booking invoice is past its due date and can no longer be paid.",
+            );
+        }
     }
 
     const existing = await prisma.payment.findFirst({
@@ -412,8 +449,8 @@ const getMyPayments = async (tenantId: string, query: IPaymentQuery) => {
     const [payments, total] = await Promise.all([
         prisma.payment.findMany({
             where,
-            skip: (page - 1) * limit,
-            take: limit,
+            skip: (Number(page) - 1) * Number(limit),
+            take: Number(limit),
             orderBy: { createdAt: "desc" },
             select: {
                 id: true,
@@ -452,7 +489,7 @@ const getMyPayments = async (tenantId: string, query: IPaymentQuery) => {
             page,
             limit,
             total,
-            totalPages: Math.ceil(total / limit),
+            totalPages: Math.ceil(Number(total) / Number(limit)),
         },
         payments,
     };

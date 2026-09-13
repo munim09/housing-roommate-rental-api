@@ -109,6 +109,21 @@ const getApplications = async (req: Request, res: Response) => {
     });
 };
 
+const getApplicationById = async (req: Request, res: Response) => {
+    const result = await TenantService.getApplicationById(
+        req.user!.userId,
+        req.user!.role,
+        req.params.id as string,
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Application retrieved successfully",
+        data: result,
+    });
+};
+
 const updateApplication = async (req: Request, res: Response) => {
     const result = await TenantService.updateApplication(
         req.user!.userId,
@@ -125,6 +140,66 @@ const updateApplication = async (req: Request, res: Response) => {
     });
 };
 
+const getInvoices = async (req: Request, res: Response) => {
+    const result = await TenantService.getInvoices(
+        req.user!.userId,
+        req.user!.role,
+        req.query as any,
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Invoices retrieved successfully",
+        data: result.invoices,
+        meta: result.meta,
+    });
+};
+
+const getInvoiceById = async (req: Request, res: Response) => {
+    const result = await TenantService.getInvoiceById(
+        req.user!.userId,
+        req.user!.role,
+        req.params.id as string,
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Invoice retrieved successfully",
+        data: result,
+    });
+};
+
+const getInvoicesByStay = async (req: Request, res: Response) => {
+    const result = await TenantService.getInvoicesByStay(
+        req.user!.userId,
+        req.user!.role,
+        req.query as any,
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Invoices retrieved successfully",
+        data: result.invoices,
+    });
+};
+
+const getStays = async (req: Request, res: Response) => {
+    const result = await TenantService.getStays(
+        req.user!.userId,
+        req.user!.role,
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Stays retrieved successfully",
+        data: result.stays,
+    });
+};
+
 export const TenantController = {
     createViewingRequest,
     getViewingRequests,
@@ -133,5 +208,10 @@ export const TenantController = {
     updateViewingRequest,
     createApplication,
     getApplications,
+    getApplicationById,
     updateApplication,
+    getInvoices,
+    getInvoicesByStay,
+    getInvoiceById,
+    getStays,
 };
