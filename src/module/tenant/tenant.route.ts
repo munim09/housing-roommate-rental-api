@@ -52,6 +52,13 @@ router.post(
     catchAsync(TenantController.createApplication),
 );
 
+router.patch(
+    "/applications/:id",
+    auth(Role.TENANT, Role.OWNER, Role.MANAGER),
+    validateRequest(TenantValidation.updateApplication),
+    catchAsync(TenantController.updateApplication),
+);
+
 router.get(
     "/applications",
     auth(Role.TENANT),
@@ -63,13 +70,6 @@ router.get(
     "/applications/:id",
     auth(Role.TENANT, Role.OWNER, Role.MANAGER),
     catchAsync(TenantController.getApplicationById),
-);
-
-router.patch(
-    "/applications/:id",
-    auth(Role.TENANT, Role.OWNER, Role.MANAGER),
-    validateRequest(TenantValidation.updateApplication),
-    catchAsync(TenantController.updateApplication),
 );
 
 router.get(
