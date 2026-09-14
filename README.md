@@ -1,6 +1,6 @@
-# Housing & Roommate Backend
+# Housing Rental Backend
 
-Backend API for a housing & roommate matching platform. Owners and managers list flats/rooms, tenants apply for stays, invoices are generated for rent & utility bills, and payments are collected via SSLCommerz.
+Backend API for a housing matching platform. Owners and managers list flats/rooms, tenants apply for stays, invoices are generated for rent & utility bills, and payments are collected via SSLCommerz.
 
 ## Tech Stack
 
@@ -120,7 +120,7 @@ Client → Express App (app.ts)
 | `User` (+ `OwnerProfile`, `ManagerProfile`, `TenantProfile`) | Users and role profiles |
 | `Property` → `Flat` → `Room` | Property hierarchy with images |
 | `PropertyOwnership` / `ManagerAssignment` | Who owns / manages a flat |
-| `Advertisement` | Rental / roommate listings (flat or room target) |
+| `Advertisement` | Rental listings (flat or room target) |
 | `Application` | Tenant applications against an advertisement |
 | `Stay` | Confirmed/active booking (from an approved application) |
 | `Invoice` | Rent (RENT) and utility (UTILITY) bills |
