@@ -34,7 +34,7 @@ This document describes the PostgreSQL database for the Housing & Roommate platf
 | 16 | `Invoice` | Rent (RENT) and utility (UTILITY) bills |
 | 17 | `Payment` | Payments with gateway metadata |
 | 18 | `ViewingRequest` | Requests to view an advertised flat/room |
-| 19 | `Notification` | Notifications for users |
+
 
 ## ERD
 
@@ -56,7 +56,6 @@ erDiagram
     User ||--o{ Payment : "as receiver"
     User ||--o{ ViewingRequest : "requests"
     User ||--o{ ViewingRequest : "reviews"
-    User ||--o{ Notification : "receives"
 
     City ||--o{ Area : "contains"
     Area ||--o{ Property : "located in"
@@ -100,7 +99,6 @@ erDiagram
 | `User` | `Invoice` | 1 → 0..N | as **payer** and as **receiver** (two FKs) |
 | `User` | `Payment` | 1 → 0..N | as **payer** and as **receiver** (two FKs) |
 | `User` | `ViewingRequest` | 1 → 0..N | as **requester** and as **reviewer** (`reviewedById` nullable) |
-| `User` | `Notification` | 1 → 0..N | `userId` |
 | `City` | `Area` | 1 → 0..N | `cityId`; unique on `(cityId, name)` |
 | `Area` | `Property` | 1 → 0..N | `areaId` (mandatory) |
 | `Property` | `Flat` | 1 → 0..N | unique on `(propertyId, flatNumber)` |
@@ -363,18 +361,6 @@ Single table for viewing any advertisement.
 | `noteByReviewer` | String? | from reviewer |
 | `createdAt` / `updatedAt` | DateTime | |
 
-### 19. Notification
-
-| Field | Type | Notes |
-| --- | --- | --- |
-| `id` | String (uuid) | PK |
-| `userId` | String | FK → `User` |
-| `type` | `NotificationType` | e.g. `SYSTEM`, `APPLICATION`, `PAYMENT`, `VIEWING` |
-| `title` | String | |
-| `message` | String | |
-| `readAt` | DateTime? | |
-| `createdAt` | DateTime | |
-
 ## Enums
 
 | Enum | Values | Used by |
@@ -402,7 +388,7 @@ Single table for viewing any advertisement.
 | `ViewingRequestStatus` | `PENDING`, `APPROVED`, `REJECTED`, `CANCELLED`, `COMPLETED`, `NO_SHOW` | `ViewingRequest.status` |
 | `MaintenanceStatus` | `OPEN`, `IN_PROGRESS`, `RESOLVED`, `CLOSED`, `CANCELLED` | *(unused — reserved)* |
 | `MaintenancePriority` | `LOW`, `MEDIUM`, `HIGH`, `URGENT` | *(unused — reserved)* |
-| `NotificationType` | `SYSTEM`, `APPLICATION`, `PAYMENT`, `UTILITY`, `VIEWING`, `MAINTENANCE`, `ROOMMATE` | `Notification.type` |
+
 
 ## Conventions & Rules
 
@@ -435,4 +421,3 @@ Single table for viewing any advertisement.
 | `Invoice` | — | `stayId`, `payerId`, `receiverId`, `status`, `dueDate` |
 | `Payment` | — | `stayId`, `invoiceId`, `payerId`, `receiverId`, `status` |
 | `ViewingRequest` | — | `advertisementId`, `requesterId`, `status`, `requestedDate` |
-| `Notification` | — | `userId`, `readAt`, `createdAt` |
