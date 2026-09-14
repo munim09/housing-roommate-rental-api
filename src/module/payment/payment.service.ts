@@ -55,10 +55,12 @@ const buildRemainingRentInvoices = (
     let cursor = new Date(stay.startDate);
     let isFirst = true;
 
+    console.log("cursor 1", cursor);
     while (cursor <= stay.endDate) {
         const blockEnd = addOneMonth(cursor);
+        console.log("blockEnd 1", blockEnd);
         const finalEnd = blockEnd > stay.endDate ? stay.endDate : blockEnd;
-
+        console.log("finalEnd 1", finalEnd);
         const billedDays =
             Math.round((finalEnd.getTime() - cursor.getTime()) / MS_PER_DAY) +
             1;
@@ -67,7 +69,8 @@ const buildRemainingRentInvoices = (
             ((monthlyRent / 30) * Math.max(billedDays, 1)).toFixed(2),
         );
 
-        if (!isFirst && !existingBillingStarts.has(cursor.toISOString())) {
+        // if (!isFirst && !existingBillingStarts.has(cursor.toISOString())) {
+        if (!existingBillingStarts.has(cursor.toISOString())) {
             const dueDate = new Date(cursor);
             dueDate.setDate(dueDate.getDate() - 1);
 
@@ -85,8 +88,10 @@ const buildRemainingRentInvoices = (
             break;
         }
 
-        cursor = finalEnd;
+        cursor = new Date(finalEnd);
         cursor.setDate(cursor.getDate() + 1);
+        console.log("cursor 2", cursor);
+        console.log("finalEnd 2", finalEnd);
     }
 
     return invoices;
@@ -143,7 +148,13 @@ const markPaymentSuccess = async (paymentId: string, gatewayResponse: any) => {
                             });
 
                             const existingInvoices = await tx.invoice.findMany({
-                                where: { stayId: stay.id },
+                                where: {
+                                    stayId: stay.id,
+                                    type: "RENT",
+                                    status: {
+                                        in: ["PAID", "PENDING"],
+                                    },
+                                },
                                 select: {
                                     billingPeriodStart: true,
                                 },
@@ -416,6 +427,8 @@ const checkPayment = async (tranId: string) => {
             "Transaction not found",
         );
     }
+
+    console.log("transaction", transaction);
 
     const isPaymentSuccessful =
         transaction.status === "VALID" || transaction.status === "VALIDATED";

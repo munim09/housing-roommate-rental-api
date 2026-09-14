@@ -2,11 +2,12 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import express, { Application, Request, Response } from "express";
 import httpStatus from "http-status";
+import config from "./config";
 import { globalErrorHandler } from "./middlewares/globalErrorHandler";
 import { notFound } from "./middlewares/notFound";
-import { AuthRoutes } from "./module/auth/auth.route";
 import { AdminRoutes } from "./module/admin/admin.route";
 import { AdvertisementRoutes } from "./module/advertisement/advertisement.route";
+import { AuthRoutes } from "./module/auth/auth.route";
 import { ManagerRoutes } from "./module/manager/manager.route";
 import { OwnerRoutes } from "./module/owner/owner.route";
 import { PaymentRoutes } from "./module/payment/payment.route";
@@ -24,10 +25,17 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
     cors({
-        origin: `${process.env.APP_URL}`,
+        origin: `${config.APP_URL}`,
         credentials: true,
     }),
 );
+
+// app.use(
+//     cors({
+//         origin: `${config.FRONT_END_URL}`,
+//         credentials: true,
+//     }),
+// );
 
 app.get("/", async (req: Request, res: Response) => {
     res.send("Hello, World!");

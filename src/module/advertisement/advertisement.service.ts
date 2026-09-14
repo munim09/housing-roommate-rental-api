@@ -3,7 +3,10 @@ import {
     AdvertisementCategory,
     AdvertisementStatus,
     AdvertisementTarget,
+    BillStatus,
     FlatStatus,
+    InvoiceType,
+    ManagerAssignmentStatus,
     Role,
     RoomStatus,
     StayStatus,
@@ -12,7 +15,9 @@ import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
 import type {
     ICreateAdvertisement,
+    ICreateUtilityInvoice,
     IUpdateAdvertisement,
+    IUpdateUtilityInvoice,
 } from "./advertisement.interface";
 
 const AD_CONFLICT_STATUSES = [
@@ -431,9 +436,208 @@ const updateAdvertisement = async (
     });
 };
 
+const assertUtilityInvoiceAccess = async (
+    userId: string,
+    role: Role,
+    flatId: string,
+) => {
+    if (role === Role.MANAGER) {
+        const assignment = await prisma.managerAssignment.findFirst({
+            where: {
+                managerId: userId,
+                flatId,
+                status: ManagerAssignmentStatus.ACTIVE,
+            },
+        });
+
+        if (!assignment) {
+            throw new AppError(
+                httpStatus.FORBIDDEN,
+                "You are not assigned to manage this flat",
+            );
+        }
+    }
+
+    const ownership = await prisma.propertyOwnership.findFirst({
+        where: {
+            flatId,
+            status: "ACTIVE",
+        },
+    });
+
+    if (!ownership) {
+        throw new AppError(
+            httpStatus.NOT_FOUND,
+            "No active owner found for this flat",
+        );
+    }
+
+    if (role === Role.OWNER && ownership.ownerId !== userId) {
+        throw new AppError(httpStatus.FORBIDDEN, "You do not own this flat");
+    }
+
+    return ownership;
+};
+
+const createUtilityInvoice = async (
+    userId: string,
+    role: Role,
+    payload: ICreateUtilityInvoice,
+) => {
+    const {
+        stayId,
+        amount,
+        billingPeriodStart,
+        billingPeriodEnd,
+        description,
+    } = payload;
+
+    const stay = await prisma.stay.findUnique({
+        where: { id: stayId },
+        include: {
+            flat: true,
+            occupant: { select: { id: true, role: true } },
+        },
+    });
+
+    if (!stay) {
+        throw new AppError(httpStatus.NOT_FOUND, "Stay not found");
+    }
+
+    if (stay.status !== StayStatus.CONFIRMED) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Can only create utility invoices for confirmed stays",
+        );
+    }
+
+    const payerId = stay.occupantId;
+
+    if (stay.occupant.role !== "TENANT") {
+        throw new AppError(httpStatus.BAD_REQUEST, "Payer must be a tenant");
+    }
+
+    const ownership = await assertUtilityInvoiceAccess(
+        userId,
+        role,
+        stay.flatId,
+    );
+
+    if (billingPeriodStart >= billingPeriodEnd) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Billing period start must be before end",
+        );
+    }
+
+    const invoice = await prisma.invoice.create({
+        data: {
+            stayId,
+            payerId,
+            receiverId: ownership.ownerId,
+            type: InvoiceType.UTILITY,
+            amount,
+            billingPeriodStart,
+            billingPeriodEnd,
+            status: BillStatus.PENDING,
+            description,
+        },
+        include: {
+            stay: {
+                select: {
+                    id: true,
+                    flat: { select: { id: true, flatNumber: true } },
+                },
+            },
+            payer: { select: { id: true, name: true, email: true } },
+            receiver: { select: { id: true, name: true, email: true } },
+        },
+    });
+
+    return invoice;
+};
+
+const updateUtilityInvoice = async (
+    userId: string,
+    role: Role,
+    invoiceId: string,
+    payload: IUpdateUtilityInvoice,
+) => {
+    const {
+        amount,
+        billingPeriodStart,
+        billingPeriodEnd,
+        description,
+        status,
+    } = payload;
+
+    const invoice = await prisma.invoice.findUnique({
+        where: { id: invoiceId },
+        include: { stay: true },
+    });
+
+    if (!invoice) {
+        throw new AppError(httpStatus.NOT_FOUND, "Invoice not found");
+    }
+
+    if (invoice.type !== InvoiceType.UTILITY) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Only utility invoices can be updated here",
+        );
+    }
+
+    if (invoice.status === BillStatus.PAID) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Paid invoices cannot be updated",
+        );
+    }
+
+    await assertUtilityInvoiceAccess(userId, role, invoice.stay.flatId);
+
+    const effectiveStart = billingPeriodStart ?? invoice.billingPeriodStart;
+    const effectiveEnd = billingPeriodEnd ?? invoice.billingPeriodEnd;
+    const amount_new = amount ?? invoice.amount;
+    const description_new = description ?? invoice.description;
+    const status_new = status ?? invoice.status;
+
+    if (effectiveStart >= effectiveEnd) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Billing period start must be before end",
+        );
+    }
+
+    const updatedInvoice = await prisma.invoice.update({
+        where: { id: invoiceId },
+        data: {
+            amount: amount_new,
+            billingPeriodStart: effectiveStart,
+            billingPeriodEnd: effectiveEnd,
+            description: description_new,
+            status: status_new,
+        },
+        include: {
+            stay: {
+                select: {
+                    id: true,
+                    flat: { select: { id: true, flatNumber: true } },
+                },
+            },
+            payer: { select: { id: true, name: true, email: true } },
+            receiver: { select: { id: true, name: true, email: true } },
+        },
+    });
+
+    return updatedInvoice;
+};
+
 export const AdvertisementService = {
     createFlatAdvertisement,
     createRoomAdvertisement,
     updateAdvertisementStatus,
     updateAdvertisement,
+    createUtilityInvoice,
+    updateUtilityInvoice,
 };
