@@ -49,6 +49,8 @@ model Stay {
 
   room Room? @relation(fields: [roomId], references: [id])
 
+  advertisement Advertisement[]
+
   invoices Invoice[]
 
   payments Payment[]

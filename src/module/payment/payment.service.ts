@@ -6,6 +6,7 @@ import {
     PaymentStatus,
     Prisma,
     StayStatus,
+    StayType,
 } from "../../../generated/prisma/client";
 import config from "../../config";
 import { prisma } from "../../lib/prisma";
@@ -55,12 +56,12 @@ const buildRemainingRentInvoices = (
     let cursor = new Date(stay.startDate);
     let isFirst = true;
 
-    console.log("cursor 1", cursor);
+    // console.log("cursor 1", cursor);
     while (cursor <= stay.endDate) {
         const blockEnd = addOneMonth(cursor);
-        console.log("blockEnd 1", blockEnd);
+        // console.log("blockEnd 1", blockEnd);
         const finalEnd = blockEnd > stay.endDate ? stay.endDate : blockEnd;
-        console.log("finalEnd 1", finalEnd);
+        // console.log("finalEnd 1", finalEnd);
         const billedDays =
             Math.round((finalEnd.getTime() - cursor.getTime()) / MS_PER_DAY) +
             1;
@@ -90,8 +91,8 @@ const buildRemainingRentInvoices = (
 
         cursor = new Date(finalEnd);
         cursor.setDate(cursor.getDate() + 1);
-        console.log("cursor 2", cursor);
-        console.log("finalEnd 2", finalEnd);
+        // console.log("cursor 2", cursor);
+        // console.log("finalEnd 2", finalEnd);
     }
 
     return invoices;
@@ -139,6 +140,15 @@ const markPaymentSuccess = async (paymentId: string, gatewayResponse: any) => {
                                 id: invoice.stayId,
                                 status: StayStatus.WAITING_FOR_PAYMENT,
                             },
+                            include: {
+                                flat: true,
+
+                                application: {
+                                    include: {
+                                        advertisement: true,
+                                    },
+                                },
+                            },
                         });
 
                         if (stay) {
@@ -171,12 +181,25 @@ const markPaymentSuccess = async (paymentId: string, gatewayResponse: any) => {
                                 existingBillingStarts,
                             );
 
+                            const ownership =
+                                await prisma.propertyOwnership.findFirst({
+                                    where: {
+                                        flatId: stay.flatId,
+                                        status: "ACTIVE",
+                                    },
+                                });
+
                             if (rentInvoices.length > 0) {
                                 await tx.invoice.createMany({
                                     data: rentInvoices.map((rentInvoice) => ({
                                         stayId: stay.id,
-                                        payerId: invoice.payerId,
-                                        receiverId: invoice.receiverId,
+                                        payerId: stay.occupantId,
+                                        receiverId:
+                                            stay.type === StayType.ROOMMATE
+                                                ? stay.application.advertisement
+                                                      .createdById
+                                                : ownership?.ownerId ||
+                                                  invoice.receiverId,
                                         type: InvoiceType.RENT,
                                         amount: new Prisma.Decimal(
                                             rentInvoice.amount,

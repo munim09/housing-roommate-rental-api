@@ -12,6 +12,7 @@ import { ManagerRoutes } from "./module/manager/manager.route";
 import { OwnerRoutes } from "./module/owner/owner.route";
 import { PaymentRoutes } from "./module/payment/payment.route";
 import { PublicRoutes } from "./module/public/public.route";
+import { RoommateRoutes } from "./module/roommate/roommate.route";
 import { TenantRoutes } from "./module/tenant/tenant.route";
 import { catchAsync } from "./utils/catchAsync";
 import { sendResponse } from "./utils/sendResponse";
@@ -60,6 +61,7 @@ app.use("/api/v1/manager", ManagerRoutes);
 app.use("/api/v1/advertisements", AdvertisementRoutes);
 app.use("/api/v1/tenant", TenantRoutes);
 app.use("/api/v1/payments", PaymentRoutes);
+app.use("/api/v1/roommate", RoommateRoutes);
 app.use("/api/v1", PublicRoutes);
 
 app.use(notFound);

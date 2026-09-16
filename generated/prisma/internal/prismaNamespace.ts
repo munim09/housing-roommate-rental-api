@@ -1900,6 +1900,7 @@ export const AdvertisementScalarFieldEnum = {
   createdById: 'createdById',
   flatId: 'flatId',
   roomId: 'roomId',
+  createdByTenantStayId: 'createdByTenantStayId',
   category: 'category',
   target: 'target',
   title: 'title',

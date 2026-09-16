@@ -473,13 +473,6 @@ const createApplication = async (
         throw new AppError(httpStatus.NOT_FOUND, "Advertisement not found");
     }
 
-    if (advertisement.category !== AdvertisementCategory.RENTAL) {
-        throw new AppError(
-            httpStatus.BAD_REQUEST,
-            "Only rental advertisements can be applied to with this API",
-        );
-    }
-
     if (advertisement.status !== AdvertisementStatus.PUBLISHED) {
         throw new AppError(
             httpStatus.BAD_REQUEST,
@@ -592,43 +585,109 @@ const createApplication = async (
         );
     }
 
-    const stayConflictWhere: Prisma.StayWhereInput = {
-        status: {
-            in: [StayStatus.WAITING_FOR_PAYMENT, StayStatus.CONFIRMED],
-        },
-        startDate: { lte: payload.requestedEndDate },
-        endDate: { gte: payload.requestedStartDate },
-    };
-
     const advertisementFlatId =
         advertisement.flatId ?? advertisement.room?.flatId;
 
-    if (advertisement.roomId) {
-        stayConflictWhere.OR = [
-            { flatId: advertisementFlatId, roomId: null },
-            { roomId: advertisement.roomId },
-        ];
-    } else {
-        stayConflictWhere.flatId = advertisementFlatId;
+    if (!advertisementFlatId) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Advertisement must be linked to a flat or a room",
+        );
     }
 
-    const conflictingStay = await prisma.stay.findFirst({
-        where: stayConflictWhere,
-        select: { id: true },
-    });
+    if (advertisement.category === AdvertisementCategory.ROOMMATE) {
+        if (!advertisement.roomId) {
+            throw new AppError(
+                httpStatus.BAD_REQUEST,
+                "Roommate advertisement must be linked to a room",
+            );
+        }
 
-    if (conflictingStay) {
-        throw new AppError(
-            httpStatus.CONFLICT,
-            "There is already a booking in this period for this property",
-        );
+        const advertiserStay = await prisma.stay.findFirst({
+            where: {
+                occupantId: advertisement.createdById,
+                flatId: advertisementFlatId,
+                status: StayStatus.CONFIRMED,
+            },
+            select: { id: true, startDate: true, endDate: true },
+        });
+
+        if (!advertiserStay) {
+            throw new AppError(
+                httpStatus.BAD_REQUEST,
+                "The advertiser's stay is not confirmed",
+            );
+        }
+
+        if (
+            payload.requestedStartDate < advertiserStay.startDate ||
+            payload.requestedEndDate > advertiserStay.endDate
+        ) {
+            throw new AppError(
+                httpStatus.BAD_REQUEST,
+                "Requested stay must be within the advertiser's stay period",
+            );
+        }
+
+        const conflictingRoommateStay = await prisma.stay.findFirst({
+            where: {
+                roomId: advertisement.roomId,
+                type: StayType.ROOMMATE,
+                occupantId: { not: advertisement.createdById },
+                status: {
+                    in: [StayStatus.WAITING_FOR_PAYMENT, StayStatus.CONFIRMED],
+                },
+                startDate: { lte: payload.requestedEndDate },
+                endDate: { gte: payload.requestedStartDate },
+            },
+            select: { id: true },
+        });
+
+        if (conflictingRoommateStay) {
+            throw new AppError(
+                httpStatus.CONFLICT,
+                "This room already has an active roommate for the requested period",
+            );
+        }
+    } else {
+        const stayConflictWhere: Prisma.StayWhereInput = {
+            status: {
+                in: [StayStatus.WAITING_FOR_PAYMENT, StayStatus.CONFIRMED],
+            },
+            startDate: { lte: payload.requestedEndDate },
+            endDate: { gte: payload.requestedStartDate },
+        };
+
+        if (advertisement.roomId) {
+            stayConflictWhere.OR = [
+                { flatId: advertisementFlatId, roomId: null },
+                { roomId: advertisement.roomId },
+            ];
+        } else {
+            stayConflictWhere.flatId = advertisementFlatId;
+        }
+
+        const conflictingStay = await prisma.stay.findFirst({
+            where: stayConflictWhere,
+            select: { id: true },
+        });
+
+        if (conflictingStay) {
+            throw new AppError(
+                httpStatus.CONFLICT,
+                "There is already a booking in this period for this property",
+            );
+        }
     }
 
     const application = await prisma.application.create({
         data: {
             advertisementId: payload.advertisementId,
             applicantId: tenantId,
-            type: "RENTAL",
+            type:
+                advertisement.category === AdvertisementCategory.ROOMMATE
+                    ? "ROOMMATE"
+                    : "RENTAL",
             requestedStartDate: payload.requestedStartDate,
             requestedEndDate: payload.requestedEndDate,
             note: payload.note || null,
@@ -888,6 +947,12 @@ const assertApplicationAccess = async (
             stay: true,
         },
     });
+    if (application?.advertisement.category === "ROOMMATE") {
+        throw new AppError(
+            httpStatus.NOT_FOUND,
+            "Owner/Manager cannot access this application",
+        );
+    }
 
     if (!application) {
         throw new AppError(httpStatus.NOT_FOUND, "Application not found");
@@ -1112,11 +1177,20 @@ const updateApplication = async (
                 monthlyRent,
             );
 
+            const ownership = await prisma.propertyOwnership.findFirst({
+                where: {
+                    flatId,
+                    status: "ACTIVE",
+                },
+            });
+
             await tx.invoice.create({
                 data: {
                     stayId: stay.id,
                     payerId: application.applicantId,
-                    receiverId: application.advertisement.createdById,
+                    receiverId:
+                        ownership?.ownerId ||
+                        application.advertisement.createdById,
                     type: InvoiceType.RENT,
                     amount: new Prisma.Decimal(amount),
                     billingPeriodStart: billingStart,
@@ -1241,12 +1315,15 @@ const applyStayAccessScope = (
                 some: { ownerId: userId, status: "ACTIVE" },
             },
         };
+
+        where.type = StayType.PRIMARY;
     } else {
         where.flat = {
             managerAssignments: {
                 some: { managerId: userId, status: "ACTIVE" },
             },
         };
+        where.type = StayType.PRIMARY;
     }
 };
 
@@ -1524,12 +1601,21 @@ const getStays = async (userId: string, role: Role) => {
                 select: {
                     id: true,
                     flatNumber: true,
+                    rooms: {
+                        select: {
+                            id: true,
+                            roomNumber: true,
+                            name: true,
+                        },
+                        orderBy: { roomNumber: "asc" },
+                    },
                 },
             },
             room: {
                 select: {
                     id: true,
                     roomNumber: true,
+                    name: true,
                 },
             },
             invoices: {
@@ -1548,8 +1634,19 @@ const getStays = async (userId: string, role: Role) => {
         orderBy: { createdAt: "desc" },
     });
 
+    const processedStays = stays.map((stay) => ({
+        ...stay,
+        flat: {
+            id: stay.flat.id,
+            flatNumber: stay.flat.flatNumber,
+            rooms: stay.roomId
+                ? stay.flat.rooms.filter((room) => room.id === stay.roomId)
+                : stay.flat.rooms,
+        },
+    }));
+
     return {
-        stays,
+        stays: processedStays,
     };
 };
 

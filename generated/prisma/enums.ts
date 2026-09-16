@@ -98,7 +98,8 @@ export type AdvertisementCategory = (typeof AdvertisementCategory)[keyof typeof 
 
 export const AdvertisementTarget = {
   ENTIRE_FLAT: 'ENTIRE_FLAT',
-  ROOM: 'ROOM'
+  ROOM: 'ROOM',
+  ROOM_SHARING: 'ROOM_SHARING'
 } as const
 
 export type AdvertisementTarget = (typeof AdvertisementTarget)[keyof typeof AdvertisementTarget]
@@ -119,7 +120,8 @@ export type AdvertisementStatus = (typeof AdvertisementStatus)[keyof typeof Adve
 
 export const ApplicationType = {
   RENTAL: 'RENTAL',
-  ROOMMATE: 'ROOMMATE'
+  ROOMMATE: 'ROOMMATE',
+  ROOM_SHARING: 'ROOM_SHARING'
 } as const
 
 export type ApplicationType = (typeof ApplicationType)[keyof typeof ApplicationType]

@@ -2,16 +2,20 @@ import cron from "node-cron";
 import {
     ApplicationStatus,
     BillStatus,
+    PaymentStatus,
     StayStatus,
     UserStatus,
 } from "../../generated/prisma/client";
 import { prisma } from "./prisma";
+import { PaymentService } from "../module/payment/payment.service";
 
 const OVERDUE_GRACE_MS = 60 * 60 * 1000;
 const UNVERIFIED_USER_GRACE_MS = 2 * 60 * 60 * 1000;
+const PENDING_PAYMENT_THRESHOLD_MS = 8 * 60 * 60 * 1000;
 
 let isRunning = false;
 let isDeletingUnverifiedUsers = false;
+let isVerifyingPendingPayments = false;
 
 export const cancelOverdueStays = async () => {
     if (isRunning) {
@@ -111,11 +115,72 @@ export const deleteUnverifiedUsers = async () => {
     }
 };
 
+export const verifyPendingPayments = async () => {
+    if (isVerifyingPendingPayments) {
+        return;
+    }
+
+    isVerifyingPendingPayments = true;
+
+    try {
+        const cutoff = new Date(Date.now() - PENDING_PAYMENT_THRESHOLD_MS);
+
+        const pendingPayments = await prisma.payment.findMany({
+            where: {
+                status: PaymentStatus.PENDING,
+                createdAt: { lte: cutoff },
+                transactionReference: { not: null },
+            },
+            select: { id: true, transactionReference: true },
+        });
+
+        let checked = 0;
+        let updated = 0;
+
+        for (const payment of pendingPayments) {
+            if (!payment.transactionReference) {
+                continue;
+            }
+
+            try {
+                const result = await PaymentService.checkPayment(
+                    payment.transactionReference,
+                );
+
+                checked++;
+
+                if (result.status !== PaymentStatus.PENDING) {
+                    updated++;
+                }
+
+                console.log(
+                    `[cron] Payment ${payment.id} verified. New status: ${result.status}`,
+                );
+            } catch (error: any) {
+                console.error(
+                    `[cron] Failed to verify payment ${payment.id}: ${
+                        error?.message || error
+                    }`,
+                );
+            }
+        }
+
+        console.log(
+            `[cron] Pending payment check completed. Checked ${checked} payment(s), ${updated} updated.`,
+        );
+    } catch (error) {
+        console.error("[cron] Pending payment check failed:", error);
+    } finally {
+        isVerifyingPendingPayments = false;
+    }
+};
+
 export const startCronJobs = async () => {
     cron.schedule("0 * * * *", cancelOverdueStays);
     cron.schedule("0 * * * *", deleteUnverifiedUsers);
+    cron.schedule("0 */12 * * *", verifyPendingPayments);
 
     console.log(
-        "[cron] Cron jobs started. Overdue stay and unverified user checks run every hour.",
+        "[cron] Cron jobs started. Overdue stay and unverified user checks run every hour. Pending payment check runs every 12 hours.",
     );
 };

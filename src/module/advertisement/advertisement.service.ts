@@ -10,6 +10,7 @@ import {
     Role,
     RoomStatus,
     StayStatus,
+    StayType,
 } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
@@ -497,6 +498,11 @@ const createUtilityInvoice = async (
         include: {
             flat: true,
             occupant: { select: { id: true, role: true } },
+            application: {
+                include: {
+                    advertisement: true,
+                },
+            },
         },
     });
 
@@ -534,7 +540,10 @@ const createUtilityInvoice = async (
         data: {
             stayId,
             payerId,
-            receiverId: ownership.ownerId,
+            receiverId:
+                stay.type === StayType.ROOMMATE
+                    ? stay.application.advertisement.createdById
+                    : ownership.ownerId,
             type: InvoiceType.UTILITY,
             amount,
             billingPeriodStart,

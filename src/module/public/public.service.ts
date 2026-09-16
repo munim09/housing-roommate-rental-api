@@ -157,6 +157,8 @@ const getAvailableAdvertisements = async (
 
     const where: Prisma.AdvertisementWhereInput = {
         status: AdvertisementStatus.PUBLISHED,
+        availableFrom: { lte: startDate },
+        availableTo: { gte: endDate },
         OR: [
             { flat: { property: { areaId } } },
             { room: { flat: { property: { areaId } } } },

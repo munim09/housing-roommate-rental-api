@@ -25,6 +25,8 @@ model Advertisement {
   flatId String?
   roomId String?
 
+  createdByTenantStayId String?
+
   category AdvertisementCategory
   target   AdvertisementTarget
 
@@ -49,6 +51,9 @@ model Advertisement {
   // ----------------------------------------------------------
 
   createdBy User @relation("AdvertisementCreatedBy", fields: [createdById], references: [id])
+
+
+  stay Stay? @relation(fields: [createdByTenantStayId], references: [id])
 
   flat Flat? @relation(fields: [flatId], references: [id])
 

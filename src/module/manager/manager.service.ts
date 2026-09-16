@@ -92,6 +92,7 @@ const getApplications = async (
 
     if (role === Role.OWNER) {
         where.advertisement = {
+            category: "RENTAL",
             OR: [
                 { createdById: userId },
                 {
@@ -114,6 +115,7 @@ const getApplications = async (
         };
     } else {
         where.advertisement = {
+            category: "RENTAL",
             OR: [
                 { createdById: userId },
                 {

@@ -66,6 +66,7 @@ enum AdvertisementCategory {
 enum AdvertisementTarget {
   ENTIRE_FLAT
   ROOM
+  ROOM_SHARING
 }
 
 enum AdvertisementStatus {
@@ -87,6 +88,7 @@ enum AdvertisementStatus {
 enum ApplicationType {
   RENTAL
   ROOMMATE
+  ROOM_SHARING
 }
 
 enum ApplicationStatus {
@@ -106,6 +108,8 @@ enum StayType {
   PRIMARY
   ROOMMATE
 }
+
+ 
 
 enum StayStatus {
   WAITING_FOR_PAYMENT

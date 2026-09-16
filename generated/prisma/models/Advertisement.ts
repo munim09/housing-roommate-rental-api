@@ -39,6 +39,7 @@ export type AdvertisementMinAggregateOutputType = {
   createdById: string | null
   flatId: string | null
   roomId: string | null
+  createdByTenantStayId: string | null
   category: $Enums.AdvertisementCategory | null
   target: $Enums.AdvertisementTarget | null
   title: string | null
@@ -57,6 +58,7 @@ export type AdvertisementMaxAggregateOutputType = {
   createdById: string | null
   flatId: string | null
   roomId: string | null
+  createdByTenantStayId: string | null
   category: $Enums.AdvertisementCategory | null
   target: $Enums.AdvertisementTarget | null
   title: string | null
@@ -75,6 +77,7 @@ export type AdvertisementCountAggregateOutputType = {
   createdById: number
   flatId: number
   roomId: number
+  createdByTenantStayId: number
   category: number
   target: number
   title: number
@@ -103,6 +106,7 @@ export type AdvertisementMinAggregateInputType = {
   createdById?: true
   flatId?: true
   roomId?: true
+  createdByTenantStayId?: true
   category?: true
   target?: true
   title?: true
@@ -121,6 +125,7 @@ export type AdvertisementMaxAggregateInputType = {
   createdById?: true
   flatId?: true
   roomId?: true
+  createdByTenantStayId?: true
   category?: true
   target?: true
   title?: true
@@ -139,6 +144,7 @@ export type AdvertisementCountAggregateInputType = {
   createdById?: true
   flatId?: true
   roomId?: true
+  createdByTenantStayId?: true
   category?: true
   target?: true
   title?: true
@@ -244,6 +250,7 @@ export type AdvertisementGroupByOutputType = {
   createdById: string
   flatId: string | null
   roomId: string | null
+  createdByTenantStayId: string | null
   category: $Enums.AdvertisementCategory
   target: $Enums.AdvertisementTarget
   title: string
@@ -285,6 +292,7 @@ export type AdvertisementWhereInput = {
   createdById?: Prisma.StringFilter<"Advertisement"> | string
   flatId?: Prisma.StringNullableFilter<"Advertisement"> | string | null
   roomId?: Prisma.StringNullableFilter<"Advertisement"> | string | null
+  createdByTenantStayId?: Prisma.StringNullableFilter<"Advertisement"> | string | null
   category?: Prisma.EnumAdvertisementCategoryFilter<"Advertisement"> | $Enums.AdvertisementCategory
   target?: Prisma.EnumAdvertisementTargetFilter<"Advertisement"> | $Enums.AdvertisementTarget
   title?: Prisma.StringFilter<"Advertisement"> | string
@@ -297,6 +305,7 @@ export type AdvertisementWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Advertisement"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Advertisement"> | Date | string
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  stay?: Prisma.XOR<Prisma.StayNullableScalarRelationFilter, Prisma.StayWhereInput> | null
   flat?: Prisma.XOR<Prisma.FlatNullableScalarRelationFilter, Prisma.FlatWhereInput> | null
   room?: Prisma.XOR<Prisma.RoomNullableScalarRelationFilter, Prisma.RoomWhereInput> | null
   applications?: Prisma.ApplicationListRelationFilter
@@ -308,6 +317,7 @@ export type AdvertisementOrderByWithRelationInput = {
   createdById?: Prisma.SortOrder
   flatId?: Prisma.SortOrderInput | Prisma.SortOrder
   roomId?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdByTenantStayId?: Prisma.SortOrderInput | Prisma.SortOrder
   category?: Prisma.SortOrder
   target?: Prisma.SortOrder
   title?: Prisma.SortOrder
@@ -320,6 +330,7 @@ export type AdvertisementOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   createdBy?: Prisma.UserOrderByWithRelationInput
+  stay?: Prisma.StayOrderByWithRelationInput
   flat?: Prisma.FlatOrderByWithRelationInput
   room?: Prisma.RoomOrderByWithRelationInput
   applications?: Prisma.ApplicationOrderByRelationAggregateInput
@@ -334,6 +345,7 @@ export type AdvertisementWhereUniqueInput = Prisma.AtLeast<{
   createdById?: Prisma.StringFilter<"Advertisement"> | string
   flatId?: Prisma.StringNullableFilter<"Advertisement"> | string | null
   roomId?: Prisma.StringNullableFilter<"Advertisement"> | string | null
+  createdByTenantStayId?: Prisma.StringNullableFilter<"Advertisement"> | string | null
   category?: Prisma.EnumAdvertisementCategoryFilter<"Advertisement"> | $Enums.AdvertisementCategory
   target?: Prisma.EnumAdvertisementTargetFilter<"Advertisement"> | $Enums.AdvertisementTarget
   title?: Prisma.StringFilter<"Advertisement"> | string
@@ -346,6 +358,7 @@ export type AdvertisementWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Advertisement"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Advertisement"> | Date | string
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  stay?: Prisma.XOR<Prisma.StayNullableScalarRelationFilter, Prisma.StayWhereInput> | null
   flat?: Prisma.XOR<Prisma.FlatNullableScalarRelationFilter, Prisma.FlatWhereInput> | null
   room?: Prisma.XOR<Prisma.RoomNullableScalarRelationFilter, Prisma.RoomWhereInput> | null
   applications?: Prisma.ApplicationListRelationFilter
@@ -357,6 +370,7 @@ export type AdvertisementOrderByWithAggregationInput = {
   createdById?: Prisma.SortOrder
   flatId?: Prisma.SortOrderInput | Prisma.SortOrder
   roomId?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdByTenantStayId?: Prisma.SortOrderInput | Prisma.SortOrder
   category?: Prisma.SortOrder
   target?: Prisma.SortOrder
   title?: Prisma.SortOrder
@@ -383,6 +397,7 @@ export type AdvertisementScalarWhereWithAggregatesInput = {
   createdById?: Prisma.StringWithAggregatesFilter<"Advertisement"> | string
   flatId?: Prisma.StringNullableWithAggregatesFilter<"Advertisement"> | string | null
   roomId?: Prisma.StringNullableWithAggregatesFilter<"Advertisement"> | string | null
+  createdByTenantStayId?: Prisma.StringNullableWithAggregatesFilter<"Advertisement"> | string | null
   category?: Prisma.EnumAdvertisementCategoryWithAggregatesFilter<"Advertisement"> | $Enums.AdvertisementCategory
   target?: Prisma.EnumAdvertisementTargetWithAggregatesFilter<"Advertisement"> | $Enums.AdvertisementTarget
   title?: Prisma.StringWithAggregatesFilter<"Advertisement"> | string
@@ -410,6 +425,7 @@ export type AdvertisementCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   createdBy: Prisma.UserCreateNestedOneWithoutAdvertisementsInput
+  stay?: Prisma.StayCreateNestedOneWithoutAdvertisementInput
   flat?: Prisma.FlatCreateNestedOneWithoutAdvertisementsInput
   room?: Prisma.RoomCreateNestedOneWithoutAdvertisementsInput
   applications?: Prisma.ApplicationCreateNestedManyWithoutAdvertisementInput
@@ -421,6 +437,7 @@ export type AdvertisementUncheckedCreateInput = {
   createdById: string
   flatId?: string | null
   roomId?: string | null
+  createdByTenantStayId?: string | null
   category: $Enums.AdvertisementCategory
   target: $Enums.AdvertisementTarget
   title: string
@@ -450,6 +467,7 @@ export type AdvertisementUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdBy?: Prisma.UserUpdateOneRequiredWithoutAdvertisementsNestedInput
+  stay?: Prisma.StayUpdateOneWithoutAdvertisementNestedInput
   flat?: Prisma.FlatUpdateOneWithoutAdvertisementsNestedInput
   room?: Prisma.RoomUpdateOneWithoutAdvertisementsNestedInput
   applications?: Prisma.ApplicationUpdateManyWithoutAdvertisementNestedInput
@@ -461,6 +479,7 @@ export type AdvertisementUncheckedUpdateInput = {
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   flatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdByTenantStayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.EnumAdvertisementCategoryFieldUpdateOperationsInput | $Enums.AdvertisementCategory
   target?: Prisma.EnumAdvertisementTargetFieldUpdateOperationsInput | $Enums.AdvertisementTarget
   title?: Prisma.StringFieldUpdateOperationsInput | string
@@ -481,6 +500,7 @@ export type AdvertisementCreateManyInput = {
   createdById: string
   flatId?: string | null
   roomId?: string | null
+  createdByTenantStayId?: string | null
   category: $Enums.AdvertisementCategory
   target: $Enums.AdvertisementTarget
   title: string
@@ -514,6 +534,7 @@ export type AdvertisementUncheckedUpdateManyInput = {
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   flatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdByTenantStayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.EnumAdvertisementCategoryFieldUpdateOperationsInput | $Enums.AdvertisementCategory
   target?: Prisma.EnumAdvertisementTargetFieldUpdateOperationsInput | $Enums.AdvertisementTarget
   title?: Prisma.StringFieldUpdateOperationsInput | string
@@ -532,6 +553,7 @@ export type AdvertisementCountOrderByAggregateInput = {
   createdById?: Prisma.SortOrder
   flatId?: Prisma.SortOrder
   roomId?: Prisma.SortOrder
+  createdByTenantStayId?: Prisma.SortOrder
   category?: Prisma.SortOrder
   target?: Prisma.SortOrder
   title?: Prisma.SortOrder
@@ -554,6 +576,7 @@ export type AdvertisementMaxOrderByAggregateInput = {
   createdById?: Prisma.SortOrder
   flatId?: Prisma.SortOrder
   roomId?: Prisma.SortOrder
+  createdByTenantStayId?: Prisma.SortOrder
   category?: Prisma.SortOrder
   target?: Prisma.SortOrder
   title?: Prisma.SortOrder
@@ -572,6 +595,7 @@ export type AdvertisementMinOrderByAggregateInput = {
   createdById?: Prisma.SortOrder
   flatId?: Prisma.SortOrder
   roomId?: Prisma.SortOrder
+  createdByTenantStayId?: Prisma.SortOrder
   category?: Prisma.SortOrder
   target?: Prisma.SortOrder
   title?: Prisma.SortOrder
@@ -726,6 +750,48 @@ export type AdvertisementUncheckedUpdateManyWithoutRoomNestedInput = {
   deleteMany?: Prisma.AdvertisementScalarWhereInput | Prisma.AdvertisementScalarWhereInput[]
 }
 
+export type AdvertisementCreateNestedManyWithoutStayInput = {
+  create?: Prisma.XOR<Prisma.AdvertisementCreateWithoutStayInput, Prisma.AdvertisementUncheckedCreateWithoutStayInput> | Prisma.AdvertisementCreateWithoutStayInput[] | Prisma.AdvertisementUncheckedCreateWithoutStayInput[]
+  connectOrCreate?: Prisma.AdvertisementCreateOrConnectWithoutStayInput | Prisma.AdvertisementCreateOrConnectWithoutStayInput[]
+  createMany?: Prisma.AdvertisementCreateManyStayInputEnvelope
+  connect?: Prisma.AdvertisementWhereUniqueInput | Prisma.AdvertisementWhereUniqueInput[]
+}
+
+export type AdvertisementUncheckedCreateNestedManyWithoutStayInput = {
+  create?: Prisma.XOR<Prisma.AdvertisementCreateWithoutStayInput, Prisma.AdvertisementUncheckedCreateWithoutStayInput> | Prisma.AdvertisementCreateWithoutStayInput[] | Prisma.AdvertisementUncheckedCreateWithoutStayInput[]
+  connectOrCreate?: Prisma.AdvertisementCreateOrConnectWithoutStayInput | Prisma.AdvertisementCreateOrConnectWithoutStayInput[]
+  createMany?: Prisma.AdvertisementCreateManyStayInputEnvelope
+  connect?: Prisma.AdvertisementWhereUniqueInput | Prisma.AdvertisementWhereUniqueInput[]
+}
+
+export type AdvertisementUpdateManyWithoutStayNestedInput = {
+  create?: Prisma.XOR<Prisma.AdvertisementCreateWithoutStayInput, Prisma.AdvertisementUncheckedCreateWithoutStayInput> | Prisma.AdvertisementCreateWithoutStayInput[] | Prisma.AdvertisementUncheckedCreateWithoutStayInput[]
+  connectOrCreate?: Prisma.AdvertisementCreateOrConnectWithoutStayInput | Prisma.AdvertisementCreateOrConnectWithoutStayInput[]
+  upsert?: Prisma.AdvertisementUpsertWithWhereUniqueWithoutStayInput | Prisma.AdvertisementUpsertWithWhereUniqueWithoutStayInput[]
+  createMany?: Prisma.AdvertisementCreateManyStayInputEnvelope
+  set?: Prisma.AdvertisementWhereUniqueInput | Prisma.AdvertisementWhereUniqueInput[]
+  disconnect?: Prisma.AdvertisementWhereUniqueInput | Prisma.AdvertisementWhereUniqueInput[]
+  delete?: Prisma.AdvertisementWhereUniqueInput | Prisma.AdvertisementWhereUniqueInput[]
+  connect?: Prisma.AdvertisementWhereUniqueInput | Prisma.AdvertisementWhereUniqueInput[]
+  update?: Prisma.AdvertisementUpdateWithWhereUniqueWithoutStayInput | Prisma.AdvertisementUpdateWithWhereUniqueWithoutStayInput[]
+  updateMany?: Prisma.AdvertisementUpdateManyWithWhereWithoutStayInput | Prisma.AdvertisementUpdateManyWithWhereWithoutStayInput[]
+  deleteMany?: Prisma.AdvertisementScalarWhereInput | Prisma.AdvertisementScalarWhereInput[]
+}
+
+export type AdvertisementUncheckedUpdateManyWithoutStayNestedInput = {
+  create?: Prisma.XOR<Prisma.AdvertisementCreateWithoutStayInput, Prisma.AdvertisementUncheckedCreateWithoutStayInput> | Prisma.AdvertisementCreateWithoutStayInput[] | Prisma.AdvertisementUncheckedCreateWithoutStayInput[]
+  connectOrCreate?: Prisma.AdvertisementCreateOrConnectWithoutStayInput | Prisma.AdvertisementCreateOrConnectWithoutStayInput[]
+  upsert?: Prisma.AdvertisementUpsertWithWhereUniqueWithoutStayInput | Prisma.AdvertisementUpsertWithWhereUniqueWithoutStayInput[]
+  createMany?: Prisma.AdvertisementCreateManyStayInputEnvelope
+  set?: Prisma.AdvertisementWhereUniqueInput | Prisma.AdvertisementWhereUniqueInput[]
+  disconnect?: Prisma.AdvertisementWhereUniqueInput | Prisma.AdvertisementWhereUniqueInput[]
+  delete?: Prisma.AdvertisementWhereUniqueInput | Prisma.AdvertisementWhereUniqueInput[]
+  connect?: Prisma.AdvertisementWhereUniqueInput | Prisma.AdvertisementWhereUniqueInput[]
+  update?: Prisma.AdvertisementUpdateWithWhereUniqueWithoutStayInput | Prisma.AdvertisementUpdateWithWhereUniqueWithoutStayInput[]
+  updateMany?: Prisma.AdvertisementUpdateManyWithWhereWithoutStayInput | Prisma.AdvertisementUpdateManyWithWhereWithoutStayInput[]
+  deleteMany?: Prisma.AdvertisementScalarWhereInput | Prisma.AdvertisementScalarWhereInput[]
+}
+
 export type AdvertisementCreateNestedManyWithoutCreatedByInput = {
   create?: Prisma.XOR<Prisma.AdvertisementCreateWithoutCreatedByInput, Prisma.AdvertisementUncheckedCreateWithoutCreatedByInput> | Prisma.AdvertisementCreateWithoutCreatedByInput[] | Prisma.AdvertisementUncheckedCreateWithoutCreatedByInput[]
   connectOrCreate?: Prisma.AdvertisementCreateOrConnectWithoutCreatedByInput | Prisma.AdvertisementCreateOrConnectWithoutCreatedByInput[]
@@ -796,6 +862,7 @@ export type AdvertisementCreateWithoutApplicationsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   createdBy: Prisma.UserCreateNestedOneWithoutAdvertisementsInput
+  stay?: Prisma.StayCreateNestedOneWithoutAdvertisementInput
   flat?: Prisma.FlatCreateNestedOneWithoutAdvertisementsInput
   room?: Prisma.RoomCreateNestedOneWithoutAdvertisementsInput
   viewingRequests?: Prisma.ViewingRequestCreateNestedManyWithoutAdvertisementInput
@@ -806,6 +873,7 @@ export type AdvertisementUncheckedCreateWithoutApplicationsInput = {
   createdById: string
   flatId?: string | null
   roomId?: string | null
+  createdByTenantStayId?: string | null
   category: $Enums.AdvertisementCategory
   target: $Enums.AdvertisementTarget
   title: string
@@ -850,6 +918,7 @@ export type AdvertisementUpdateWithoutApplicationsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdBy?: Prisma.UserUpdateOneRequiredWithoutAdvertisementsNestedInput
+  stay?: Prisma.StayUpdateOneWithoutAdvertisementNestedInput
   flat?: Prisma.FlatUpdateOneWithoutAdvertisementsNestedInput
   room?: Prisma.RoomUpdateOneWithoutAdvertisementsNestedInput
   viewingRequests?: Prisma.ViewingRequestUpdateManyWithoutAdvertisementNestedInput
@@ -860,6 +929,7 @@ export type AdvertisementUncheckedUpdateWithoutApplicationsInput = {
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   flatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdByTenantStayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.EnumAdvertisementCategoryFieldUpdateOperationsInput | $Enums.AdvertisementCategory
   target?: Prisma.EnumAdvertisementTargetFieldUpdateOperationsInput | $Enums.AdvertisementTarget
   title?: Prisma.StringFieldUpdateOperationsInput | string
@@ -888,6 +958,7 @@ export type AdvertisementCreateWithoutFlatInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   createdBy: Prisma.UserCreateNestedOneWithoutAdvertisementsInput
+  stay?: Prisma.StayCreateNestedOneWithoutAdvertisementInput
   room?: Prisma.RoomCreateNestedOneWithoutAdvertisementsInput
   applications?: Prisma.ApplicationCreateNestedManyWithoutAdvertisementInput
   viewingRequests?: Prisma.ViewingRequestCreateNestedManyWithoutAdvertisementInput
@@ -897,6 +968,7 @@ export type AdvertisementUncheckedCreateWithoutFlatInput = {
   id?: string
   createdById: string
   roomId?: string | null
+  createdByTenantStayId?: string | null
   category: $Enums.AdvertisementCategory
   target: $Enums.AdvertisementTarget
   title: string
@@ -946,6 +1018,7 @@ export type AdvertisementScalarWhereInput = {
   createdById?: Prisma.StringFilter<"Advertisement"> | string
   flatId?: Prisma.StringNullableFilter<"Advertisement"> | string | null
   roomId?: Prisma.StringNullableFilter<"Advertisement"> | string | null
+  createdByTenantStayId?: Prisma.StringNullableFilter<"Advertisement"> | string | null
   category?: Prisma.EnumAdvertisementCategoryFilter<"Advertisement"> | $Enums.AdvertisementCategory
   target?: Prisma.EnumAdvertisementTargetFilter<"Advertisement"> | $Enums.AdvertisementTarget
   title?: Prisma.StringFilter<"Advertisement"> | string
@@ -973,6 +1046,7 @@ export type AdvertisementCreateWithoutRoomInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   createdBy: Prisma.UserCreateNestedOneWithoutAdvertisementsInput
+  stay?: Prisma.StayCreateNestedOneWithoutAdvertisementInput
   flat?: Prisma.FlatCreateNestedOneWithoutAdvertisementsInput
   applications?: Prisma.ApplicationCreateNestedManyWithoutAdvertisementInput
   viewingRequests?: Prisma.ViewingRequestCreateNestedManyWithoutAdvertisementInput
@@ -982,6 +1056,7 @@ export type AdvertisementUncheckedCreateWithoutRoomInput = {
   id?: string
   createdById: string
   flatId?: string | null
+  createdByTenantStayId?: string | null
   category: $Enums.AdvertisementCategory
   target: $Enums.AdvertisementTarget
   title: string
@@ -1023,6 +1098,72 @@ export type AdvertisementUpdateManyWithWhereWithoutRoomInput = {
   data: Prisma.XOR<Prisma.AdvertisementUpdateManyMutationInput, Prisma.AdvertisementUncheckedUpdateManyWithoutRoomInput>
 }
 
+export type AdvertisementCreateWithoutStayInput = {
+  id?: string
+  category: $Enums.AdvertisementCategory
+  target: $Enums.AdvertisementTarget
+  title: string
+  description?: string | null
+  monthlyRent: runtime.Decimal | runtime.DecimalJsLike | number | string
+  availableFrom?: Date | string | null
+  availableTo?: Date | string | null
+  status?: $Enums.AdvertisementStatus
+  publishedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdBy: Prisma.UserCreateNestedOneWithoutAdvertisementsInput
+  flat?: Prisma.FlatCreateNestedOneWithoutAdvertisementsInput
+  room?: Prisma.RoomCreateNestedOneWithoutAdvertisementsInput
+  applications?: Prisma.ApplicationCreateNestedManyWithoutAdvertisementInput
+  viewingRequests?: Prisma.ViewingRequestCreateNestedManyWithoutAdvertisementInput
+}
+
+export type AdvertisementUncheckedCreateWithoutStayInput = {
+  id?: string
+  createdById: string
+  flatId?: string | null
+  roomId?: string | null
+  category: $Enums.AdvertisementCategory
+  target: $Enums.AdvertisementTarget
+  title: string
+  description?: string | null
+  monthlyRent: runtime.Decimal | runtime.DecimalJsLike | number | string
+  availableFrom?: Date | string | null
+  availableTo?: Date | string | null
+  status?: $Enums.AdvertisementStatus
+  publishedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutAdvertisementInput
+  viewingRequests?: Prisma.ViewingRequestUncheckedCreateNestedManyWithoutAdvertisementInput
+}
+
+export type AdvertisementCreateOrConnectWithoutStayInput = {
+  where: Prisma.AdvertisementWhereUniqueInput
+  create: Prisma.XOR<Prisma.AdvertisementCreateWithoutStayInput, Prisma.AdvertisementUncheckedCreateWithoutStayInput>
+}
+
+export type AdvertisementCreateManyStayInputEnvelope = {
+  data: Prisma.AdvertisementCreateManyStayInput | Prisma.AdvertisementCreateManyStayInput[]
+  skipDuplicates?: boolean
+}
+
+export type AdvertisementUpsertWithWhereUniqueWithoutStayInput = {
+  where: Prisma.AdvertisementWhereUniqueInput
+  update: Prisma.XOR<Prisma.AdvertisementUpdateWithoutStayInput, Prisma.AdvertisementUncheckedUpdateWithoutStayInput>
+  create: Prisma.XOR<Prisma.AdvertisementCreateWithoutStayInput, Prisma.AdvertisementUncheckedCreateWithoutStayInput>
+}
+
+export type AdvertisementUpdateWithWhereUniqueWithoutStayInput = {
+  where: Prisma.AdvertisementWhereUniqueInput
+  data: Prisma.XOR<Prisma.AdvertisementUpdateWithoutStayInput, Prisma.AdvertisementUncheckedUpdateWithoutStayInput>
+}
+
+export type AdvertisementUpdateManyWithWhereWithoutStayInput = {
+  where: Prisma.AdvertisementScalarWhereInput
+  data: Prisma.XOR<Prisma.AdvertisementUpdateManyMutationInput, Prisma.AdvertisementUncheckedUpdateManyWithoutStayInput>
+}
+
 export type AdvertisementCreateWithoutCreatedByInput = {
   id?: string
   category: $Enums.AdvertisementCategory
@@ -1036,6 +1177,7 @@ export type AdvertisementCreateWithoutCreatedByInput = {
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  stay?: Prisma.StayCreateNestedOneWithoutAdvertisementInput
   flat?: Prisma.FlatCreateNestedOneWithoutAdvertisementsInput
   room?: Prisma.RoomCreateNestedOneWithoutAdvertisementsInput
   applications?: Prisma.ApplicationCreateNestedManyWithoutAdvertisementInput
@@ -1046,6 +1188,7 @@ export type AdvertisementUncheckedCreateWithoutCreatedByInput = {
   id?: string
   flatId?: string | null
   roomId?: string | null
+  createdByTenantStayId?: string | null
   category: $Enums.AdvertisementCategory
   target: $Enums.AdvertisementTarget
   title: string
@@ -1101,6 +1244,7 @@ export type AdvertisementCreateWithoutViewingRequestsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   createdBy: Prisma.UserCreateNestedOneWithoutAdvertisementsInput
+  stay?: Prisma.StayCreateNestedOneWithoutAdvertisementInput
   flat?: Prisma.FlatCreateNestedOneWithoutAdvertisementsInput
   room?: Prisma.RoomCreateNestedOneWithoutAdvertisementsInput
   applications?: Prisma.ApplicationCreateNestedManyWithoutAdvertisementInput
@@ -1111,6 +1255,7 @@ export type AdvertisementUncheckedCreateWithoutViewingRequestsInput = {
   createdById: string
   flatId?: string | null
   roomId?: string | null
+  createdByTenantStayId?: string | null
   category: $Enums.AdvertisementCategory
   target: $Enums.AdvertisementTarget
   title: string
@@ -1155,6 +1300,7 @@ export type AdvertisementUpdateWithoutViewingRequestsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdBy?: Prisma.UserUpdateOneRequiredWithoutAdvertisementsNestedInput
+  stay?: Prisma.StayUpdateOneWithoutAdvertisementNestedInput
   flat?: Prisma.FlatUpdateOneWithoutAdvertisementsNestedInput
   room?: Prisma.RoomUpdateOneWithoutAdvertisementsNestedInput
   applications?: Prisma.ApplicationUpdateManyWithoutAdvertisementNestedInput
@@ -1165,6 +1311,7 @@ export type AdvertisementUncheckedUpdateWithoutViewingRequestsInput = {
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   flatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdByTenantStayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.EnumAdvertisementCategoryFieldUpdateOperationsInput | $Enums.AdvertisementCategory
   target?: Prisma.EnumAdvertisementTargetFieldUpdateOperationsInput | $Enums.AdvertisementTarget
   title?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1183,6 +1330,7 @@ export type AdvertisementCreateManyFlatInput = {
   id?: string
   createdById: string
   roomId?: string | null
+  createdByTenantStayId?: string | null
   category: $Enums.AdvertisementCategory
   target: $Enums.AdvertisementTarget
   title: string
@@ -1210,6 +1358,7 @@ export type AdvertisementUpdateWithoutFlatInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdBy?: Prisma.UserUpdateOneRequiredWithoutAdvertisementsNestedInput
+  stay?: Prisma.StayUpdateOneWithoutAdvertisementNestedInput
   room?: Prisma.RoomUpdateOneWithoutAdvertisementsNestedInput
   applications?: Prisma.ApplicationUpdateManyWithoutAdvertisementNestedInput
   viewingRequests?: Prisma.ViewingRequestUpdateManyWithoutAdvertisementNestedInput
@@ -1219,6 +1368,7 @@ export type AdvertisementUncheckedUpdateWithoutFlatInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdByTenantStayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.EnumAdvertisementCategoryFieldUpdateOperationsInput | $Enums.AdvertisementCategory
   target?: Prisma.EnumAdvertisementTargetFieldUpdateOperationsInput | $Enums.AdvertisementTarget
   title?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1238,6 +1388,7 @@ export type AdvertisementUncheckedUpdateManyWithoutFlatInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdByTenantStayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.EnumAdvertisementCategoryFieldUpdateOperationsInput | $Enums.AdvertisementCategory
   target?: Prisma.EnumAdvertisementTargetFieldUpdateOperationsInput | $Enums.AdvertisementTarget
   title?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1255,6 +1406,7 @@ export type AdvertisementCreateManyRoomInput = {
   id?: string
   createdById: string
   flatId?: string | null
+  createdByTenantStayId?: string | null
   category: $Enums.AdvertisementCategory
   target: $Enums.AdvertisementTarget
   title: string
@@ -1282,6 +1434,7 @@ export type AdvertisementUpdateWithoutRoomInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdBy?: Prisma.UserUpdateOneRequiredWithoutAdvertisementsNestedInput
+  stay?: Prisma.StayUpdateOneWithoutAdvertisementNestedInput
   flat?: Prisma.FlatUpdateOneWithoutAdvertisementsNestedInput
   applications?: Prisma.ApplicationUpdateManyWithoutAdvertisementNestedInput
   viewingRequests?: Prisma.ViewingRequestUpdateManyWithoutAdvertisementNestedInput
@@ -1291,6 +1444,7 @@ export type AdvertisementUncheckedUpdateWithoutRoomInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   flatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdByTenantStayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.EnumAdvertisementCategoryFieldUpdateOperationsInput | $Enums.AdvertisementCategory
   target?: Prisma.EnumAdvertisementTargetFieldUpdateOperationsInput | $Enums.AdvertisementTarget
   title?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1310,6 +1464,83 @@ export type AdvertisementUncheckedUpdateManyWithoutRoomInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   flatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdByTenantStayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.EnumAdvertisementCategoryFieldUpdateOperationsInput | $Enums.AdvertisementCategory
+  target?: Prisma.EnumAdvertisementTargetFieldUpdateOperationsInput | $Enums.AdvertisementTarget
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  monthlyRent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  availableFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  availableTo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumAdvertisementStatusFieldUpdateOperationsInput | $Enums.AdvertisementStatus
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type AdvertisementCreateManyStayInput = {
+  id?: string
+  createdById: string
+  flatId?: string | null
+  roomId?: string | null
+  category: $Enums.AdvertisementCategory
+  target: $Enums.AdvertisementTarget
+  title: string
+  description?: string | null
+  monthlyRent: runtime.Decimal | runtime.DecimalJsLike | number | string
+  availableFrom?: Date | string | null
+  availableTo?: Date | string | null
+  status?: $Enums.AdvertisementStatus
+  publishedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type AdvertisementUpdateWithoutStayInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.EnumAdvertisementCategoryFieldUpdateOperationsInput | $Enums.AdvertisementCategory
+  target?: Prisma.EnumAdvertisementTargetFieldUpdateOperationsInput | $Enums.AdvertisementTarget
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  monthlyRent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  availableFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  availableTo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumAdvertisementStatusFieldUpdateOperationsInput | $Enums.AdvertisementStatus
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutAdvertisementsNestedInput
+  flat?: Prisma.FlatUpdateOneWithoutAdvertisementsNestedInput
+  room?: Prisma.RoomUpdateOneWithoutAdvertisementsNestedInput
+  applications?: Prisma.ApplicationUpdateManyWithoutAdvertisementNestedInput
+  viewingRequests?: Prisma.ViewingRequestUpdateManyWithoutAdvertisementNestedInput
+}
+
+export type AdvertisementUncheckedUpdateWithoutStayInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  flatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.EnumAdvertisementCategoryFieldUpdateOperationsInput | $Enums.AdvertisementCategory
+  target?: Prisma.EnumAdvertisementTargetFieldUpdateOperationsInput | $Enums.AdvertisementTarget
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  monthlyRent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  availableFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  availableTo?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumAdvertisementStatusFieldUpdateOperationsInput | $Enums.AdvertisementStatus
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  applications?: Prisma.ApplicationUncheckedUpdateManyWithoutAdvertisementNestedInput
+  viewingRequests?: Prisma.ViewingRequestUncheckedUpdateManyWithoutAdvertisementNestedInput
+}
+
+export type AdvertisementUncheckedUpdateManyWithoutStayInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  flatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.EnumAdvertisementCategoryFieldUpdateOperationsInput | $Enums.AdvertisementCategory
   target?: Prisma.EnumAdvertisementTargetFieldUpdateOperationsInput | $Enums.AdvertisementTarget
   title?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1327,6 +1558,7 @@ export type AdvertisementCreateManyCreatedByInput = {
   id?: string
   flatId?: string | null
   roomId?: string | null
+  createdByTenantStayId?: string | null
   category: $Enums.AdvertisementCategory
   target: $Enums.AdvertisementTarget
   title: string
@@ -1353,6 +1585,7 @@ export type AdvertisementUpdateWithoutCreatedByInput = {
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  stay?: Prisma.StayUpdateOneWithoutAdvertisementNestedInput
   flat?: Prisma.FlatUpdateOneWithoutAdvertisementsNestedInput
   room?: Prisma.RoomUpdateOneWithoutAdvertisementsNestedInput
   applications?: Prisma.ApplicationUpdateManyWithoutAdvertisementNestedInput
@@ -1363,6 +1596,7 @@ export type AdvertisementUncheckedUpdateWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   flatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdByTenantStayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.EnumAdvertisementCategoryFieldUpdateOperationsInput | $Enums.AdvertisementCategory
   target?: Prisma.EnumAdvertisementTargetFieldUpdateOperationsInput | $Enums.AdvertisementTarget
   title?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1382,6 +1616,7 @@ export type AdvertisementUncheckedUpdateManyWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   flatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdByTenantStayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.EnumAdvertisementCategoryFieldUpdateOperationsInput | $Enums.AdvertisementCategory
   target?: Prisma.EnumAdvertisementTargetFieldUpdateOperationsInput | $Enums.AdvertisementTarget
   title?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1440,6 +1675,7 @@ export type AdvertisementSelect<ExtArgs extends runtime.Types.Extensions.Interna
   createdById?: boolean
   flatId?: boolean
   roomId?: boolean
+  createdByTenantStayId?: boolean
   category?: boolean
   target?: boolean
   title?: boolean
@@ -1452,6 +1688,7 @@ export type AdvertisementSelect<ExtArgs extends runtime.Types.Extensions.Interna
   createdAt?: boolean
   updatedAt?: boolean
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  stay?: boolean | Prisma.Advertisement$stayArgs<ExtArgs>
   flat?: boolean | Prisma.Advertisement$flatArgs<ExtArgs>
   room?: boolean | Prisma.Advertisement$roomArgs<ExtArgs>
   applications?: boolean | Prisma.Advertisement$applicationsArgs<ExtArgs>
@@ -1464,6 +1701,7 @@ export type AdvertisementSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   createdById?: boolean
   flatId?: boolean
   roomId?: boolean
+  createdByTenantStayId?: boolean
   category?: boolean
   target?: boolean
   title?: boolean
@@ -1476,6 +1714,7 @@ export type AdvertisementSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   createdAt?: boolean
   updatedAt?: boolean
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  stay?: boolean | Prisma.Advertisement$stayArgs<ExtArgs>
   flat?: boolean | Prisma.Advertisement$flatArgs<ExtArgs>
   room?: boolean | Prisma.Advertisement$roomArgs<ExtArgs>
 }, ExtArgs["result"]["advertisement"]>
@@ -1485,6 +1724,7 @@ export type AdvertisementSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   createdById?: boolean
   flatId?: boolean
   roomId?: boolean
+  createdByTenantStayId?: boolean
   category?: boolean
   target?: boolean
   title?: boolean
@@ -1497,6 +1737,7 @@ export type AdvertisementSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   createdAt?: boolean
   updatedAt?: boolean
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  stay?: boolean | Prisma.Advertisement$stayArgs<ExtArgs>
   flat?: boolean | Prisma.Advertisement$flatArgs<ExtArgs>
   room?: boolean | Prisma.Advertisement$roomArgs<ExtArgs>
 }, ExtArgs["result"]["advertisement"]>
@@ -1506,6 +1747,7 @@ export type AdvertisementSelectScalar = {
   createdById?: boolean
   flatId?: boolean
   roomId?: boolean
+  createdByTenantStayId?: boolean
   category?: boolean
   target?: boolean
   title?: boolean
@@ -1519,9 +1761,10 @@ export type AdvertisementSelectScalar = {
   updatedAt?: boolean
 }
 
-export type AdvertisementOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdById" | "flatId" | "roomId" | "category" | "target" | "title" | "description" | "monthlyRent" | "availableFrom" | "availableTo" | "status" | "publishedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["advertisement"]>
+export type AdvertisementOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdById" | "flatId" | "roomId" | "createdByTenantStayId" | "category" | "target" | "title" | "description" | "monthlyRent" | "availableFrom" | "availableTo" | "status" | "publishedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["advertisement"]>
 export type AdvertisementInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  stay?: boolean | Prisma.Advertisement$stayArgs<ExtArgs>
   flat?: boolean | Prisma.Advertisement$flatArgs<ExtArgs>
   room?: boolean | Prisma.Advertisement$roomArgs<ExtArgs>
   applications?: boolean | Prisma.Advertisement$applicationsArgs<ExtArgs>
@@ -1530,11 +1773,13 @@ export type AdvertisementInclude<ExtArgs extends runtime.Types.Extensions.Intern
 }
 export type AdvertisementIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  stay?: boolean | Prisma.Advertisement$stayArgs<ExtArgs>
   flat?: boolean | Prisma.Advertisement$flatArgs<ExtArgs>
   room?: boolean | Prisma.Advertisement$roomArgs<ExtArgs>
 }
 export type AdvertisementIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  stay?: boolean | Prisma.Advertisement$stayArgs<ExtArgs>
   flat?: boolean | Prisma.Advertisement$flatArgs<ExtArgs>
   room?: boolean | Prisma.Advertisement$roomArgs<ExtArgs>
 }
@@ -1543,6 +1788,7 @@ export type $AdvertisementPayload<ExtArgs extends runtime.Types.Extensions.Inter
   name: "Advertisement"
   objects: {
     createdBy: Prisma.$UserPayload<ExtArgs>
+    stay: Prisma.$StayPayload<ExtArgs> | null
     flat: Prisma.$FlatPayload<ExtArgs> | null
     room: Prisma.$RoomPayload<ExtArgs> | null
     applications: Prisma.$ApplicationPayload<ExtArgs>[]
@@ -1553,6 +1799,7 @@ export type $AdvertisementPayload<ExtArgs extends runtime.Types.Extensions.Inter
     createdById: string
     flatId: string | null
     roomId: string | null
+    createdByTenantStayId: string | null
     category: $Enums.AdvertisementCategory
     target: $Enums.AdvertisementTarget
     title: string
@@ -1959,6 +2206,7 @@ readonly fields: AdvertisementFieldRefs;
 export interface Prisma__AdvertisementClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  stay<T extends Prisma.Advertisement$stayArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Advertisement$stayArgs<ExtArgs>>): Prisma.Prisma__StayClient<runtime.Types.Result.GetResult<Prisma.$StayPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   flat<T extends Prisma.Advertisement$flatArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Advertisement$flatArgs<ExtArgs>>): Prisma.Prisma__FlatClient<runtime.Types.Result.GetResult<Prisma.$FlatPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   room<T extends Prisma.Advertisement$roomArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Advertisement$roomArgs<ExtArgs>>): Prisma.Prisma__RoomClient<runtime.Types.Result.GetResult<Prisma.$RoomPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   applications<T extends Prisma.Advertisement$applicationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Advertisement$applicationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -1996,6 +2244,7 @@ export interface AdvertisementFieldRefs {
   readonly createdById: Prisma.FieldRef<"Advertisement", 'String'>
   readonly flatId: Prisma.FieldRef<"Advertisement", 'String'>
   readonly roomId: Prisma.FieldRef<"Advertisement", 'String'>
+  readonly createdByTenantStayId: Prisma.FieldRef<"Advertisement", 'String'>
   readonly category: Prisma.FieldRef<"Advertisement", 'AdvertisementCategory'>
   readonly target: Prisma.FieldRef<"Advertisement", 'AdvertisementTarget'>
   readonly title: Prisma.FieldRef<"Advertisement", 'String'>
@@ -2405,6 +2654,25 @@ export type AdvertisementDeleteManyArgs<ExtArgs extends runtime.Types.Extensions
    * Limit how many Advertisements to delete.
    */
   limit?: number
+}
+
+/**
+ * Advertisement.stay
+ */
+export type Advertisement$stayArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Stay
+   */
+  select?: Prisma.StaySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Stay
+   */
+  omit?: Prisma.StayOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StayInclude<ExtArgs> | null
+  where?: Prisma.StayWhereInput
 }
 
 /**
