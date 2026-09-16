@@ -149,12 +149,27 @@ const addRoom = async (
         throw new AppError(httpStatus.FORBIDDEN, "You do not own this flat");
     }
 
-    const flat = await prisma.flat.findUnique({ where: { id: flatId } });
+    const flat = await prisma.flat.findUnique({
+        where: { id: flatId },
+        include: {
+            rooms: true,
+        },
+    });
 
     if (!flat) {
         throw new AppError(httpStatus.NOT_FOUND, "Flat not found");
     }
 
+    if (flat.bedrooms) {
+        if (flat.bedrooms <= flat.rooms.length) {
+            throw new AppError(
+                httpStatus.FORBIDDEN,
+                "Number of rooms can not be greater than bedrooms",
+            );
+        }
+    } else {
+        throw new AppError(httpStatus.FORBIDDEN, "Update number of bedrooms");
+    }
     const uploadedImages = await uploadImages(images, "housing/rooms");
 
     const room = await prisma.$transaction(async (tx) => {
@@ -707,10 +722,9 @@ const getMyProperties = async (ownerId: string) => {
             name: true,
             type: true,
             address: true,
-            city: true,
-            district: true,
             status: true,
             createdAt: true,
+            area: true,
             flats: {
                 select: {
                     id: true,
@@ -755,7 +769,7 @@ const getMyFlats = async (ownerId: string) => {
                         select: {
                             id: true,
                             name: true,
-                            city: true,
+                            area: true,
                         },
                     },
                     rooms: {
