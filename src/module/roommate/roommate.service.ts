@@ -1,16 +1,14 @@
 import httpStatus from "http-status";
+import { Prisma } from "../../../generated/prisma/client";
 import {
-    AdvertisementCategory,
     AdvertisementStatus,
-    AdvertisementTarget,
     ApplicationStatus,
     BillStatus,
     InvoiceType,
+    RentalType,
     RoomStatus,
     StayStatus,
-    StayType,
 } from "../../../generated/prisma/enums";
-import { Prisma } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
 import { ICreateRoommateAdvertisement } from "./roommate.interface";
@@ -65,7 +63,13 @@ const createRoommateAdvertisement = async (
     } = payload;
 
     const stay = await prisma.stay.findFirst({
-        where: { id: stayId, occupantId: tenantId },
+        where: {
+            id: stayId,
+            occupantId: tenantId,
+            type: {
+                in: [RentalType.PRIMARY_ENTIRE_FLAT, RentalType.PRIMARY_ROOM],
+            },
+        },
     });
 
     if (!stay) {
@@ -108,13 +112,21 @@ const createRoommateAdvertisement = async (
             status: { in: AD_CONFLICT_STATUSES },
             availableFrom: { lte: availableTo },
             availableTo: { gte: availableFrom },
-            OR: [
-                { roomId },
-                {
-                    flatId: room.flatId,
-                    target: AdvertisementTarget.ENTIRE_FLAT,
-                },
-            ],
+            roomId,
+            rentalType: {
+                in: [
+                    RentalType.SECONDARY_ROOM,
+                    RentalType.SECONDARY_ROOM_SHARING,
+                ],
+            },
+            // category: AdvertisementCategory.SECONDARY_RENTAL,
+            // OR: [
+            //     { roomId },
+            //     {
+            //         flatId: room.flatId,
+            //         target: AdvertisementTarget.ENTIRE_FLAT,
+            //     },
+            // ],
         },
         select: { id: true },
     });
@@ -126,14 +138,25 @@ const createRoommateAdvertisement = async (
         );
     }
 
+    if (
+        advertisementTarget !== RentalType.SECONDARY_ROOM &&
+        advertisementTarget !== RentalType.SECONDARY_ROOM_SHARING
+    ) {
+        throw new AppError(
+            httpStatus.CONFLICT,
+            "Advertisement target must be ROOM or ROOM_SHARING",
+        );
+    }
+
     return prisma.advertisement.create({
         data: {
             createdById: tenantId,
             flatId: room.flatId,
             createdByTenantStayId: stayId,
             roomId,
-            category: AdvertisementCategory.ROOMMATE,
-            target: advertisementTarget,
+            rentalType: advertisementTarget,
+            // category: AdvertisementCategory.SECONDARY_RENTAL,
+            // target: advertisementTarget,
             title,
             description: description || null,
             monthlyRent,
@@ -152,11 +175,15 @@ const createRoommateAdvertisement = async (
 const getRoommateStays = async (tenantId: string) => {
     const stays = await prisma.stay.findMany({
         where: {
-            type: StayType.ROOMMATE,
+            type: {
+                in: [
+                    RentalType.SECONDARY_ROOM,
+                    RentalType.SECONDARY_ROOM_SHARING,
+                ],
+            },
             application: {
                 advertisement: {
                     createdById: tenantId,
-                    category: AdvertisementCategory.ROOMMATE,
                 },
             },
         },
@@ -273,17 +300,15 @@ const getRoommateStays = async (tenantId: string) => {
 const getApplications = async (userId: string) => {
     const applications = await prisma.application.findMany({
         where: {
-            OR: [
-                {
-                    advertisement: {
-                        category: AdvertisementCategory.ROOMMATE,
-                        createdById: userId,
-                    },
+            advertisement: {
+                rentalType: {
+                    in: [
+                        RentalType.SECONDARY_ROOM,
+                        RentalType.SECONDARY_ROOM_SHARING,
+                    ],
                 },
-                {
-                    applicantId: userId,
-                },
-            ],
+                createdById: userId,
+            },
         },
         select: {
             id: true,
@@ -382,7 +407,10 @@ const updateApplicationStatus = async (
         throw new AppError(httpStatus.NOT_FOUND, "Application not found");
     }
 
-    if (application.advertisement.category !== AdvertisementCategory.ROOMMATE) {
+    if (
+        application.rentalType === RentalType.SECONDARY_ROOM ||
+        application.rentalType === RentalType.SECONDARY_ROOM_SHARING
+    ) {
         throw new AppError(
             httpStatus.BAD_REQUEST,
             "Only roommate applications can be reviewed here",
@@ -448,7 +476,7 @@ const updateApplicationStatus = async (
                     propertyId: flat.propertyId,
                     flatId: flatId!,
                     roomId: application.advertisement.roomId || null,
-                    type: StayType.ROOMMATE,
+                    rentalType: application.rentalType,
                     status: StayStatus.WAITING_FOR_PAYMENT,
                     startDate: application.requestedStartDate,
                     endDate: application.requestedEndDate,

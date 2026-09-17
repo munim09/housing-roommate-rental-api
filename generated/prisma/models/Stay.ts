@@ -41,7 +41,7 @@ export type StayMinAggregateOutputType = {
   propertyId: string | null
   flatId: string | null
   roomId: string | null
-  type: $Enums.StayType | null
+  rentalType: $Enums.RentalType | null
   status: $Enums.StayStatus | null
   startDate: Date | null
   endDate: Date | null
@@ -57,7 +57,7 @@ export type StayMaxAggregateOutputType = {
   propertyId: string | null
   flatId: string | null
   roomId: string | null
-  type: $Enums.StayType | null
+  rentalType: $Enums.RentalType | null
   status: $Enums.StayStatus | null
   startDate: Date | null
   endDate: Date | null
@@ -73,7 +73,7 @@ export type StayCountAggregateOutputType = {
   propertyId: number
   flatId: number
   roomId: number
-  type: number
+  rentalType: number
   status: number
   startDate: number
   endDate: number
@@ -99,7 +99,7 @@ export type StayMinAggregateInputType = {
   propertyId?: true
   flatId?: true
   roomId?: true
-  type?: true
+  rentalType?: true
   status?: true
   startDate?: true
   endDate?: true
@@ -115,7 +115,7 @@ export type StayMaxAggregateInputType = {
   propertyId?: true
   flatId?: true
   roomId?: true
-  type?: true
+  rentalType?: true
   status?: true
   startDate?: true
   endDate?: true
@@ -131,7 +131,7 @@ export type StayCountAggregateInputType = {
   propertyId?: true
   flatId?: true
   roomId?: true
-  type?: true
+  rentalType?: true
   status?: true
   startDate?: true
   endDate?: true
@@ -234,7 +234,7 @@ export type StayGroupByOutputType = {
   propertyId: string
   flatId: string
   roomId: string | null
-  type: $Enums.StayType
+  rentalType: $Enums.RentalType
   status: $Enums.StayStatus
   startDate: Date
   endDate: Date
@@ -273,7 +273,7 @@ export type StayWhereInput = {
   propertyId?: Prisma.StringFilter<"Stay"> | string
   flatId?: Prisma.StringFilter<"Stay"> | string
   roomId?: Prisma.StringNullableFilter<"Stay"> | string | null
-  type?: Prisma.EnumStayTypeFilter<"Stay"> | $Enums.StayType
+  rentalType?: Prisma.EnumRentalTypeFilter<"Stay"> | $Enums.RentalType
   status?: Prisma.EnumStayStatusFilter<"Stay"> | $Enums.StayStatus
   startDate?: Prisma.DateTimeFilter<"Stay"> | Date | string
   endDate?: Prisma.DateTimeFilter<"Stay"> | Date | string
@@ -297,7 +297,7 @@ export type StayOrderByWithRelationInput = {
   propertyId?: Prisma.SortOrder
   flatId?: Prisma.SortOrder
   roomId?: Prisma.SortOrderInput | Prisma.SortOrder
-  type?: Prisma.SortOrder
+  rentalType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
@@ -324,7 +324,7 @@ export type StayWhereUniqueInput = Prisma.AtLeast<{
   propertyId?: Prisma.StringFilter<"Stay"> | string
   flatId?: Prisma.StringFilter<"Stay"> | string
   roomId?: Prisma.StringNullableFilter<"Stay"> | string | null
-  type?: Prisma.EnumStayTypeFilter<"Stay"> | $Enums.StayType
+  rentalType?: Prisma.EnumRentalTypeFilter<"Stay"> | $Enums.RentalType
   status?: Prisma.EnumStayStatusFilter<"Stay"> | $Enums.StayStatus
   startDate?: Prisma.DateTimeFilter<"Stay"> | Date | string
   endDate?: Prisma.DateTimeFilter<"Stay"> | Date | string
@@ -348,7 +348,7 @@ export type StayOrderByWithAggregationInput = {
   propertyId?: Prisma.SortOrder
   flatId?: Prisma.SortOrder
   roomId?: Prisma.SortOrderInput | Prisma.SortOrder
-  type?: Prisma.SortOrder
+  rentalType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
@@ -372,7 +372,7 @@ export type StayScalarWhereWithAggregatesInput = {
   propertyId?: Prisma.StringWithAggregatesFilter<"Stay"> | string
   flatId?: Prisma.StringWithAggregatesFilter<"Stay"> | string
   roomId?: Prisma.StringNullableWithAggregatesFilter<"Stay"> | string | null
-  type?: Prisma.EnumStayTypeWithAggregatesFilter<"Stay"> | $Enums.StayType
+  rentalType?: Prisma.EnumRentalTypeWithAggregatesFilter<"Stay"> | $Enums.RentalType
   status?: Prisma.EnumStayStatusWithAggregatesFilter<"Stay"> | $Enums.StayStatus
   startDate?: Prisma.DateTimeWithAggregatesFilter<"Stay"> | Date | string
   endDate?: Prisma.DateTimeWithAggregatesFilter<"Stay"> | Date | string
@@ -383,7 +383,7 @@ export type StayScalarWhereWithAggregatesInput = {
 
 export type StayCreateInput = {
   id?: string
-  type: $Enums.StayType
+  rentalType?: $Enums.RentalType
   status?: $Enums.StayStatus
   startDate: Date | string
   endDate: Date | string
@@ -407,7 +407,7 @@ export type StayUncheckedCreateInput = {
   propertyId: string
   flatId: string
   roomId?: string | null
-  type: $Enums.StayType
+  rentalType?: $Enums.RentalType
   status?: $Enums.StayStatus
   startDate: Date | string
   endDate: Date | string
@@ -421,7 +421,7 @@ export type StayUncheckedCreateInput = {
 
 export type StayUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumStayTypeFieldUpdateOperationsInput | $Enums.StayType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumStayStatusFieldUpdateOperationsInput | $Enums.StayStatus
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -445,7 +445,7 @@ export type StayUncheckedUpdateInput = {
   propertyId?: Prisma.StringFieldUpdateOperationsInput | string
   flatId?: Prisma.StringFieldUpdateOperationsInput | string
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumStayTypeFieldUpdateOperationsInput | $Enums.StayType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumStayStatusFieldUpdateOperationsInput | $Enums.StayStatus
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -464,7 +464,7 @@ export type StayCreateManyInput = {
   propertyId: string
   flatId: string
   roomId?: string | null
-  type: $Enums.StayType
+  rentalType?: $Enums.RentalType
   status?: $Enums.StayStatus
   startDate: Date | string
   endDate: Date | string
@@ -475,7 +475,7 @@ export type StayCreateManyInput = {
 
 export type StayUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumStayTypeFieldUpdateOperationsInput | $Enums.StayType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumStayStatusFieldUpdateOperationsInput | $Enums.StayStatus
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -491,7 +491,7 @@ export type StayUncheckedUpdateManyInput = {
   propertyId?: Prisma.StringFieldUpdateOperationsInput | string
   flatId?: Prisma.StringFieldUpdateOperationsInput | string
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumStayTypeFieldUpdateOperationsInput | $Enums.StayType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumStayStatusFieldUpdateOperationsInput | $Enums.StayStatus
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -527,7 +527,7 @@ export type StayCountOrderByAggregateInput = {
   propertyId?: Prisma.SortOrder
   flatId?: Prisma.SortOrder
   roomId?: Prisma.SortOrder
-  type?: Prisma.SortOrder
+  rentalType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
@@ -547,7 +547,7 @@ export type StayMaxOrderByAggregateInput = {
   propertyId?: Prisma.SortOrder
   flatId?: Prisma.SortOrder
   roomId?: Prisma.SortOrder
-  type?: Prisma.SortOrder
+  rentalType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
@@ -563,7 +563,7 @@ export type StayMinOrderByAggregateInput = {
   propertyId?: Prisma.SortOrder
   flatId?: Prisma.SortOrder
   roomId?: Prisma.SortOrder
-  type?: Prisma.SortOrder
+  rentalType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
@@ -780,10 +780,6 @@ export type StayUncheckedUpdateManyWithoutRoomNestedInput = {
   deleteMany?: Prisma.StayScalarWhereInput | Prisma.StayScalarWhereInput[]
 }
 
-export type EnumStayTypeFieldUpdateOperationsInput = {
-  set?: $Enums.StayType
-}
-
 export type EnumStayStatusFieldUpdateOperationsInput = {
   set?: $Enums.StayStatus
 }
@@ -832,7 +828,7 @@ export type StayUncheckedUpdateManyWithoutOccupantNestedInput = {
 
 export type StayCreateWithoutAdvertisementInput = {
   id?: string
-  type: $Enums.StayType
+  rentalType?: $Enums.RentalType
   status?: $Enums.StayStatus
   startDate: Date | string
   endDate: Date | string
@@ -855,7 +851,7 @@ export type StayUncheckedCreateWithoutAdvertisementInput = {
   propertyId: string
   flatId: string
   roomId?: string | null
-  type: $Enums.StayType
+  rentalType?: $Enums.RentalType
   status?: $Enums.StayStatus
   startDate: Date | string
   endDate: Date | string
@@ -884,7 +880,7 @@ export type StayUpdateToOneWithWhereWithoutAdvertisementInput = {
 
 export type StayUpdateWithoutAdvertisementInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumStayTypeFieldUpdateOperationsInput | $Enums.StayType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumStayStatusFieldUpdateOperationsInput | $Enums.StayStatus
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -907,7 +903,7 @@ export type StayUncheckedUpdateWithoutAdvertisementInput = {
   propertyId?: Prisma.StringFieldUpdateOperationsInput | string
   flatId?: Prisma.StringFieldUpdateOperationsInput | string
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumStayTypeFieldUpdateOperationsInput | $Enums.StayType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumStayStatusFieldUpdateOperationsInput | $Enums.StayStatus
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -920,7 +916,7 @@ export type StayUncheckedUpdateWithoutAdvertisementInput = {
 
 export type StayCreateWithoutApplicationInput = {
   id?: string
-  type: $Enums.StayType
+  rentalType?: $Enums.RentalType
   status?: $Enums.StayStatus
   startDate: Date | string
   endDate: Date | string
@@ -942,7 +938,7 @@ export type StayUncheckedCreateWithoutApplicationInput = {
   propertyId: string
   flatId: string
   roomId?: string | null
-  type: $Enums.StayType
+  rentalType?: $Enums.RentalType
   status?: $Enums.StayStatus
   startDate: Date | string
   endDate: Date | string
@@ -972,7 +968,7 @@ export type StayUpdateToOneWithWhereWithoutApplicationInput = {
 
 export type StayUpdateWithoutApplicationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumStayTypeFieldUpdateOperationsInput | $Enums.StayType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumStayStatusFieldUpdateOperationsInput | $Enums.StayStatus
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -994,7 +990,7 @@ export type StayUncheckedUpdateWithoutApplicationInput = {
   propertyId?: Prisma.StringFieldUpdateOperationsInput | string
   flatId?: Prisma.StringFieldUpdateOperationsInput | string
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumStayTypeFieldUpdateOperationsInput | $Enums.StayType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumStayStatusFieldUpdateOperationsInput | $Enums.StayStatus
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1008,7 +1004,7 @@ export type StayUncheckedUpdateWithoutApplicationInput = {
 
 export type StayCreateWithoutFlatInput = {
   id?: string
-  type: $Enums.StayType
+  rentalType?: $Enums.RentalType
   status?: $Enums.StayStatus
   startDate: Date | string
   endDate: Date | string
@@ -1030,7 +1026,7 @@ export type StayUncheckedCreateWithoutFlatInput = {
   occupantId: string
   propertyId: string
   roomId?: string | null
-  type: $Enums.StayType
+  rentalType?: $Enums.RentalType
   status?: $Enums.StayStatus
   startDate: Date | string
   endDate: Date | string
@@ -1078,7 +1074,7 @@ export type StayScalarWhereInput = {
   propertyId?: Prisma.StringFilter<"Stay"> | string
   flatId?: Prisma.StringFilter<"Stay"> | string
   roomId?: Prisma.StringNullableFilter<"Stay"> | string | null
-  type?: Prisma.EnumStayTypeFilter<"Stay"> | $Enums.StayType
+  rentalType?: Prisma.EnumRentalTypeFilter<"Stay"> | $Enums.RentalType
   status?: Prisma.EnumStayStatusFilter<"Stay"> | $Enums.StayStatus
   startDate?: Prisma.DateTimeFilter<"Stay"> | Date | string
   endDate?: Prisma.DateTimeFilter<"Stay"> | Date | string
@@ -1089,7 +1085,7 @@ export type StayScalarWhereInput = {
 
 export type StayCreateWithoutInvoicesInput = {
   id?: string
-  type: $Enums.StayType
+  rentalType?: $Enums.RentalType
   status?: $Enums.StayStatus
   startDate: Date | string
   endDate: Date | string
@@ -1112,7 +1108,7 @@ export type StayUncheckedCreateWithoutInvoicesInput = {
   propertyId: string
   flatId: string
   roomId?: string | null
-  type: $Enums.StayType
+  rentalType?: $Enums.RentalType
   status?: $Enums.StayStatus
   startDate: Date | string
   endDate: Date | string
@@ -1141,7 +1137,7 @@ export type StayUpdateToOneWithWhereWithoutInvoicesInput = {
 
 export type StayUpdateWithoutInvoicesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumStayTypeFieldUpdateOperationsInput | $Enums.StayType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumStayStatusFieldUpdateOperationsInput | $Enums.StayStatus
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1164,7 +1160,7 @@ export type StayUncheckedUpdateWithoutInvoicesInput = {
   propertyId?: Prisma.StringFieldUpdateOperationsInput | string
   flatId?: Prisma.StringFieldUpdateOperationsInput | string
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumStayTypeFieldUpdateOperationsInput | $Enums.StayType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumStayStatusFieldUpdateOperationsInput | $Enums.StayStatus
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1177,7 +1173,7 @@ export type StayUncheckedUpdateWithoutInvoicesInput = {
 
 export type StayCreateWithoutPaymentsInput = {
   id?: string
-  type: $Enums.StayType
+  rentalType?: $Enums.RentalType
   status?: $Enums.StayStatus
   startDate: Date | string
   endDate: Date | string
@@ -1200,7 +1196,7 @@ export type StayUncheckedCreateWithoutPaymentsInput = {
   propertyId: string
   flatId: string
   roomId?: string | null
-  type: $Enums.StayType
+  rentalType?: $Enums.RentalType
   status?: $Enums.StayStatus
   startDate: Date | string
   endDate: Date | string
@@ -1229,7 +1225,7 @@ export type StayUpdateToOneWithWhereWithoutPaymentsInput = {
 
 export type StayUpdateWithoutPaymentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumStayTypeFieldUpdateOperationsInput | $Enums.StayType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumStayStatusFieldUpdateOperationsInput | $Enums.StayStatus
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1252,7 +1248,7 @@ export type StayUncheckedUpdateWithoutPaymentsInput = {
   propertyId?: Prisma.StringFieldUpdateOperationsInput | string
   flatId?: Prisma.StringFieldUpdateOperationsInput | string
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumStayTypeFieldUpdateOperationsInput | $Enums.StayType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumStayStatusFieldUpdateOperationsInput | $Enums.StayStatus
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1265,7 +1261,7 @@ export type StayUncheckedUpdateWithoutPaymentsInput = {
 
 export type StayCreateWithoutPropertyInput = {
   id?: string
-  type: $Enums.StayType
+  rentalType?: $Enums.RentalType
   status?: $Enums.StayStatus
   startDate: Date | string
   endDate: Date | string
@@ -1287,7 +1283,7 @@ export type StayUncheckedCreateWithoutPropertyInput = {
   occupantId: string
   flatId: string
   roomId?: string | null
-  type: $Enums.StayType
+  rentalType?: $Enums.RentalType
   status?: $Enums.StayStatus
   startDate: Date | string
   endDate: Date | string
@@ -1327,7 +1323,7 @@ export type StayUpdateManyWithWhereWithoutPropertyInput = {
 
 export type StayCreateWithoutRoomInput = {
   id?: string
-  type: $Enums.StayType
+  rentalType?: $Enums.RentalType
   status?: $Enums.StayStatus
   startDate: Date | string
   endDate: Date | string
@@ -1349,7 +1345,7 @@ export type StayUncheckedCreateWithoutRoomInput = {
   occupantId: string
   propertyId: string
   flatId: string
-  type: $Enums.StayType
+  rentalType?: $Enums.RentalType
   status?: $Enums.StayStatus
   startDate: Date | string
   endDate: Date | string
@@ -1389,7 +1385,7 @@ export type StayUpdateManyWithWhereWithoutRoomInput = {
 
 export type StayCreateWithoutOccupantInput = {
   id?: string
-  type: $Enums.StayType
+  rentalType?: $Enums.RentalType
   status?: $Enums.StayStatus
   startDate: Date | string
   endDate: Date | string
@@ -1411,7 +1407,7 @@ export type StayUncheckedCreateWithoutOccupantInput = {
   propertyId: string
   flatId: string
   roomId?: string | null
-  type: $Enums.StayType
+  rentalType?: $Enums.RentalType
   status?: $Enums.StayStatus
   startDate: Date | string
   endDate: Date | string
@@ -1455,7 +1451,7 @@ export type StayCreateManyFlatInput = {
   occupantId: string
   propertyId: string
   roomId?: string | null
-  type: $Enums.StayType
+  rentalType?: $Enums.RentalType
   status?: $Enums.StayStatus
   startDate: Date | string
   endDate: Date | string
@@ -1466,7 +1462,7 @@ export type StayCreateManyFlatInput = {
 
 export type StayUpdateWithoutFlatInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumStayTypeFieldUpdateOperationsInput | $Enums.StayType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumStayStatusFieldUpdateOperationsInput | $Enums.StayStatus
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1488,7 +1484,7 @@ export type StayUncheckedUpdateWithoutFlatInput = {
   occupantId?: Prisma.StringFieldUpdateOperationsInput | string
   propertyId?: Prisma.StringFieldUpdateOperationsInput | string
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumStayTypeFieldUpdateOperationsInput | $Enums.StayType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumStayStatusFieldUpdateOperationsInput | $Enums.StayStatus
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1506,7 +1502,7 @@ export type StayUncheckedUpdateManyWithoutFlatInput = {
   occupantId?: Prisma.StringFieldUpdateOperationsInput | string
   propertyId?: Prisma.StringFieldUpdateOperationsInput | string
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumStayTypeFieldUpdateOperationsInput | $Enums.StayType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumStayStatusFieldUpdateOperationsInput | $Enums.StayStatus
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1521,7 +1517,7 @@ export type StayCreateManyPropertyInput = {
   occupantId: string
   flatId: string
   roomId?: string | null
-  type: $Enums.StayType
+  rentalType?: $Enums.RentalType
   status?: $Enums.StayStatus
   startDate: Date | string
   endDate: Date | string
@@ -1532,7 +1528,7 @@ export type StayCreateManyPropertyInput = {
 
 export type StayUpdateWithoutPropertyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumStayTypeFieldUpdateOperationsInput | $Enums.StayType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumStayStatusFieldUpdateOperationsInput | $Enums.StayStatus
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1554,7 +1550,7 @@ export type StayUncheckedUpdateWithoutPropertyInput = {
   occupantId?: Prisma.StringFieldUpdateOperationsInput | string
   flatId?: Prisma.StringFieldUpdateOperationsInput | string
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumStayTypeFieldUpdateOperationsInput | $Enums.StayType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumStayStatusFieldUpdateOperationsInput | $Enums.StayStatus
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1572,7 +1568,7 @@ export type StayUncheckedUpdateManyWithoutPropertyInput = {
   occupantId?: Prisma.StringFieldUpdateOperationsInput | string
   flatId?: Prisma.StringFieldUpdateOperationsInput | string
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumStayTypeFieldUpdateOperationsInput | $Enums.StayType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumStayStatusFieldUpdateOperationsInput | $Enums.StayStatus
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1587,7 +1583,7 @@ export type StayCreateManyRoomInput = {
   occupantId: string
   propertyId: string
   flatId: string
-  type: $Enums.StayType
+  rentalType?: $Enums.RentalType
   status?: $Enums.StayStatus
   startDate: Date | string
   endDate: Date | string
@@ -1598,7 +1594,7 @@ export type StayCreateManyRoomInput = {
 
 export type StayUpdateWithoutRoomInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumStayTypeFieldUpdateOperationsInput | $Enums.StayType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumStayStatusFieldUpdateOperationsInput | $Enums.StayStatus
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1620,7 +1616,7 @@ export type StayUncheckedUpdateWithoutRoomInput = {
   occupantId?: Prisma.StringFieldUpdateOperationsInput | string
   propertyId?: Prisma.StringFieldUpdateOperationsInput | string
   flatId?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumStayTypeFieldUpdateOperationsInput | $Enums.StayType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumStayStatusFieldUpdateOperationsInput | $Enums.StayStatus
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1638,7 +1634,7 @@ export type StayUncheckedUpdateManyWithoutRoomInput = {
   occupantId?: Prisma.StringFieldUpdateOperationsInput | string
   propertyId?: Prisma.StringFieldUpdateOperationsInput | string
   flatId?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumStayTypeFieldUpdateOperationsInput | $Enums.StayType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumStayStatusFieldUpdateOperationsInput | $Enums.StayStatus
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1653,7 +1649,7 @@ export type StayCreateManyOccupantInput = {
   propertyId: string
   flatId: string
   roomId?: string | null
-  type: $Enums.StayType
+  rentalType?: $Enums.RentalType
   status?: $Enums.StayStatus
   startDate: Date | string
   endDate: Date | string
@@ -1664,7 +1660,7 @@ export type StayCreateManyOccupantInput = {
 
 export type StayUpdateWithoutOccupantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumStayTypeFieldUpdateOperationsInput | $Enums.StayType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumStayStatusFieldUpdateOperationsInput | $Enums.StayStatus
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1686,7 +1682,7 @@ export type StayUncheckedUpdateWithoutOccupantInput = {
   propertyId?: Prisma.StringFieldUpdateOperationsInput | string
   flatId?: Prisma.StringFieldUpdateOperationsInput | string
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumStayTypeFieldUpdateOperationsInput | $Enums.StayType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumStayStatusFieldUpdateOperationsInput | $Enums.StayStatus
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1704,7 +1700,7 @@ export type StayUncheckedUpdateManyWithoutOccupantInput = {
   propertyId?: Prisma.StringFieldUpdateOperationsInput | string
   flatId?: Prisma.StringFieldUpdateOperationsInput | string
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.EnumStayTypeFieldUpdateOperationsInput | $Enums.StayType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumStayStatusFieldUpdateOperationsInput | $Enums.StayStatus
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1769,7 +1765,7 @@ export type StaySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   propertyId?: boolean
   flatId?: boolean
   roomId?: boolean
-  type?: boolean
+  rentalType?: boolean
   status?: boolean
   startDate?: boolean
   endDate?: boolean
@@ -1794,7 +1790,7 @@ export type StaySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   propertyId?: boolean
   flatId?: boolean
   roomId?: boolean
-  type?: boolean
+  rentalType?: boolean
   status?: boolean
   startDate?: boolean
   endDate?: boolean
@@ -1815,7 +1811,7 @@ export type StaySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   propertyId?: boolean
   flatId?: boolean
   roomId?: boolean
-  type?: boolean
+  rentalType?: boolean
   status?: boolean
   startDate?: boolean
   endDate?: boolean
@@ -1836,7 +1832,7 @@ export type StaySelectScalar = {
   propertyId?: boolean
   flatId?: boolean
   roomId?: boolean
-  type?: boolean
+  rentalType?: boolean
   status?: boolean
   startDate?: boolean
   endDate?: boolean
@@ -1845,7 +1841,7 @@ export type StaySelectScalar = {
   updatedAt?: boolean
 }
 
-export type StayOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "applicationId" | "occupantId" | "propertyId" | "flatId" | "roomId" | "type" | "status" | "startDate" | "endDate" | "monthlyRent" | "createdAt" | "updatedAt", ExtArgs["result"]["stay"]>
+export type StayOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "applicationId" | "occupantId" | "propertyId" | "flatId" | "roomId" | "rentalType" | "status" | "startDate" | "endDate" | "monthlyRent" | "createdAt" | "updatedAt", ExtArgs["result"]["stay"]>
 export type StayInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   application?: boolean | Prisma.ApplicationDefaultArgs<ExtArgs>
   occupant?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1891,7 +1887,7 @@ export type $StayPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     propertyId: string
     flatId: string
     roomId: string | null
-    type: $Enums.StayType
+    rentalType: $Enums.RentalType
     status: $Enums.StayStatus
     startDate: Date
     endDate: Date
@@ -2335,7 +2331,7 @@ export interface StayFieldRefs {
   readonly propertyId: Prisma.FieldRef<"Stay", 'String'>
   readonly flatId: Prisma.FieldRef<"Stay", 'String'>
   readonly roomId: Prisma.FieldRef<"Stay", 'String'>
-  readonly type: Prisma.FieldRef<"Stay", 'StayType'>
+  readonly rentalType: Prisma.FieldRef<"Stay", 'RentalType'>
   readonly status: Prisma.FieldRef<"Stay", 'StayStatus'>
   readonly startDate: Prisma.FieldRef<"Stay", 'DateTime'>
   readonly endDate: Prisma.FieldRef<"Stay", 'DateTime'>

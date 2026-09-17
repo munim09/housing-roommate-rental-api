@@ -58,17 +58,6 @@ enum ManagerAssignmentStatus {
 // Advertisement
 // ------------------------------------------------------------
 
-enum AdvertisementCategory {
-  RENTAL
-  ROOMMATE
-}
-
-enum AdvertisementTarget {
-  ENTIRE_FLAT
-  ROOM
-  ROOM_SHARING
-}
-
 enum AdvertisementStatus {
   DRAFT
   PUBLISHED
@@ -81,15 +70,37 @@ enum AdvertisementStatus {
 
 //No need EXPIRED, ARCHIVED, FULL
 
-// ------------------------------------------------------------
-// Application
-// ------------------------------------------------------------
 
-enum ApplicationType {
-  RENTAL
-  ROOMMATE
-  ROOM_SHARING
+enum RentalType {
+  PRIMARY_ENTIRE_FLAT
+  PRIMARY_ROOM
+  SECONDARY_ROOM
+  SECONDARY_ROOM_SHARING
 }
+
+// enum AdvertisementCategory {
+//   RENTAL
+//   SECONDARY_RENTAL
+// }
+
+// enum AdvertisementTarget {
+//   ENTIRE_FLAT
+//   ROOM
+//   ROOM_SHARING
+// }
+
+
+// enum ApplicationType {
+//   RENTAL
+//   ROOMMATE
+//   ROOM_SHARING
+// }
+
+// enum StayType {
+//   PRIMARY
+//   SECONDARY
+// }
+
 
 enum ApplicationStatus {
   PENDING
@@ -104,10 +115,6 @@ enum ApplicationStatus {
 // Stay
 // ------------------------------------------------------------
 
-enum StayType {
-  PRIMARY
-  ROOMMATE
-}
 
  
 

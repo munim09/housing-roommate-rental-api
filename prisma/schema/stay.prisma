@@ -22,7 +22,8 @@ model Stay {
   flatId     String
   roomId     String?
 
-  type   StayType
+//   type   StayType
+  rentalType RentalType @default(PRIMARY_ENTIRE_FLAT)
   status StayStatus @default(WAITING_FOR_PAYMENT)
 
   startDate DateTime

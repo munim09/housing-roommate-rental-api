@@ -1,9 +1,9 @@
 import httpStatus from "http-status";
 import {
     AdvertisementStatus,
-    AdvertisementTarget,
     ApplicationStatus,
     Prisma,
+    RentalType,
     StayStatus,
 } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
@@ -441,7 +441,7 @@ const getAdvertisementById = async (advertisementId: string) => {
         throw new AppError(httpStatus.NOT_FOUND, "Advertisement not found");
     }
 
-    if (advertisement.target === AdvertisementTarget.ENTIRE_FLAT) {
+    if (advertisement.rentalType === RentalType.PRIMARY_ENTIRE_FLAT) {
         return {
             ...advertisement,
             flat: advertisement.flat ?? null,

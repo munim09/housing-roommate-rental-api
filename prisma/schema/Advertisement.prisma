@@ -27,8 +27,10 @@ model Advertisement {
 
   createdByTenantStayId String?
 
-  category AdvertisementCategory
-  target   AdvertisementTarget
+//   category AdvertisementCategory
+//   target   AdvertisementTarget
+  
+  rentalType RentalType @default(PRIMARY_ENTIRE_FLAT)
 
   title       String
   description String?
@@ -66,5 +68,5 @@ model Advertisement {
   @@index([createdById])
   @@index([flatId])
   @@index([roomId])
-  @@index([category, status])
+//   @@index([category, status])
 }

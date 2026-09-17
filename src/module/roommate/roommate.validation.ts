@@ -5,9 +5,12 @@ const createAdvertisementValidation = z
         stayId: z.string().uuid("Invalid stay ID"),
         roomId: z.string().uuid("Invalid room ID"),
         title: z.string().min(1, "Advertisement title is required"),
-        advertisementTarget: z.enum(["ROOM", "ROOM_SHARING"], {
-            message: "Advertisement target must be ROOM or ROOM_SHARING",
-        }),
+        advertisementTarget: z.enum(
+            ["SECONDARY_ROOM", "SECONDARY_ROOM_SHARING"],
+            {
+                message: "Advertisement target must be ROOM or ROOM_SHARING",
+            },
+        ),
         description: z
             .string()
             .max(2000, "Description must be at most 2000 characters")

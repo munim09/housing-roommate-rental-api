@@ -1,4 +1,6 @@
 import bcrypt from "bcryptjs";
+
+import { RentalType } from "../generated/prisma/enums";
 import { prisma } from "../src/lib/prisma";
 
 // ============================================================
@@ -48,8 +50,6 @@ const MANAGER_ASSIGNMENT_IDS = {
 const ADVERTISEMENT_IDS = {
     ad1: "70000000-0000-4000-8000-000000000001",
     ad2: "70000000-0000-4000-8000-000000000002",
-    ad3: "70000000-0000-4000-8000-000000000003",
-    ad4: "70000000-0000-4000-8000-000000000004",
 };
 
 const IMAGE_IDS = {
@@ -61,8 +61,6 @@ const IMAGE_IDS = {
 const APPLICATION_IDS = {
     app1: "90000000-0000-4000-8000-000000000001",
     app2: "90000000-0000-4000-8000-000000000002",
-    app3: "90000000-0000-4000-8000-000000000003",
-    app4: "90000000-0000-4000-8000-000000000004",
 };
 
 const STAY_IDS = {
@@ -525,12 +523,13 @@ const seedAdvertisements = async () => {
             createdById: USER_IDS.manager1,
             flatId: FLAT_IDS.flat1,
             roomId: null,
-            category: "RENTAL" as const,
-            target: "ENTIRE_FLAT" as const,
+            rentalType: RentalType.PRIMARY_ENTIRE_FLAT,
             title: "2 Bedroom Flat for Rent in Dhanmondi",
             description: "Fully furnished flat available for a family.",
             monthlyRent: 30000,
             status: "PUBLISHED" as const,
+            availableFrom: new Date("2026-10-01T00:00:00.000Z"),
+            availableTo: new Date("2027-09-30T23:59:59.999Z"),
             publishedAt,
         },
         {
@@ -538,40 +537,13 @@ const seedAdvertisements = async () => {
             createdById: USER_IDS.owner1,
             flatId: FLAT_IDS.flat1,
             roomId: ROOM_IDS.room2,
-            category: "RENTAL" as const,
-            target: "ROOM" as const,
+            rentalType: RentalType.PRIMARY_ROOM,
             title: "Single Bedroom for Rent",
             description: "Private single bedroom in a 2BR flat.",
             monthlyRent: 12000,
             status: "PUBLISHED" as const,
-            publishedAt,
-        },
-        {
-            id: ADVERTISEMENT_IDS.ad3,
-            createdById: USER_IDS.tenant1,
-            flatId: FLAT_IDS.flat1,
-            roomId: ROOM_IDS.room1,
-            category: "ROOMMATE" as const,
-            target: "ROOM" as const,
-            title: "Roommate Wanted for Master Bedroom",
-            description: "Looking for a female roommate in Dhanmondi.",
-            monthlyRent: 10000,
-            availableFrom: new Date("2026-09-01T00:00:00Z"),
-            availableTo: new Date("2027-08-31T00:00:00Z"),
-            status: "PUBLISHED" as const,
-            publishedAt,
-        },
-        {
-            id: ADVERTISEMENT_IDS.ad4,
-            createdById: USER_IDS.owner2,
-            flatId: FLAT_IDS.flat2,
-            roomId: null,
-            category: "RENTAL" as const,
-            target: "ENTIRE_FLAT" as const,
-            title: "3 Bedroom Flat for Rent",
-            description: "Bright and airy 3BR flat on the second floor.",
-            monthlyRent: 40000,
-            status: "PUBLISHED" as const,
+            availableFrom: new Date("2026-10-01T00:00:00.000Z"),
+            availableTo: new Date("2027-09-30T23:59:59.999Z"),
             publishedAt,
         },
     ];
@@ -585,8 +557,7 @@ const seedAdvertisements = async () => {
                 createdById: ad.createdById,
                 flatId: ad.flatId,
                 roomId: ad.roomId,
-                category: ad.category,
-                target: ad.target,
+                rentalType: ad.rentalType,
                 title: ad.title,
                 description: ad.description,
                 monthlyRent: ad.monthlyRent,
@@ -660,7 +631,7 @@ const seedApplications = async () => {
             id: APPLICATION_IDS.app1,
             advertisementId: ADVERTISEMENT_IDS.ad1,
             applicantId: USER_IDS.tenant1,
-            type: "RENTAL" as const,
+            rentalType: RentalType.PRIMARY_ENTIRE_FLAT,
             status: "APPROVED" as const,
             requestedStartDate: new Date("2026-09-01T00:00:00Z"),
             requestedEndDate: new Date("2027-08-31T00:00:00Z"),
@@ -670,37 +641,15 @@ const seedApplications = async () => {
         },
         {
             id: APPLICATION_IDS.app2,
-            advertisementId: ADVERTISEMENT_IDS.ad3,
+            advertisementId: ADVERTISEMENT_IDS.ad2,
             applicantId: USER_IDS.tenant2,
-            type: "ROOMMATE" as const,
+            rentalType: RentalType.PRIMARY_ROOM,
             status: "APPROVED" as const,
             requestedStartDate: new Date("2026-09-15T00:00:00Z"),
             requestedEndDate: new Date("2027-09-14T00:00:00Z"),
             note: "Working professional, looking for a long term stay.",
             reviewedById: USER_IDS.tenant1,
             reviewedAt: new Date("2026-09-10T12:00:00Z"),
-        },
-        {
-            id: APPLICATION_IDS.app3,
-            advertisementId: ADVERTISEMENT_IDS.ad2,
-            applicantId: USER_IDS.tenant3,
-            type: "RENTAL" as const,
-            status: "PENDING" as const,
-            requestedStartDate: new Date("2026-10-01T00:00:00Z"),
-            requestedEndDate: new Date("2027-09-30T00:00:00Z"),
-            note: "Doctor, needs a quiet place near Dhanmondi.",
-        },
-        {
-            id: APPLICATION_IDS.app4,
-            advertisementId: ADVERTISEMENT_IDS.ad4,
-            applicantId: USER_IDS.tenant3,
-            type: "RENTAL" as const,
-            status: "REJECTED" as const,
-            requestedStartDate: new Date("2026-09-01T00:00:00Z"),
-            requestedEndDate: new Date("2027-08-31T00:00:00Z"),
-            note: "Asked for a discount on rent.",
-            reviewedById: USER_IDS.owner2,
-            reviewedAt: new Date("2026-08-28T09:00:00Z"),
         },
     ];
 
@@ -729,7 +678,7 @@ const seedStays = async () => {
             occupantId: USER_IDS.tenant1,
             propertyId: PROPERTY_ID,
             flatId: FLAT_IDS.flat1,
-            type: "PRIMARY",
+            rentalType: RentalType.PRIMARY_ENTIRE_FLAT,
             status: "CONFIRMED",
             startDate: new Date("2026-09-01T00:00:00Z"),
             endDate: new Date("2027-08-31T00:00:00Z"),
@@ -747,7 +696,7 @@ const seedStays = async () => {
             propertyId: PROPERTY_ID,
             flatId: FLAT_IDS.flat1,
             roomId: ROOM_IDS.room1,
-            type: "ROOMMATE",
+            rentalType: RentalType.PRIMARY_ROOM,
             status: "WAITING_FOR_PAYMENT",
             startDate: new Date("2026-09-15T00:00:00Z"),
             endDate: new Date("2027-09-14T00:00:00Z"),
@@ -910,19 +859,6 @@ const seedViewingRequests = async () => {
             reviewedAt: new Date("2026-09-18T09:00:00Z"),
             note: "Can come in the morning.",
             noteByReviewer: "Please bring a photocopy of your NID.",
-        },
-    });
-
-    await prisma.viewingRequest.upsert({
-        where: { id: VIEWING_REQUEST_IDS.v2 },
-        update: {},
-        create: {
-            id: VIEWING_REQUEST_IDS.v2,
-            advertisementId: ADVERTISEMENT_IDS.ad4,
-            requesterId: USER_IDS.tenant3,
-            requestedDate: new Date("2026-09-25T16:00:00Z"),
-            status: "PENDING",
-            note: "Interested for a weekend visit.",
         },
     });
 

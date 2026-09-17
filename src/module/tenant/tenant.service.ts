@@ -1,15 +1,14 @@
 import httpStatus from "http-status";
 import {
-    AdvertisementCategory,
     AdvertisementStatus,
     ApplicationStatus,
     BillStatus,
     FlatStatus,
     InvoiceType,
     Prisma,
+    RentalType,
     Role,
     StayStatus,
-    StayType,
     ViewingRequestStatus,
 } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
@@ -595,7 +594,10 @@ const createApplication = async (
         );
     }
 
-    if (advertisement.category === AdvertisementCategory.ROOMMATE) {
+    if (
+        advertisement.rentalType === RentalType.SECONDARY_ROOM ||
+        advertisement.rentalType === RentalType.SECONDARY_ROOM_SHARING
+    ) {
         if (!advertisement.roomId) {
             throw new AppError(
                 httpStatus.BAD_REQUEST,
@@ -632,7 +634,8 @@ const createApplication = async (
         const conflictingRoommateStay = await prisma.stay.findFirst({
             where: {
                 roomId: advertisement.roomId,
-                type: StayType.ROOMMATE,
+                rentalType: advertisement.rentalType,
+                // type: StayType.SECONDARY,
                 occupantId: { not: advertisement.createdById },
                 status: {
                     in: [StayStatus.WAITING_FOR_PAYMENT, StayStatus.CONFIRMED],
@@ -679,15 +682,31 @@ const createApplication = async (
             );
         }
     }
+    // let type: ApplicationType;
+
+    // if (advertisement.target === AdvertisementTarget.ENTIRE_FLAT) {
+    //     type = ApplicationType.RENTAL;
+    // } else if (
+    //     advertisement.target === AdvertisementTarget.ROOM &&
+    //     advertisement.category === AdvertisementCategory.RENTAL
+    // ) {
+    //     type = ApplicationType.RENTAL;
+    // } else if (
+    //     advertisement.target === AdvertisementTarget.ROOM &&
+    //     advertisement.category === AdvertisementCategory.SECONDARY_RENTAL
+    // ) {
+    //     type = ApplicationType.ROOMMATE;
+    // } else {
+    //     //if AdvertisementCategory.SECONDARY_RENTAL && AdvertisementTarget.ROOM_SHARING
+    //     type = ApplicationType.ROOM_SHARING;
+    // }
 
     const application = await prisma.application.create({
         data: {
             advertisementId: payload.advertisementId,
             applicantId: tenantId,
-            type:
-                advertisement.category === AdvertisementCategory.ROOMMATE
-                    ? "ROOMMATE"
-                    : "RENTAL",
+            rentalType: advertisement.rentalType,
+            // type: type,
             requestedStartDate: payload.requestedStartDate,
             requestedEndDate: payload.requestedEndDate,
             note: payload.note || null,
@@ -947,15 +966,19 @@ const assertApplicationAccess = async (
             stay: true,
         },
     });
-    if (application?.advertisement.category === "ROOMMATE") {
+
+    if (!application) {
+        throw new AppError(httpStatus.NOT_FOUND, "Application not found");
+    }
+
+    if (
+        application?.rentalType === RentalType.SECONDARY_ROOM ||
+        application?.rentalType === RentalType.SECONDARY_ROOM_SHARING
+    ) {
         throw new AppError(
             httpStatus.NOT_FOUND,
             "Owner/Manager cannot access this application",
         );
-    }
-
-    if (!application) {
-        throw new AppError(httpStatus.NOT_FOUND, "Application not found");
     }
 
     const flatId =
@@ -1163,7 +1186,8 @@ const updateApplication = async (
                     propertyId: flat.propertyId,
                     flatId: flatId!,
                     roomId: application.advertisement.roomId || null,
-                    type: StayType.PRIMARY,
+                    rentalType: application.rentalType,
+                    // type: StayType.PRIMARY,
                     status: StayStatus.WAITING_FOR_PAYMENT,
                     startDate: application.requestedStartDate,
                     endDate: application.requestedEndDate,
@@ -1316,14 +1340,18 @@ const applyStayAccessScope = (
             },
         };
 
-        where.type = StayType.PRIMARY;
+        where.rentalType = {
+            in: [RentalType.PRIMARY_ENTIRE_FLAT, RentalType.PRIMARY_ROOM],
+        };
     } else {
         where.flat = {
             managerAssignments: {
                 some: { managerId: userId, status: "ACTIVE" },
             },
         };
-        where.type = StayType.PRIMARY;
+        where.rentalType = {
+            in: [RentalType.PRIMARY_ENTIRE_FLAT, RentalType.PRIMARY_ROOM],
+        };
     }
 };
 

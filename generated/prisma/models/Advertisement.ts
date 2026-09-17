@@ -40,8 +40,7 @@ export type AdvertisementMinAggregateOutputType = {
   flatId: string | null
   roomId: string | null
   createdByTenantStayId: string | null
-  category: $Enums.AdvertisementCategory | null
-  target: $Enums.AdvertisementTarget | null
+  rentalType: $Enums.RentalType | null
   title: string | null
   description: string | null
   monthlyRent: runtime.Decimal | null
@@ -59,8 +58,7 @@ export type AdvertisementMaxAggregateOutputType = {
   flatId: string | null
   roomId: string | null
   createdByTenantStayId: string | null
-  category: $Enums.AdvertisementCategory | null
-  target: $Enums.AdvertisementTarget | null
+  rentalType: $Enums.RentalType | null
   title: string | null
   description: string | null
   monthlyRent: runtime.Decimal | null
@@ -78,8 +76,7 @@ export type AdvertisementCountAggregateOutputType = {
   flatId: number
   roomId: number
   createdByTenantStayId: number
-  category: number
-  target: number
+  rentalType: number
   title: number
   description: number
   monthlyRent: number
@@ -107,8 +104,7 @@ export type AdvertisementMinAggregateInputType = {
   flatId?: true
   roomId?: true
   createdByTenantStayId?: true
-  category?: true
-  target?: true
+  rentalType?: true
   title?: true
   description?: true
   monthlyRent?: true
@@ -126,8 +122,7 @@ export type AdvertisementMaxAggregateInputType = {
   flatId?: true
   roomId?: true
   createdByTenantStayId?: true
-  category?: true
-  target?: true
+  rentalType?: true
   title?: true
   description?: true
   monthlyRent?: true
@@ -145,8 +140,7 @@ export type AdvertisementCountAggregateInputType = {
   flatId?: true
   roomId?: true
   createdByTenantStayId?: true
-  category?: true
-  target?: true
+  rentalType?: true
   title?: true
   description?: true
   monthlyRent?: true
@@ -251,8 +245,7 @@ export type AdvertisementGroupByOutputType = {
   flatId: string | null
   roomId: string | null
   createdByTenantStayId: string | null
-  category: $Enums.AdvertisementCategory
-  target: $Enums.AdvertisementTarget
+  rentalType: $Enums.RentalType
   title: string
   description: string | null
   monthlyRent: runtime.Decimal
@@ -293,8 +286,7 @@ export type AdvertisementWhereInput = {
   flatId?: Prisma.StringNullableFilter<"Advertisement"> | string | null
   roomId?: Prisma.StringNullableFilter<"Advertisement"> | string | null
   createdByTenantStayId?: Prisma.StringNullableFilter<"Advertisement"> | string | null
-  category?: Prisma.EnumAdvertisementCategoryFilter<"Advertisement"> | $Enums.AdvertisementCategory
-  target?: Prisma.EnumAdvertisementTargetFilter<"Advertisement"> | $Enums.AdvertisementTarget
+  rentalType?: Prisma.EnumRentalTypeFilter<"Advertisement"> | $Enums.RentalType
   title?: Prisma.StringFilter<"Advertisement"> | string
   description?: Prisma.StringNullableFilter<"Advertisement"> | string | null
   monthlyRent?: Prisma.DecimalFilter<"Advertisement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -318,8 +310,7 @@ export type AdvertisementOrderByWithRelationInput = {
   flatId?: Prisma.SortOrderInput | Prisma.SortOrder
   roomId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdByTenantStayId?: Prisma.SortOrderInput | Prisma.SortOrder
-  category?: Prisma.SortOrder
-  target?: Prisma.SortOrder
+  rentalType?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   monthlyRent?: Prisma.SortOrder
@@ -346,8 +337,7 @@ export type AdvertisementWhereUniqueInput = Prisma.AtLeast<{
   flatId?: Prisma.StringNullableFilter<"Advertisement"> | string | null
   roomId?: Prisma.StringNullableFilter<"Advertisement"> | string | null
   createdByTenantStayId?: Prisma.StringNullableFilter<"Advertisement"> | string | null
-  category?: Prisma.EnumAdvertisementCategoryFilter<"Advertisement"> | $Enums.AdvertisementCategory
-  target?: Prisma.EnumAdvertisementTargetFilter<"Advertisement"> | $Enums.AdvertisementTarget
+  rentalType?: Prisma.EnumRentalTypeFilter<"Advertisement"> | $Enums.RentalType
   title?: Prisma.StringFilter<"Advertisement"> | string
   description?: Prisma.StringNullableFilter<"Advertisement"> | string | null
   monthlyRent?: Prisma.DecimalFilter<"Advertisement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -371,8 +361,7 @@ export type AdvertisementOrderByWithAggregationInput = {
   flatId?: Prisma.SortOrderInput | Prisma.SortOrder
   roomId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdByTenantStayId?: Prisma.SortOrderInput | Prisma.SortOrder
-  category?: Prisma.SortOrder
-  target?: Prisma.SortOrder
+  rentalType?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   monthlyRent?: Prisma.SortOrder
@@ -398,8 +387,7 @@ export type AdvertisementScalarWhereWithAggregatesInput = {
   flatId?: Prisma.StringNullableWithAggregatesFilter<"Advertisement"> | string | null
   roomId?: Prisma.StringNullableWithAggregatesFilter<"Advertisement"> | string | null
   createdByTenantStayId?: Prisma.StringNullableWithAggregatesFilter<"Advertisement"> | string | null
-  category?: Prisma.EnumAdvertisementCategoryWithAggregatesFilter<"Advertisement"> | $Enums.AdvertisementCategory
-  target?: Prisma.EnumAdvertisementTargetWithAggregatesFilter<"Advertisement"> | $Enums.AdvertisementTarget
+  rentalType?: Prisma.EnumRentalTypeWithAggregatesFilter<"Advertisement"> | $Enums.RentalType
   title?: Prisma.StringWithAggregatesFilter<"Advertisement"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Advertisement"> | string | null
   monthlyRent?: Prisma.DecimalWithAggregatesFilter<"Advertisement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -413,8 +401,7 @@ export type AdvertisementScalarWhereWithAggregatesInput = {
 
 export type AdvertisementCreateInput = {
   id?: string
-  category: $Enums.AdvertisementCategory
-  target: $Enums.AdvertisementTarget
+  rentalType?: $Enums.RentalType
   title: string
   description?: string | null
   monthlyRent: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -438,8 +425,7 @@ export type AdvertisementUncheckedCreateInput = {
   flatId?: string | null
   roomId?: string | null
   createdByTenantStayId?: string | null
-  category: $Enums.AdvertisementCategory
-  target: $Enums.AdvertisementTarget
+  rentalType?: $Enums.RentalType
   title: string
   description?: string | null
   monthlyRent: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -455,8 +441,7 @@ export type AdvertisementUncheckedCreateInput = {
 
 export type AdvertisementUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  category?: Prisma.EnumAdvertisementCategoryFieldUpdateOperationsInput | $Enums.AdvertisementCategory
-  target?: Prisma.EnumAdvertisementTargetFieldUpdateOperationsInput | $Enums.AdvertisementTarget
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   monthlyRent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -480,8 +465,7 @@ export type AdvertisementUncheckedUpdateInput = {
   flatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByTenantStayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.EnumAdvertisementCategoryFieldUpdateOperationsInput | $Enums.AdvertisementCategory
-  target?: Prisma.EnumAdvertisementTargetFieldUpdateOperationsInput | $Enums.AdvertisementTarget
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   monthlyRent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -501,8 +485,7 @@ export type AdvertisementCreateManyInput = {
   flatId?: string | null
   roomId?: string | null
   createdByTenantStayId?: string | null
-  category: $Enums.AdvertisementCategory
-  target: $Enums.AdvertisementTarget
+  rentalType?: $Enums.RentalType
   title: string
   description?: string | null
   monthlyRent: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -516,8 +499,7 @@ export type AdvertisementCreateManyInput = {
 
 export type AdvertisementUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  category?: Prisma.EnumAdvertisementCategoryFieldUpdateOperationsInput | $Enums.AdvertisementCategory
-  target?: Prisma.EnumAdvertisementTargetFieldUpdateOperationsInput | $Enums.AdvertisementTarget
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   monthlyRent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -535,8 +517,7 @@ export type AdvertisementUncheckedUpdateManyInput = {
   flatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByTenantStayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.EnumAdvertisementCategoryFieldUpdateOperationsInput | $Enums.AdvertisementCategory
-  target?: Prisma.EnumAdvertisementTargetFieldUpdateOperationsInput | $Enums.AdvertisementTarget
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   monthlyRent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -554,8 +535,7 @@ export type AdvertisementCountOrderByAggregateInput = {
   flatId?: Prisma.SortOrder
   roomId?: Prisma.SortOrder
   createdByTenantStayId?: Prisma.SortOrder
-  category?: Prisma.SortOrder
-  target?: Prisma.SortOrder
+  rentalType?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   monthlyRent?: Prisma.SortOrder
@@ -577,8 +557,7 @@ export type AdvertisementMaxOrderByAggregateInput = {
   flatId?: Prisma.SortOrder
   roomId?: Prisma.SortOrder
   createdByTenantStayId?: Prisma.SortOrder
-  category?: Prisma.SortOrder
-  target?: Prisma.SortOrder
+  rentalType?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   monthlyRent?: Prisma.SortOrder
@@ -596,8 +575,7 @@ export type AdvertisementMinOrderByAggregateInput = {
   flatId?: Prisma.SortOrder
   roomId?: Prisma.SortOrder
   createdByTenantStayId?: Prisma.SortOrder
-  category?: Prisma.SortOrder
-  target?: Prisma.SortOrder
+  rentalType?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   monthlyRent?: Prisma.SortOrder
@@ -628,12 +606,8 @@ export type AdvertisementOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type EnumAdvertisementCategoryFieldUpdateOperationsInput = {
-  set?: $Enums.AdvertisementCategory
-}
-
-export type EnumAdvertisementTargetFieldUpdateOperationsInput = {
-  set?: $Enums.AdvertisementTarget
+export type EnumRentalTypeFieldUpdateOperationsInput = {
+  set?: $Enums.RentalType
 }
 
 export type DecimalFieldUpdateOperationsInput = {
@@ -850,8 +824,7 @@ export type AdvertisementUpdateOneRequiredWithoutViewingRequestsNestedInput = {
 
 export type AdvertisementCreateWithoutApplicationsInput = {
   id?: string
-  category: $Enums.AdvertisementCategory
-  target: $Enums.AdvertisementTarget
+  rentalType?: $Enums.RentalType
   title: string
   description?: string | null
   monthlyRent: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -874,8 +847,7 @@ export type AdvertisementUncheckedCreateWithoutApplicationsInput = {
   flatId?: string | null
   roomId?: string | null
   createdByTenantStayId?: string | null
-  category: $Enums.AdvertisementCategory
-  target: $Enums.AdvertisementTarget
+  rentalType?: $Enums.RentalType
   title: string
   description?: string | null
   monthlyRent: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -906,8 +878,7 @@ export type AdvertisementUpdateToOneWithWhereWithoutApplicationsInput = {
 
 export type AdvertisementUpdateWithoutApplicationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  category?: Prisma.EnumAdvertisementCategoryFieldUpdateOperationsInput | $Enums.AdvertisementCategory
-  target?: Prisma.EnumAdvertisementTargetFieldUpdateOperationsInput | $Enums.AdvertisementTarget
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   monthlyRent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -930,8 +901,7 @@ export type AdvertisementUncheckedUpdateWithoutApplicationsInput = {
   flatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByTenantStayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.EnumAdvertisementCategoryFieldUpdateOperationsInput | $Enums.AdvertisementCategory
-  target?: Prisma.EnumAdvertisementTargetFieldUpdateOperationsInput | $Enums.AdvertisementTarget
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   monthlyRent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -946,8 +916,7 @@ export type AdvertisementUncheckedUpdateWithoutApplicationsInput = {
 
 export type AdvertisementCreateWithoutFlatInput = {
   id?: string
-  category: $Enums.AdvertisementCategory
-  target: $Enums.AdvertisementTarget
+  rentalType?: $Enums.RentalType
   title: string
   description?: string | null
   monthlyRent: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -969,8 +938,7 @@ export type AdvertisementUncheckedCreateWithoutFlatInput = {
   createdById: string
   roomId?: string | null
   createdByTenantStayId?: string | null
-  category: $Enums.AdvertisementCategory
-  target: $Enums.AdvertisementTarget
+  rentalType?: $Enums.RentalType
   title: string
   description?: string | null
   monthlyRent: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1019,8 +987,7 @@ export type AdvertisementScalarWhereInput = {
   flatId?: Prisma.StringNullableFilter<"Advertisement"> | string | null
   roomId?: Prisma.StringNullableFilter<"Advertisement"> | string | null
   createdByTenantStayId?: Prisma.StringNullableFilter<"Advertisement"> | string | null
-  category?: Prisma.EnumAdvertisementCategoryFilter<"Advertisement"> | $Enums.AdvertisementCategory
-  target?: Prisma.EnumAdvertisementTargetFilter<"Advertisement"> | $Enums.AdvertisementTarget
+  rentalType?: Prisma.EnumRentalTypeFilter<"Advertisement"> | $Enums.RentalType
   title?: Prisma.StringFilter<"Advertisement"> | string
   description?: Prisma.StringNullableFilter<"Advertisement"> | string | null
   monthlyRent?: Prisma.DecimalFilter<"Advertisement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1034,8 +1001,7 @@ export type AdvertisementScalarWhereInput = {
 
 export type AdvertisementCreateWithoutRoomInput = {
   id?: string
-  category: $Enums.AdvertisementCategory
-  target: $Enums.AdvertisementTarget
+  rentalType?: $Enums.RentalType
   title: string
   description?: string | null
   monthlyRent: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1057,8 +1023,7 @@ export type AdvertisementUncheckedCreateWithoutRoomInput = {
   createdById: string
   flatId?: string | null
   createdByTenantStayId?: string | null
-  category: $Enums.AdvertisementCategory
-  target: $Enums.AdvertisementTarget
+  rentalType?: $Enums.RentalType
   title: string
   description?: string | null
   monthlyRent: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1100,8 +1065,7 @@ export type AdvertisementUpdateManyWithWhereWithoutRoomInput = {
 
 export type AdvertisementCreateWithoutStayInput = {
   id?: string
-  category: $Enums.AdvertisementCategory
-  target: $Enums.AdvertisementTarget
+  rentalType?: $Enums.RentalType
   title: string
   description?: string | null
   monthlyRent: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1123,8 +1087,7 @@ export type AdvertisementUncheckedCreateWithoutStayInput = {
   createdById: string
   flatId?: string | null
   roomId?: string | null
-  category: $Enums.AdvertisementCategory
-  target: $Enums.AdvertisementTarget
+  rentalType?: $Enums.RentalType
   title: string
   description?: string | null
   monthlyRent: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1166,8 +1129,7 @@ export type AdvertisementUpdateManyWithWhereWithoutStayInput = {
 
 export type AdvertisementCreateWithoutCreatedByInput = {
   id?: string
-  category: $Enums.AdvertisementCategory
-  target: $Enums.AdvertisementTarget
+  rentalType?: $Enums.RentalType
   title: string
   description?: string | null
   monthlyRent: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1189,8 +1151,7 @@ export type AdvertisementUncheckedCreateWithoutCreatedByInput = {
   flatId?: string | null
   roomId?: string | null
   createdByTenantStayId?: string | null
-  category: $Enums.AdvertisementCategory
-  target: $Enums.AdvertisementTarget
+  rentalType?: $Enums.RentalType
   title: string
   description?: string | null
   monthlyRent: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1232,8 +1193,7 @@ export type AdvertisementUpdateManyWithWhereWithoutCreatedByInput = {
 
 export type AdvertisementCreateWithoutViewingRequestsInput = {
   id?: string
-  category: $Enums.AdvertisementCategory
-  target: $Enums.AdvertisementTarget
+  rentalType?: $Enums.RentalType
   title: string
   description?: string | null
   monthlyRent: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1256,8 +1216,7 @@ export type AdvertisementUncheckedCreateWithoutViewingRequestsInput = {
   flatId?: string | null
   roomId?: string | null
   createdByTenantStayId?: string | null
-  category: $Enums.AdvertisementCategory
-  target: $Enums.AdvertisementTarget
+  rentalType?: $Enums.RentalType
   title: string
   description?: string | null
   monthlyRent: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1288,8 +1247,7 @@ export type AdvertisementUpdateToOneWithWhereWithoutViewingRequestsInput = {
 
 export type AdvertisementUpdateWithoutViewingRequestsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  category?: Prisma.EnumAdvertisementCategoryFieldUpdateOperationsInput | $Enums.AdvertisementCategory
-  target?: Prisma.EnumAdvertisementTargetFieldUpdateOperationsInput | $Enums.AdvertisementTarget
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   monthlyRent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1312,8 +1270,7 @@ export type AdvertisementUncheckedUpdateWithoutViewingRequestsInput = {
   flatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByTenantStayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.EnumAdvertisementCategoryFieldUpdateOperationsInput | $Enums.AdvertisementCategory
-  target?: Prisma.EnumAdvertisementTargetFieldUpdateOperationsInput | $Enums.AdvertisementTarget
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   monthlyRent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1331,8 +1288,7 @@ export type AdvertisementCreateManyFlatInput = {
   createdById: string
   roomId?: string | null
   createdByTenantStayId?: string | null
-  category: $Enums.AdvertisementCategory
-  target: $Enums.AdvertisementTarget
+  rentalType?: $Enums.RentalType
   title: string
   description?: string | null
   monthlyRent: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1346,8 +1302,7 @@ export type AdvertisementCreateManyFlatInput = {
 
 export type AdvertisementUpdateWithoutFlatInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  category?: Prisma.EnumAdvertisementCategoryFieldUpdateOperationsInput | $Enums.AdvertisementCategory
-  target?: Prisma.EnumAdvertisementTargetFieldUpdateOperationsInput | $Enums.AdvertisementTarget
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   monthlyRent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1369,8 +1324,7 @@ export type AdvertisementUncheckedUpdateWithoutFlatInput = {
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByTenantStayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.EnumAdvertisementCategoryFieldUpdateOperationsInput | $Enums.AdvertisementCategory
-  target?: Prisma.EnumAdvertisementTargetFieldUpdateOperationsInput | $Enums.AdvertisementTarget
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   monthlyRent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1389,8 +1343,7 @@ export type AdvertisementUncheckedUpdateManyWithoutFlatInput = {
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByTenantStayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.EnumAdvertisementCategoryFieldUpdateOperationsInput | $Enums.AdvertisementCategory
-  target?: Prisma.EnumAdvertisementTargetFieldUpdateOperationsInput | $Enums.AdvertisementTarget
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   monthlyRent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1407,8 +1360,7 @@ export type AdvertisementCreateManyRoomInput = {
   createdById: string
   flatId?: string | null
   createdByTenantStayId?: string | null
-  category: $Enums.AdvertisementCategory
-  target: $Enums.AdvertisementTarget
+  rentalType?: $Enums.RentalType
   title: string
   description?: string | null
   monthlyRent: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1422,8 +1374,7 @@ export type AdvertisementCreateManyRoomInput = {
 
 export type AdvertisementUpdateWithoutRoomInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  category?: Prisma.EnumAdvertisementCategoryFieldUpdateOperationsInput | $Enums.AdvertisementCategory
-  target?: Prisma.EnumAdvertisementTargetFieldUpdateOperationsInput | $Enums.AdvertisementTarget
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   monthlyRent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1445,8 +1396,7 @@ export type AdvertisementUncheckedUpdateWithoutRoomInput = {
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   flatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByTenantStayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.EnumAdvertisementCategoryFieldUpdateOperationsInput | $Enums.AdvertisementCategory
-  target?: Prisma.EnumAdvertisementTargetFieldUpdateOperationsInput | $Enums.AdvertisementTarget
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   monthlyRent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1465,8 +1415,7 @@ export type AdvertisementUncheckedUpdateManyWithoutRoomInput = {
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   flatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByTenantStayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.EnumAdvertisementCategoryFieldUpdateOperationsInput | $Enums.AdvertisementCategory
-  target?: Prisma.EnumAdvertisementTargetFieldUpdateOperationsInput | $Enums.AdvertisementTarget
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   monthlyRent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1483,8 +1432,7 @@ export type AdvertisementCreateManyStayInput = {
   createdById: string
   flatId?: string | null
   roomId?: string | null
-  category: $Enums.AdvertisementCategory
-  target: $Enums.AdvertisementTarget
+  rentalType?: $Enums.RentalType
   title: string
   description?: string | null
   monthlyRent: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1498,8 +1446,7 @@ export type AdvertisementCreateManyStayInput = {
 
 export type AdvertisementUpdateWithoutStayInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  category?: Prisma.EnumAdvertisementCategoryFieldUpdateOperationsInput | $Enums.AdvertisementCategory
-  target?: Prisma.EnumAdvertisementTargetFieldUpdateOperationsInput | $Enums.AdvertisementTarget
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   monthlyRent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1521,8 +1468,7 @@ export type AdvertisementUncheckedUpdateWithoutStayInput = {
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   flatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.EnumAdvertisementCategoryFieldUpdateOperationsInput | $Enums.AdvertisementCategory
-  target?: Prisma.EnumAdvertisementTargetFieldUpdateOperationsInput | $Enums.AdvertisementTarget
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   monthlyRent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1541,8 +1487,7 @@ export type AdvertisementUncheckedUpdateManyWithoutStayInput = {
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   flatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.EnumAdvertisementCategoryFieldUpdateOperationsInput | $Enums.AdvertisementCategory
-  target?: Prisma.EnumAdvertisementTargetFieldUpdateOperationsInput | $Enums.AdvertisementTarget
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   monthlyRent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1559,8 +1504,7 @@ export type AdvertisementCreateManyCreatedByInput = {
   flatId?: string | null
   roomId?: string | null
   createdByTenantStayId?: string | null
-  category: $Enums.AdvertisementCategory
-  target: $Enums.AdvertisementTarget
+  rentalType?: $Enums.RentalType
   title: string
   description?: string | null
   monthlyRent: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1574,8 +1518,7 @@ export type AdvertisementCreateManyCreatedByInput = {
 
 export type AdvertisementUpdateWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  category?: Prisma.EnumAdvertisementCategoryFieldUpdateOperationsInput | $Enums.AdvertisementCategory
-  target?: Prisma.EnumAdvertisementTargetFieldUpdateOperationsInput | $Enums.AdvertisementTarget
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   monthlyRent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1597,8 +1540,7 @@ export type AdvertisementUncheckedUpdateWithoutCreatedByInput = {
   flatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByTenantStayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.EnumAdvertisementCategoryFieldUpdateOperationsInput | $Enums.AdvertisementCategory
-  target?: Prisma.EnumAdvertisementTargetFieldUpdateOperationsInput | $Enums.AdvertisementTarget
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   monthlyRent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1617,8 +1559,7 @@ export type AdvertisementUncheckedUpdateManyWithoutCreatedByInput = {
   flatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdByTenantStayId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.EnumAdvertisementCategoryFieldUpdateOperationsInput | $Enums.AdvertisementCategory
-  target?: Prisma.EnumAdvertisementTargetFieldUpdateOperationsInput | $Enums.AdvertisementTarget
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   monthlyRent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1676,8 +1617,7 @@ export type AdvertisementSelect<ExtArgs extends runtime.Types.Extensions.Interna
   flatId?: boolean
   roomId?: boolean
   createdByTenantStayId?: boolean
-  category?: boolean
-  target?: boolean
+  rentalType?: boolean
   title?: boolean
   description?: boolean
   monthlyRent?: boolean
@@ -1702,8 +1642,7 @@ export type AdvertisementSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   flatId?: boolean
   roomId?: boolean
   createdByTenantStayId?: boolean
-  category?: boolean
-  target?: boolean
+  rentalType?: boolean
   title?: boolean
   description?: boolean
   monthlyRent?: boolean
@@ -1725,8 +1664,7 @@ export type AdvertisementSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   flatId?: boolean
   roomId?: boolean
   createdByTenantStayId?: boolean
-  category?: boolean
-  target?: boolean
+  rentalType?: boolean
   title?: boolean
   description?: boolean
   monthlyRent?: boolean
@@ -1748,8 +1686,7 @@ export type AdvertisementSelectScalar = {
   flatId?: boolean
   roomId?: boolean
   createdByTenantStayId?: boolean
-  category?: boolean
-  target?: boolean
+  rentalType?: boolean
   title?: boolean
   description?: boolean
   monthlyRent?: boolean
@@ -1761,7 +1698,7 @@ export type AdvertisementSelectScalar = {
   updatedAt?: boolean
 }
 
-export type AdvertisementOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdById" | "flatId" | "roomId" | "createdByTenantStayId" | "category" | "target" | "title" | "description" | "monthlyRent" | "availableFrom" | "availableTo" | "status" | "publishedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["advertisement"]>
+export type AdvertisementOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdById" | "flatId" | "roomId" | "createdByTenantStayId" | "rentalType" | "title" | "description" | "monthlyRent" | "availableFrom" | "availableTo" | "status" | "publishedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["advertisement"]>
 export type AdvertisementInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   stay?: boolean | Prisma.Advertisement$stayArgs<ExtArgs>
@@ -1800,8 +1737,7 @@ export type $AdvertisementPayload<ExtArgs extends runtime.Types.Extensions.Inter
     flatId: string | null
     roomId: string | null
     createdByTenantStayId: string | null
-    category: $Enums.AdvertisementCategory
-    target: $Enums.AdvertisementTarget
+    rentalType: $Enums.RentalType
     title: string
     description: string | null
     monthlyRent: runtime.Decimal
@@ -2245,8 +2181,7 @@ export interface AdvertisementFieldRefs {
   readonly flatId: Prisma.FieldRef<"Advertisement", 'String'>
   readonly roomId: Prisma.FieldRef<"Advertisement", 'String'>
   readonly createdByTenantStayId: Prisma.FieldRef<"Advertisement", 'String'>
-  readonly category: Prisma.FieldRef<"Advertisement", 'AdvertisementCategory'>
-  readonly target: Prisma.FieldRef<"Advertisement", 'AdvertisementTarget'>
+  readonly rentalType: Prisma.FieldRef<"Advertisement", 'RentalType'>
   readonly title: Prisma.FieldRef<"Advertisement", 'String'>
   readonly description: Prisma.FieldRef<"Advertisement", 'String'>
   readonly monthlyRent: Prisma.FieldRef<"Advertisement", 'Decimal'>

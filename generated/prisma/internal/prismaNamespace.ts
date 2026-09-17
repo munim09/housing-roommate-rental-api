@@ -1901,8 +1901,7 @@ export const AdvertisementScalarFieldEnum = {
   flatId: 'flatId',
   roomId: 'roomId',
   createdByTenantStayId: 'createdByTenantStayId',
-  category: 'category',
-  target: 'target',
+  rentalType: 'rentalType',
   title: 'title',
   description: 'description',
   monthlyRent: 'monthlyRent',
@@ -1921,7 +1920,7 @@ export const ApplicationScalarFieldEnum = {
   id: 'id',
   advertisementId: 'advertisementId',
   applicantId: 'applicantId',
-  type: 'type',
+  rentalType: 'rentalType',
   status: 'status',
   requestedStartDate: 'requestedStartDate',
   requestedEndDate: 'requestedEndDate',
@@ -2133,7 +2132,7 @@ export const StayScalarFieldEnum = {
   propertyId: 'propertyId',
   flatId: 'flatId',
   roomId: 'roomId',
-  type: 'type',
+  rentalType: 'rentalType',
   status: 'status',
   startDate: 'startDate',
   endDate: 'endDate',
@@ -2278,30 +2277,16 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
- * Reference to a field of type 'AdvertisementCategory'
+ * Reference to a field of type 'RentalType'
  */
-export type EnumAdvertisementCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AdvertisementCategory'>
+export type EnumRentalTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RentalType'>
     
 
 
 /**
- * Reference to a field of type 'AdvertisementCategory[]'
+ * Reference to a field of type 'RentalType[]'
  */
-export type ListEnumAdvertisementCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AdvertisementCategory[]'>
-    
-
-
-/**
- * Reference to a field of type 'AdvertisementTarget'
- */
-export type EnumAdvertisementTargetFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AdvertisementTarget'>
-    
-
-
-/**
- * Reference to a field of type 'AdvertisementTarget[]'
- */
-export type ListEnumAdvertisementTargetFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AdvertisementTarget[]'>
+export type ListEnumRentalTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RentalType[]'>
     
 
 
@@ -2330,20 +2315,6 @@ export type EnumAdvertisementStatusFieldRefInput<$PrismaModel> = FieldRefInputTy
  * Reference to a field of type 'AdvertisementStatus[]'
  */
 export type ListEnumAdvertisementStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AdvertisementStatus[]'>
-    
-
-
-/**
- * Reference to a field of type 'ApplicationType'
- */
-export type EnumApplicationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApplicationType'>
-    
-
-
-/**
- * Reference to a field of type 'ApplicationType[]'
- */
-export type ListEnumApplicationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApplicationType[]'>
     
 
 
@@ -2526,20 +2497,6 @@ export type EnumNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<
  * Reference to a field of type 'NotificationType[]'
  */
 export type ListEnumNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationType[]'>
-    
-
-
-/**
- * Reference to a field of type 'StayType'
- */
-export type EnumStayTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StayType'>
-    
-
-
-/**
- * Reference to a field of type 'StayType[]'
- */
-export type ListEnumStayTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StayType[]'>
     
 
 

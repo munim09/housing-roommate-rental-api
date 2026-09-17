@@ -1,16 +1,14 @@
 import httpStatus from "http-status";
 import {
-    AdvertisementCategory,
     AdvertisementStatus,
-    AdvertisementTarget,
     BillStatus,
     FlatStatus,
     InvoiceType,
     ManagerAssignmentStatus,
+    RentalType,
     Role,
     RoomStatus,
     StayStatus,
-    StayType,
 } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
@@ -111,7 +109,6 @@ const createFlatAdvertisement = async (
     const flatAdvertisement = await prisma.advertisement.findFirst({
         where: {
             flatId,
-            category: AdvertisementCategory.RENTAL,
             status: { in: AD_CONFLICT_STATUSES },
             availableFrom: { lte: availableTo },
             availableTo: { gte: availableFrom },
@@ -126,24 +123,24 @@ const createFlatAdvertisement = async (
         );
     }
 
-    const roomAdvertisement = await prisma.advertisement.findFirst({
-        where: {
-            flatId,
-            target: AdvertisementTarget.ROOM,
-            category: AdvertisementCategory.RENTAL,
-            status: { in: AD_CONFLICT_STATUSES },
-            availableFrom: { lte: availableTo },
-            availableTo: { gte: availableFrom },
-        },
-        select: { id: true },
-    });
+    // const roomAdvertisement = await prisma.advertisement.findFirst({
+    //     where: {
+    //         flatId,
+    //         target: AdvertisementTarget.ROOM,
+    //         category: AdvertisementCategory.RENTAL,
+    //         status: { in: AD_CONFLICT_STATUSES },
+    //         availableFrom: { lte: availableTo },
+    //         availableTo: { gte: availableFrom },
+    //     },
+    //     select: { id: true },
+    // });
 
-    if (roomAdvertisement) {
-        throw new AppError(
-            httpStatus.CONFLICT,
-            "A room of this flat is already advertised in the given time period",
-        );
-    }
+    // if (roomAdvertisement) {
+    //     throw new AppError(
+    //         httpStatus.CONFLICT,
+    //         "A room of this flat is already advertised in the given time period",
+    //     );
+    // }
 
     const stay = await prisma.stay.findFirst({
         where: {
@@ -166,8 +163,7 @@ const createFlatAdvertisement = async (
         data: {
             createdById: creatorId,
             flatId,
-            category: AdvertisementCategory.RENTAL,
-            target: AdvertisementTarget.ENTIRE_FLAT,
+            rentalType: RentalType.PRIMARY_ENTIRE_FLAT,
             title: payload.title,
             description: payload.description || null,
             monthlyRent: payload.monthlyRent,
@@ -209,7 +205,7 @@ const createRoomAdvertisement = async (
     const roomAdvertisement = await prisma.advertisement.findFirst({
         where: {
             roomId,
-            category: AdvertisementCategory.RENTAL,
+            rentalType: RentalType.PRIMARY_ROOM,
             status: { in: AD_CONFLICT_STATUSES },
             availableFrom: { lte: availableTo },
             availableTo: { gte: availableFrom },
@@ -227,8 +223,7 @@ const createRoomAdvertisement = async (
     const flatAdvertisement = await prisma.advertisement.findFirst({
         where: {
             flatId: room.flatId,
-            target: AdvertisementTarget.ENTIRE_FLAT,
-            category: AdvertisementCategory.RENTAL,
+            rentalType: RentalType.PRIMARY_ENTIRE_FLAT,
             status: { in: AD_CONFLICT_STATUSES },
             availableFrom: { lte: availableTo },
             availableTo: { gte: availableFrom },
@@ -275,8 +270,7 @@ const createRoomAdvertisement = async (
             createdById: creatorId,
             flatId: room.flatId,
             roomId,
-            category: AdvertisementCategory.RENTAL,
-            target: AdvertisementTarget.ROOM,
+            rentalType: RentalType.PRIMARY_ROOM,
             title: payload.title,
             description: payload.description || null,
             monthlyRent: payload.monthlyRent,
@@ -536,14 +530,21 @@ const createUtilityInvoice = async (
         );
     }
 
+    let receiverId;
+    if (
+        stay.rentalType === RentalType.PRIMARY_ENTIRE_FLAT ||
+        stay.rentalType === RentalType.PRIMARY_ROOM
+    ) {
+        receiverId = ownership.ownerId;
+    } else {
+        receiverId = stay.application.advertisement.createdById;
+    }
+
     const invoice = await prisma.invoice.create({
         data: {
             stayId,
             payerId,
-            receiverId:
-                stay.type === StayType.ROOMMATE
-                    ? stay.application.advertisement.createdById
-                    : ownership.ownerId,
+            receiverId: receiverId,
             type: InvoiceType.UTILITY,
             amount,
             billingPeriodStart,

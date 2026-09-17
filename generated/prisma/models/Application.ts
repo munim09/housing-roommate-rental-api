@@ -28,7 +28,7 @@ export type ApplicationMinAggregateOutputType = {
   id: string | null
   advertisementId: string | null
   applicantId: string | null
-  type: $Enums.ApplicationType | null
+  rentalType: $Enums.RentalType | null
   status: $Enums.ApplicationStatus | null
   requestedStartDate: Date | null
   requestedEndDate: Date | null
@@ -43,7 +43,7 @@ export type ApplicationMaxAggregateOutputType = {
   id: string | null
   advertisementId: string | null
   applicantId: string | null
-  type: $Enums.ApplicationType | null
+  rentalType: $Enums.RentalType | null
   status: $Enums.ApplicationStatus | null
   requestedStartDate: Date | null
   requestedEndDate: Date | null
@@ -58,7 +58,7 @@ export type ApplicationCountAggregateOutputType = {
   id: number
   advertisementId: number
   applicantId: number
-  type: number
+  rentalType: number
   status: number
   requestedStartDate: number
   requestedEndDate: number
@@ -75,7 +75,7 @@ export type ApplicationMinAggregateInputType = {
   id?: true
   advertisementId?: true
   applicantId?: true
-  type?: true
+  rentalType?: true
   status?: true
   requestedStartDate?: true
   requestedEndDate?: true
@@ -90,7 +90,7 @@ export type ApplicationMaxAggregateInputType = {
   id?: true
   advertisementId?: true
   applicantId?: true
-  type?: true
+  rentalType?: true
   status?: true
   requestedStartDate?: true
   requestedEndDate?: true
@@ -105,7 +105,7 @@ export type ApplicationCountAggregateInputType = {
   id?: true
   advertisementId?: true
   applicantId?: true
-  type?: true
+  rentalType?: true
   status?: true
   requestedStartDate?: true
   requestedEndDate?: true
@@ -193,7 +193,7 @@ export type ApplicationGroupByOutputType = {
   id: string
   advertisementId: string
   applicantId: string
-  type: $Enums.ApplicationType
+  rentalType: $Enums.RentalType
   status: $Enums.ApplicationStatus
   requestedStartDate: Date
   requestedEndDate: Date
@@ -229,7 +229,7 @@ export type ApplicationWhereInput = {
   id?: Prisma.StringFilter<"Application"> | string
   advertisementId?: Prisma.StringFilter<"Application"> | string
   applicantId?: Prisma.StringFilter<"Application"> | string
-  type?: Prisma.EnumApplicationTypeFilter<"Application"> | $Enums.ApplicationType
+  rentalType?: Prisma.EnumRentalTypeFilter<"Application"> | $Enums.RentalType
   status?: Prisma.EnumApplicationStatusFilter<"Application"> | $Enums.ApplicationStatus
   requestedStartDate?: Prisma.DateTimeFilter<"Application"> | Date | string
   requestedEndDate?: Prisma.DateTimeFilter<"Application"> | Date | string
@@ -248,7 +248,7 @@ export type ApplicationOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   advertisementId?: Prisma.SortOrder
   applicantId?: Prisma.SortOrder
-  type?: Prisma.SortOrder
+  rentalType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   requestedStartDate?: Prisma.SortOrder
   requestedEndDate?: Prisma.SortOrder
@@ -270,7 +270,7 @@ export type ApplicationWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ApplicationWhereInput | Prisma.ApplicationWhereInput[]
   advertisementId?: Prisma.StringFilter<"Application"> | string
   applicantId?: Prisma.StringFilter<"Application"> | string
-  type?: Prisma.EnumApplicationTypeFilter<"Application"> | $Enums.ApplicationType
+  rentalType?: Prisma.EnumRentalTypeFilter<"Application"> | $Enums.RentalType
   status?: Prisma.EnumApplicationStatusFilter<"Application"> | $Enums.ApplicationStatus
   requestedStartDate?: Prisma.DateTimeFilter<"Application"> | Date | string
   requestedEndDate?: Prisma.DateTimeFilter<"Application"> | Date | string
@@ -289,7 +289,7 @@ export type ApplicationOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   advertisementId?: Prisma.SortOrder
   applicantId?: Prisma.SortOrder
-  type?: Prisma.SortOrder
+  rentalType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   requestedStartDate?: Prisma.SortOrder
   requestedEndDate?: Prisma.SortOrder
@@ -310,7 +310,7 @@ export type ApplicationScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Application"> | string
   advertisementId?: Prisma.StringWithAggregatesFilter<"Application"> | string
   applicantId?: Prisma.StringWithAggregatesFilter<"Application"> | string
-  type?: Prisma.EnumApplicationTypeWithAggregatesFilter<"Application"> | $Enums.ApplicationType
+  rentalType?: Prisma.EnumRentalTypeWithAggregatesFilter<"Application"> | $Enums.RentalType
   status?: Prisma.EnumApplicationStatusWithAggregatesFilter<"Application"> | $Enums.ApplicationStatus
   requestedStartDate?: Prisma.DateTimeWithAggregatesFilter<"Application"> | Date | string
   requestedEndDate?: Prisma.DateTimeWithAggregatesFilter<"Application"> | Date | string
@@ -323,7 +323,7 @@ export type ApplicationScalarWhereWithAggregatesInput = {
 
 export type ApplicationCreateInput = {
   id?: string
-  type?: $Enums.ApplicationType
+  rentalType?: $Enums.RentalType
   status?: $Enums.ApplicationStatus
   requestedStartDate: Date | string
   requestedEndDate: Date | string
@@ -341,7 +341,7 @@ export type ApplicationUncheckedCreateInput = {
   id?: string
   advertisementId: string
   applicantId: string
-  type?: $Enums.ApplicationType
+  rentalType?: $Enums.RentalType
   status?: $Enums.ApplicationStatus
   requestedStartDate: Date | string
   requestedEndDate: Date | string
@@ -355,7 +355,7 @@ export type ApplicationUncheckedCreateInput = {
 
 export type ApplicationUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumApplicationTypeFieldUpdateOperationsInput | $Enums.ApplicationType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
   requestedStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   requestedEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -373,7 +373,7 @@ export type ApplicationUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   advertisementId?: Prisma.StringFieldUpdateOperationsInput | string
   applicantId?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumApplicationTypeFieldUpdateOperationsInput | $Enums.ApplicationType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
   requestedStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   requestedEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -389,7 +389,7 @@ export type ApplicationCreateManyInput = {
   id?: string
   advertisementId: string
   applicantId: string
-  type?: $Enums.ApplicationType
+  rentalType?: $Enums.RentalType
   status?: $Enums.ApplicationStatus
   requestedStartDate: Date | string
   requestedEndDate: Date | string
@@ -402,7 +402,7 @@ export type ApplicationCreateManyInput = {
 
 export type ApplicationUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumApplicationTypeFieldUpdateOperationsInput | $Enums.ApplicationType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
   requestedStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   requestedEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -416,7 +416,7 @@ export type ApplicationUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   advertisementId?: Prisma.StringFieldUpdateOperationsInput | string
   applicantId?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumApplicationTypeFieldUpdateOperationsInput | $Enums.ApplicationType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
   requestedStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   requestedEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -441,7 +441,7 @@ export type ApplicationCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   advertisementId?: Prisma.SortOrder
   applicantId?: Prisma.SortOrder
-  type?: Prisma.SortOrder
+  rentalType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   requestedStartDate?: Prisma.SortOrder
   requestedEndDate?: Prisma.SortOrder
@@ -456,7 +456,7 @@ export type ApplicationMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   advertisementId?: Prisma.SortOrder
   applicantId?: Prisma.SortOrder
-  type?: Prisma.SortOrder
+  rentalType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   requestedStartDate?: Prisma.SortOrder
   requestedEndDate?: Prisma.SortOrder
@@ -471,7 +471,7 @@ export type ApplicationMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   advertisementId?: Prisma.SortOrder
   applicantId?: Prisma.SortOrder
-  type?: Prisma.SortOrder
+  rentalType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   requestedStartDate?: Prisma.SortOrder
   requestedEndDate?: Prisma.SortOrder
@@ -527,10 +527,6 @@ export type ApplicationUncheckedUpdateManyWithoutAdvertisementNestedInput = {
   update?: Prisma.ApplicationUpdateWithWhereUniqueWithoutAdvertisementInput | Prisma.ApplicationUpdateWithWhereUniqueWithoutAdvertisementInput[]
   updateMany?: Prisma.ApplicationUpdateManyWithWhereWithoutAdvertisementInput | Prisma.ApplicationUpdateManyWithWhereWithoutAdvertisementInput[]
   deleteMany?: Prisma.ApplicationScalarWhereInput | Prisma.ApplicationScalarWhereInput[]
-}
-
-export type EnumApplicationTypeFieldUpdateOperationsInput = {
-  set?: $Enums.ApplicationType
 }
 
 export type EnumApplicationStatusFieldUpdateOperationsInput = {
@@ -637,7 +633,7 @@ export type ApplicationUncheckedUpdateManyWithoutReviewedByNestedInput = {
 
 export type ApplicationCreateWithoutAdvertisementInput = {
   id?: string
-  type?: $Enums.ApplicationType
+  rentalType?: $Enums.RentalType
   status?: $Enums.ApplicationStatus
   requestedStartDate: Date | string
   requestedEndDate: Date | string
@@ -653,7 +649,7 @@ export type ApplicationCreateWithoutAdvertisementInput = {
 export type ApplicationUncheckedCreateWithoutAdvertisementInput = {
   id?: string
   applicantId: string
-  type?: $Enums.ApplicationType
+  rentalType?: $Enums.RentalType
   status?: $Enums.ApplicationStatus
   requestedStartDate: Date | string
   requestedEndDate: Date | string
@@ -698,7 +694,7 @@ export type ApplicationScalarWhereInput = {
   id?: Prisma.StringFilter<"Application"> | string
   advertisementId?: Prisma.StringFilter<"Application"> | string
   applicantId?: Prisma.StringFilter<"Application"> | string
-  type?: Prisma.EnumApplicationTypeFilter<"Application"> | $Enums.ApplicationType
+  rentalType?: Prisma.EnumRentalTypeFilter<"Application"> | $Enums.RentalType
   status?: Prisma.EnumApplicationStatusFilter<"Application"> | $Enums.ApplicationStatus
   requestedStartDate?: Prisma.DateTimeFilter<"Application"> | Date | string
   requestedEndDate?: Prisma.DateTimeFilter<"Application"> | Date | string
@@ -711,7 +707,7 @@ export type ApplicationScalarWhereInput = {
 
 export type ApplicationCreateWithoutStayInput = {
   id?: string
-  type?: $Enums.ApplicationType
+  rentalType?: $Enums.RentalType
   status?: $Enums.ApplicationStatus
   requestedStartDate: Date | string
   requestedEndDate: Date | string
@@ -728,7 +724,7 @@ export type ApplicationUncheckedCreateWithoutStayInput = {
   id?: string
   advertisementId: string
   applicantId: string
-  type?: $Enums.ApplicationType
+  rentalType?: $Enums.RentalType
   status?: $Enums.ApplicationStatus
   requestedStartDate: Date | string
   requestedEndDate: Date | string
@@ -757,7 +753,7 @@ export type ApplicationUpdateToOneWithWhereWithoutStayInput = {
 
 export type ApplicationUpdateWithoutStayInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumApplicationTypeFieldUpdateOperationsInput | $Enums.ApplicationType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
   requestedStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   requestedEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -774,7 +770,7 @@ export type ApplicationUncheckedUpdateWithoutStayInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   advertisementId?: Prisma.StringFieldUpdateOperationsInput | string
   applicantId?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumApplicationTypeFieldUpdateOperationsInput | $Enums.ApplicationType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
   requestedStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   requestedEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -787,7 +783,7 @@ export type ApplicationUncheckedUpdateWithoutStayInput = {
 
 export type ApplicationCreateWithoutApplicantInput = {
   id?: string
-  type?: $Enums.ApplicationType
+  rentalType?: $Enums.RentalType
   status?: $Enums.ApplicationStatus
   requestedStartDate: Date | string
   requestedEndDate: Date | string
@@ -803,7 +799,7 @@ export type ApplicationCreateWithoutApplicantInput = {
 export type ApplicationUncheckedCreateWithoutApplicantInput = {
   id?: string
   advertisementId: string
-  type?: $Enums.ApplicationType
+  rentalType?: $Enums.RentalType
   status?: $Enums.ApplicationStatus
   requestedStartDate: Date | string
   requestedEndDate: Date | string
@@ -827,7 +823,7 @@ export type ApplicationCreateManyApplicantInputEnvelope = {
 
 export type ApplicationCreateWithoutReviewedByInput = {
   id?: string
-  type?: $Enums.ApplicationType
+  rentalType?: $Enums.RentalType
   status?: $Enums.ApplicationStatus
   requestedStartDate: Date | string
   requestedEndDate: Date | string
@@ -844,7 +840,7 @@ export type ApplicationUncheckedCreateWithoutReviewedByInput = {
   id?: string
   advertisementId: string
   applicantId: string
-  type?: $Enums.ApplicationType
+  rentalType?: $Enums.RentalType
   status?: $Enums.ApplicationStatus
   requestedStartDate: Date | string
   requestedEndDate: Date | string
@@ -900,7 +896,7 @@ export type ApplicationUpdateManyWithWhereWithoutReviewedByInput = {
 export type ApplicationCreateManyAdvertisementInput = {
   id?: string
   applicantId: string
-  type?: $Enums.ApplicationType
+  rentalType?: $Enums.RentalType
   status?: $Enums.ApplicationStatus
   requestedStartDate: Date | string
   requestedEndDate: Date | string
@@ -913,7 +909,7 @@ export type ApplicationCreateManyAdvertisementInput = {
 
 export type ApplicationUpdateWithoutAdvertisementInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumApplicationTypeFieldUpdateOperationsInput | $Enums.ApplicationType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
   requestedStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   requestedEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -929,7 +925,7 @@ export type ApplicationUpdateWithoutAdvertisementInput = {
 export type ApplicationUncheckedUpdateWithoutAdvertisementInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicantId?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumApplicationTypeFieldUpdateOperationsInput | $Enums.ApplicationType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
   requestedStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   requestedEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -944,7 +940,7 @@ export type ApplicationUncheckedUpdateWithoutAdvertisementInput = {
 export type ApplicationUncheckedUpdateManyWithoutAdvertisementInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   applicantId?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumApplicationTypeFieldUpdateOperationsInput | $Enums.ApplicationType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
   requestedStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   requestedEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -958,7 +954,7 @@ export type ApplicationUncheckedUpdateManyWithoutAdvertisementInput = {
 export type ApplicationCreateManyApplicantInput = {
   id?: string
   advertisementId: string
-  type?: $Enums.ApplicationType
+  rentalType?: $Enums.RentalType
   status?: $Enums.ApplicationStatus
   requestedStartDate: Date | string
   requestedEndDate: Date | string
@@ -973,7 +969,7 @@ export type ApplicationCreateManyReviewedByInput = {
   id?: string
   advertisementId: string
   applicantId: string
-  type?: $Enums.ApplicationType
+  rentalType?: $Enums.RentalType
   status?: $Enums.ApplicationStatus
   requestedStartDate: Date | string
   requestedEndDate: Date | string
@@ -985,7 +981,7 @@ export type ApplicationCreateManyReviewedByInput = {
 
 export type ApplicationUpdateWithoutApplicantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumApplicationTypeFieldUpdateOperationsInput | $Enums.ApplicationType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
   requestedStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   requestedEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1001,7 +997,7 @@ export type ApplicationUpdateWithoutApplicantInput = {
 export type ApplicationUncheckedUpdateWithoutApplicantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   advertisementId?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumApplicationTypeFieldUpdateOperationsInput | $Enums.ApplicationType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
   requestedStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   requestedEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1016,7 +1012,7 @@ export type ApplicationUncheckedUpdateWithoutApplicantInput = {
 export type ApplicationUncheckedUpdateManyWithoutApplicantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   advertisementId?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumApplicationTypeFieldUpdateOperationsInput | $Enums.ApplicationType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
   requestedStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   requestedEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1029,7 +1025,7 @@ export type ApplicationUncheckedUpdateManyWithoutApplicantInput = {
 
 export type ApplicationUpdateWithoutReviewedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumApplicationTypeFieldUpdateOperationsInput | $Enums.ApplicationType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
   requestedStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   requestedEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1046,7 +1042,7 @@ export type ApplicationUncheckedUpdateWithoutReviewedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   advertisementId?: Prisma.StringFieldUpdateOperationsInput | string
   applicantId?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumApplicationTypeFieldUpdateOperationsInput | $Enums.ApplicationType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
   requestedStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   requestedEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1061,7 +1057,7 @@ export type ApplicationUncheckedUpdateManyWithoutReviewedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   advertisementId?: Prisma.StringFieldUpdateOperationsInput | string
   applicantId?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumApplicationTypeFieldUpdateOperationsInput | $Enums.ApplicationType
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
   status?: Prisma.EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
   requestedStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   requestedEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1077,7 +1073,7 @@ export type ApplicationSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   id?: boolean
   advertisementId?: boolean
   applicantId?: boolean
-  type?: boolean
+  rentalType?: boolean
   status?: boolean
   requestedStartDate?: boolean
   requestedEndDate?: boolean
@@ -1096,7 +1092,7 @@ export type ApplicationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   id?: boolean
   advertisementId?: boolean
   applicantId?: boolean
-  type?: boolean
+  rentalType?: boolean
   status?: boolean
   requestedStartDate?: boolean
   requestedEndDate?: boolean
@@ -1114,7 +1110,7 @@ export type ApplicationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   id?: boolean
   advertisementId?: boolean
   applicantId?: boolean
-  type?: boolean
+  rentalType?: boolean
   status?: boolean
   requestedStartDate?: boolean
   requestedEndDate?: boolean
@@ -1132,7 +1128,7 @@ export type ApplicationSelectScalar = {
   id?: boolean
   advertisementId?: boolean
   applicantId?: boolean
-  type?: boolean
+  rentalType?: boolean
   status?: boolean
   requestedStartDate?: boolean
   requestedEndDate?: boolean
@@ -1143,7 +1139,7 @@ export type ApplicationSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ApplicationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "advertisementId" | "applicantId" | "type" | "status" | "requestedStartDate" | "requestedEndDate" | "note" | "reviewedById" | "reviewedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["application"]>
+export type ApplicationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "advertisementId" | "applicantId" | "rentalType" | "status" | "requestedStartDate" | "requestedEndDate" | "note" | "reviewedById" | "reviewedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["application"]>
 export type ApplicationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   advertisement?: boolean | Prisma.AdvertisementDefaultArgs<ExtArgs>
   applicant?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1173,7 +1169,7 @@ export type $ApplicationPayload<ExtArgs extends runtime.Types.Extensions.Interna
     id: string
     advertisementId: string
     applicantId: string
-    type: $Enums.ApplicationType
+    rentalType: $Enums.RentalType
     status: $Enums.ApplicationStatus
     requestedStartDate: Date
     requestedEndDate: Date
@@ -1612,7 +1608,7 @@ export interface ApplicationFieldRefs {
   readonly id: Prisma.FieldRef<"Application", 'String'>
   readonly advertisementId: Prisma.FieldRef<"Application", 'String'>
   readonly applicantId: Prisma.FieldRef<"Application", 'String'>
-  readonly type: Prisma.FieldRef<"Application", 'ApplicationType'>
+  readonly rentalType: Prisma.FieldRef<"Application", 'RentalType'>
   readonly status: Prisma.FieldRef<"Application", 'ApplicationStatus'>
   readonly requestedStartDate: Prisma.FieldRef<"Application", 'DateTime'>
   readonly requestedEndDate: Prisma.FieldRef<"Application", 'DateTime'>

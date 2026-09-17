@@ -88,23 +88,6 @@ export const ManagerAssignmentStatus = {
 export type ManagerAssignmentStatus = (typeof ManagerAssignmentStatus)[keyof typeof ManagerAssignmentStatus]
 
 
-export const AdvertisementCategory = {
-  RENTAL: 'RENTAL',
-  ROOMMATE: 'ROOMMATE'
-} as const
-
-export type AdvertisementCategory = (typeof AdvertisementCategory)[keyof typeof AdvertisementCategory]
-
-
-export const AdvertisementTarget = {
-  ENTIRE_FLAT: 'ENTIRE_FLAT',
-  ROOM: 'ROOM',
-  ROOM_SHARING: 'ROOM_SHARING'
-} as const
-
-export type AdvertisementTarget = (typeof AdvertisementTarget)[keyof typeof AdvertisementTarget]
-
-
 export const AdvertisementStatus = {
   DRAFT: 'DRAFT',
   PUBLISHED: 'PUBLISHED',
@@ -118,13 +101,14 @@ export const AdvertisementStatus = {
 export type AdvertisementStatus = (typeof AdvertisementStatus)[keyof typeof AdvertisementStatus]
 
 
-export const ApplicationType = {
-  RENTAL: 'RENTAL',
-  ROOMMATE: 'ROOMMATE',
-  ROOM_SHARING: 'ROOM_SHARING'
+export const RentalType = {
+  PRIMARY_ENTIRE_FLAT: 'PRIMARY_ENTIRE_FLAT',
+  PRIMARY_ROOM: 'PRIMARY_ROOM',
+  SECONDARY_ROOM: 'SECONDARY_ROOM',
+  SECONDARY_ROOM_SHARING: 'SECONDARY_ROOM_SHARING'
 } as const
 
-export type ApplicationType = (typeof ApplicationType)[keyof typeof ApplicationType]
+export type RentalType = (typeof RentalType)[keyof typeof RentalType]
 
 
 export const ApplicationStatus = {
@@ -136,14 +120,6 @@ export const ApplicationStatus = {
 } as const
 
 export type ApplicationStatus = (typeof ApplicationStatus)[keyof typeof ApplicationStatus]
-
-
-export const StayType = {
-  PRIMARY: 'PRIMARY',
-  ROOMMATE: 'ROOMMATE'
-} as const
-
-export type StayType = (typeof StayType)[keyof typeof StayType]
 
 
 export const StayStatus = {

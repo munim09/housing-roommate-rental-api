@@ -15,7 +15,10 @@ model Application {
   advertisementId String
   applicantId     String
 
-  type   ApplicationType @default(RENTAL)
+//   type   ApplicationType @default(RENTAL)
+
+  rentalType RentalType @default(PRIMARY_ENTIRE_FLAT)
+
   status ApplicationStatus @default(PENDING)
 
   requestedStartDate DateTime

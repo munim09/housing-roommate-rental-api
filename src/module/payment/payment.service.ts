@@ -5,8 +5,8 @@ import {
     InvoiceType,
     PaymentStatus,
     Prisma,
+    RentalType,
     StayStatus,
-    StayType,
 } from "../../../generated/prisma/client";
 import config from "../../config";
 import { prisma } from "../../lib/prisma";
@@ -189,17 +189,25 @@ const markPaymentSuccess = async (paymentId: string, gatewayResponse: any) => {
                                     },
                                 });
 
+                            let receiverId;
+                            if (
+                                stay.rentalType ===
+                                    RentalType.PRIMARY_ENTIRE_FLAT ||
+                                stay.rentalType === RentalType.PRIMARY_ROOM
+                            ) {
+                                receiverId =
+                                    ownership?.ownerId || invoice.receiverId;
+                            } else {
+                                receiverId =
+                                    stay.application.advertisement.createdById;
+                            }
+
                             if (rentInvoices.length > 0) {
                                 await tx.invoice.createMany({
                                     data: rentInvoices.map((rentInvoice) => ({
                                         stayId: stay.id,
                                         payerId: stay.occupantId,
-                                        receiverId:
-                                            stay.type === StayType.ROOMMATE
-                                                ? stay.application.advertisement
-                                                      .createdById
-                                                : ownership?.ownerId ||
-                                                  invoice.receiverId,
+                                        receiverId: receiverId,
                                         type: InvoiceType.RENT,
                                         amount: new Prisma.Decimal(
                                             rentInvoice.amount,

@@ -1,10 +1,10 @@
-import { AdvertisementTarget } from "../../../generated/prisma/enums";
+import { RentalType } from "../../../generated/prisma/enums";
 
 export interface ICreateRoommateAdvertisement {
     stayId: string;
     roomId: string;
     title: string;
-    advertisementTarget: AdvertisementTarget;
+    advertisementTarget: RentalType;
     description?: string;
     monthlyRent: number;
     availableFrom: Date;
