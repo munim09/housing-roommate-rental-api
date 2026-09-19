@@ -67,42 +67,9 @@ const updateAdvertisement = async (req: Request, res: Response) => {
     });
 };
 
-const createUtilityInvoice = async (req: Request, res: Response) => {
-    const result = await AdvertisementService.createUtilityInvoice(
-        req.user!.userId,
-        req.user!.role,
-        req.body,
-    );
-
-    sendResponse(res, {
-        statusCode: httpStatus.CREATED,
-        success: true,
-        message: "Utility invoice created successfully",
-        data: result,
-    });
-};
-
-const updateUtilityInvoice = async (req: Request, res: Response) => {
-    const result = await AdvertisementService.updateUtilityInvoice(
-        req.user!.userId,
-        req.user!.role,
-        req.params.invoiceId as string,
-        req.body,
-    );
-
-    sendResponse(res, {
-        statusCode: httpStatus.OK,
-        success: true,
-        message: "Utility invoice updated successfully",
-        data: result,
-    });
-};
-
 export const AdvertisementController = {
     createFlatAdvertisement,
     createRoomAdvertisement,
     updateAdvertisementStatus,
     updateAdvertisement,
-    createUtilityInvoice,
-    updateUtilityInvoice,
 };

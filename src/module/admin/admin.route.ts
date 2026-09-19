@@ -16,6 +16,12 @@ router.get(
     catchAsync(AdminController.getAllUsers),
 );
 
+router.get(
+    "/users/profiles",
+    validateRequest(AdminValidation.getAllUsers),
+    catchAsync(AdminController.getAllUsersWithProfiles),
+);
+
 router.get("/users/:id", catchAsync(AdminController.getUserById));
 
 router.patch(

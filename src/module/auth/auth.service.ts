@@ -347,7 +347,7 @@ const googleLogin = async (payload: IGoogleLoginPayload) => {
         );
     }
 
-    const ifPatientExistWithGoogleAuth = await prisma.user.findUnique({
+    const ifExistWithGoogleAuth = await prisma.user.findUnique({
         where: {
             email: googleIdTokenPayload.email,
             role: Role.TENANT,
@@ -355,10 +355,10 @@ const googleLogin = async (payload: IGoogleLoginPayload) => {
         },
     });
 
-    let user = ifPatientExistWithGoogleAuth;
+    let user = ifExistWithGoogleAuth;
 
-    if (!ifPatientExistWithGoogleAuth) {
-        const ifPatientExistWithCredentials = await prisma.user.findUnique({
+    if (!ifExistWithGoogleAuth) {
+        const ifUserExistWithCredentials = await prisma.user.findUnique({
             where: {
                 email: googleIdTokenPayload.email,
                 role: Role.TENANT,
@@ -366,22 +366,22 @@ const googleLogin = async (payload: IGoogleLoginPayload) => {
             },
         });
 
-        if (ifPatientExistWithCredentials) {
-            if (!ifPatientExistWithCredentials.emailVerified) {
+        if (ifUserExistWithCredentials) {
+            if (!ifUserExistWithCredentials.emailVerified) {
                 throw new AppError(httpStatus.FORBIDDEN, "Email Not Verified");
             }
 
-            if (ifPatientExistWithCredentials.status === UserStatus.SUSPENDED) {
+            if (ifUserExistWithCredentials.status === UserStatus.SUSPENDED) {
                 throw new AppError(httpStatus.FORBIDDEN, "User Is SUSPENDED");
             }
 
-            if (ifPatientExistWithCredentials.status === UserStatus.REJECTED) {
+            if (ifUserExistWithCredentials.status === UserStatus.REJECTED) {
                 throw new AppError(httpStatus.FORBIDDEN, "User Is rejected");
             }
 
             user = await prisma.user.update({
                 where: {
-                    id: ifPatientExistWithCredentials.id,
+                    id: ifUserExistWithCredentials.id,
                 },
 
                 data: {
@@ -419,7 +419,7 @@ const googleLogin = async (payload: IGoogleLoginPayload) => {
             await transporter.sendMail({
                 from: config.EMAIL_SENDER,
                 to: user.email,
-                subject: "Welcome To PH Healthcare System",
+                subject: "Welcome To Reatal housing system",
                 // text : `Your OTP is ${otp}`
                 // html: `<h1>Your OTP is ${otp}</h1>`
                 html,
@@ -461,6 +461,13 @@ const googleLogin = async (payload: IGoogleLoginPayload) => {
     return {
         accessToken,
         refreshToken,
+        user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            status: user.status,
+        },
     };
 };
 

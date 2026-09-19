@@ -110,8 +110,7 @@ const createViewingRequest = async (
                 select: {
                     id: true,
                     title: true,
-                    category: true,
-                    target: true,
+                    rentalType: true,
                     monthlyRent: true,
                     flatId: true,
                     roomId: true,
@@ -216,8 +215,7 @@ const getViewingRequests = async (
                 select: {
                     id: true,
                     title: true,
-                    category: true,
-                    target: true,
+                    rentalType: true,
                     monthlyRent: true,
                     status: true,
                     flatId: true,
@@ -285,8 +283,7 @@ const getViewingRequestById = async (
                     id: true,
                     title: true,
                     description: true,
-                    category: true,
-                    target: true,
+                    rentalType: true,
                     monthlyRent: true,
                     status: true,
                     flatId: true,
@@ -610,8 +607,19 @@ const createApplication = async (
                 occupantId: advertisement.createdById,
                 flatId: advertisementFlatId,
                 status: StayStatus.CONFIRMED,
+                rentalType: {
+                    in: [
+                        RentalType.PRIMARY_ENTIRE_FLAT,
+                        RentalType.PRIMARY_ROOM,
+                    ],
+                },
             },
-            select: { id: true, startDate: true, endDate: true },
+            select: {
+                id: true,
+                startDate: true,
+                endDate: true,
+                applicationId: true,
+            },
         });
 
         if (!advertiserStay) {
@@ -628,6 +636,13 @@ const createApplication = async (
             throw new AppError(
                 httpStatus.BAD_REQUEST,
                 "Requested stay must be within the advertiser's stay period",
+            );
+        }
+
+        if (advertiserStay.applicationId === tenantId) {
+            throw new AppError(
+                httpStatus.BAD_REQUEST,
+                "Advertiser can not apply for stay",
             );
         }
 
@@ -713,7 +728,7 @@ const createApplication = async (
         },
         select: {
             id: true,
-            type: true,
+            rentalType: true,
             status: true,
             requestedStartDate: true,
             requestedEndDate: true,
@@ -723,8 +738,7 @@ const createApplication = async (
                 select: {
                     id: true,
                     title: true,
-                    category: true,
-                    target: true,
+                    rentalType: true,
                     monthlyRent: true,
                 },
             },
@@ -751,7 +765,7 @@ const getApplications = async (userId: string, query: IApplicationQuery) => {
         where,
         select: {
             id: true,
-            type: true,
+            rentalType: true,
             status: true,
             requestedStartDate: true,
             requestedEndDate: true,
@@ -765,8 +779,7 @@ const getApplications = async (userId: string, query: IApplicationQuery) => {
                     id: true,
                     title: true,
                     description: true,
-                    category: true,
-                    target: true,
+                    rentalType: true,
                     monthlyRent: true,
                     status: true,
                     flatId: true,
@@ -877,7 +890,7 @@ const getApplicationById = async (
             id: true,
             advertisementId: true,
             applicantId: true,
-            type: true,
+            rentalType: true,
             status: true,
             requestedStartDate: true,
             requestedEndDate: true,
@@ -891,8 +904,7 @@ const getApplicationById = async (
                     id: true,
                     title: true,
                     description: true,
-                    category: true,
-                    target: true,
+                    rentalType: true,
                     monthlyRent: true,
                     status: true,
                     flatId: true,
@@ -1110,7 +1122,7 @@ const updateApplication = async (
             data: { status: ApplicationStatus.WITHDRAWN },
             select: {
                 id: true,
-                type: true,
+                rentalType: true,
                 status: true,
                 requestedStartDate: true,
                 requestedEndDate: true,
@@ -1153,7 +1165,7 @@ const updateApplication = async (
             },
             select: {
                 id: true,
-                type: true,
+                rentalType: true,
                 status: true,
                 requestedStartDate: true,
                 requestedEndDate: true,
@@ -1588,7 +1600,7 @@ const getStays = async (userId: string, role: Role) => {
             propertyId: true,
             flatId: true,
             roomId: true,
-            type: true,
+            rentalType: true,
             status: true,
             startDate: true,
             endDate: true,

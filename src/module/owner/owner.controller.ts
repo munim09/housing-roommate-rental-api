@@ -260,7 +260,10 @@ const getMyProperties = async (req: Request, res: Response) => {
 };
 
 const getMyFlats = async (req: Request, res: Response) => {
-    const result = await OwnerService.getMyFlats(req.user!.userId);
+    const result = await OwnerService.getMyFlats(
+        req.user!.userId,
+        req.user!.role,
+    );
 
     sendResponse(res, {
         statusCode: httpStatus.OK,
@@ -271,7 +274,10 @@ const getMyFlats = async (req: Request, res: Response) => {
 };
 
 const getMyAdvertisements = async (req: Request, res: Response) => {
-    const result = await OwnerService.getMyAdvertisements(req.user!.userId);
+    const result = await OwnerService.getMyAdvertisements(
+        req.user!.userId,
+        req.user!.role,
+    );
 
     sendResponse(res, {
         statusCode: httpStatus.OK,

@@ -11,7 +11,12 @@ import {
 } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
-import { ICreateRoommateAdvertisement } from "./roommate.interface";
+import {
+    ICreateRoommateAdvertisement,
+    ICreateUtilityBill,
+    IUpdateRoommateAdvertisement,
+    IUpdateUtilityBill,
+} from "./roommate.interface";
 
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
@@ -66,7 +71,7 @@ const createRoommateAdvertisement = async (
         where: {
             id: stayId,
             occupantId: tenantId,
-            type: {
+            rentalType: {
                 in: [RentalType.PRIMARY_ENTIRE_FLAT, RentalType.PRIMARY_ROOM],
             },
         },
@@ -172,10 +177,118 @@ const createRoommateAdvertisement = async (
     });
 };
 
+const updateRoommateAdvertisement = async (
+    tenantId: string,
+    advertisementId: string,
+    payload: IUpdateRoommateAdvertisement,
+) => {
+    const advertisement = await prisma.advertisement.findUnique({
+        where: { id: advertisementId },
+        include: {
+            room: true,
+            stay: { select: { startDate: true, endDate: true } },
+        },
+    });
+
+    if (!advertisement) {
+        throw new AppError(httpStatus.NOT_FOUND, "Advertisement not found");
+    }
+
+    if (advertisement.createdById !== tenantId) {
+        throw new AppError(
+            httpStatus.FORBIDDEN,
+            "Only the advertisement creator can update this advertisement",
+        );
+    }
+
+    if (
+        advertisement.rentalType !== RentalType.SECONDARY_ROOM &&
+        advertisement.rentalType !== RentalType.SECONDARY_ROOM_SHARING
+    ) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Only roommate advertisements can be updated here",
+        );
+    }
+
+    const effectiveFrom = payload.availableFrom ?? advertisement.availableFrom;
+    const effectiveTo = payload.availableTo ?? advertisement.availableTo;
+
+    if (!effectiveFrom || !effectiveTo) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Advertisement availability dates are not set",
+        );
+    }
+
+    if (effectiveTo <= effectiveFrom) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Available to must be after available from",
+        );
+    }
+
+    if (
+        advertisement.stay &&
+        (effectiveFrom < advertisement.stay.startDate ||
+            effectiveTo > advertisement.stay.endDate)
+    ) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Advertisement availability must be within the stay period",
+        );
+    }
+
+    if (advertisement.roomId) {
+        const conflictingAd = await prisma.advertisement.findFirst({
+            where: {
+                id: { not: advertisementId },
+                status: { in: AD_CONFLICT_STATUSES },
+                availableFrom: { lte: effectiveTo },
+                availableTo: { gte: effectiveFrom },
+                roomId: advertisement.roomId,
+                rentalType: {
+                    in: [
+                        RentalType.SECONDARY_ROOM,
+                        RentalType.SECONDARY_ROOM_SHARING,
+                    ],
+                },
+            },
+            select: { id: true },
+        });
+
+        if (conflictingAd) {
+            throw new AppError(
+                httpStatus.CONFLICT,
+                "This room is already advertised in the given time period",
+            );
+        }
+    }
+
+    return prisma.advertisement.update({
+        where: { id: advertisementId },
+        data: {
+            title: payload?.title ?? advertisement.title,
+            description: payload?.description ?? advertisement.description,
+            monthlyRent: payload?.monthlyRent ?? advertisement.monthlyRent,
+            rentalType:
+                payload?.advertisementTarget ?? advertisement.rentalType,
+            availableFrom:
+                payload?.availableFrom ?? advertisement.availableFrom,
+            availableTo: payload?.availableTo ?? advertisement.availableTo,
+            status: payload?.status ?? advertisement.status,
+        },
+        include: {
+            flat: { select: { id: true, flatNumber: true } },
+            room: { select: { id: true, roomNumber: true, name: true } },
+        },
+    });
+};
+
 const getRoommateStays = async (tenantId: string) => {
     const stays = await prisma.stay.findMany({
         where: {
-            type: {
+            rentalType: {
                 in: [
                     RentalType.SECONDARY_ROOM,
                     RentalType.SECONDARY_ROOM_SHARING,
@@ -194,7 +307,7 @@ const getRoommateStays = async (tenantId: string) => {
             propertyId: true,
             flatId: true,
             roomId: true,
-            type: true,
+            rentalType: true,
             status: true,
             startDate: true,
             endDate: true,
@@ -221,7 +334,7 @@ const getRoommateStays = async (tenantId: string) => {
                             id: true,
                             title: true,
                             monthlyRent: true,
-                            target: true,
+                            rentalType: true,
                             status: true,
                         },
                     },
@@ -312,7 +425,7 @@ const getApplications = async (userId: string) => {
         },
         select: {
             id: true,
-            type: true,
+            rentalType: true,
             status: true,
             requestedStartDate: true,
             requestedEndDate: true,
@@ -333,8 +446,7 @@ const getApplications = async (userId: string) => {
                 select: {
                     id: true,
                     title: true,
-                    category: true,
-                    target: true,
+                    rentalType: true,
                     monthlyRent: true,
                     status: true,
                     availableFrom: true,
@@ -392,7 +504,6 @@ const updateApplicationStatus = async (
             stay: true,
             advertisement: {
                 select: {
-                    category: true,
                     createdById: true,
                     flatId: true,
                     roomId: true,
@@ -408,8 +519,8 @@ const updateApplicationStatus = async (
     }
 
     if (
-        application.rentalType === RentalType.SECONDARY_ROOM ||
-        application.rentalType === RentalType.SECONDARY_ROOM_SHARING
+        application.rentalType !== RentalType.SECONDARY_ROOM &&
+        application.rentalType !== RentalType.SECONDARY_ROOM_SHARING
     ) {
         throw new AppError(
             httpStatus.BAD_REQUEST,
@@ -441,7 +552,7 @@ const updateApplicationStatus = async (
             },
             select: {
                 id: true,
-                type: true,
+                rentalType: true,
                 status: true,
                 requestedStartDate: true,
                 requestedEndDate: true,
@@ -509,9 +620,283 @@ const updateApplicationStatus = async (
     });
 };
 
+const getUtilityBillsForStay = async (tenantId: string, stayId: string) => {
+    const stay = await prisma.stay.findUnique({
+        where: { id: stayId },
+        select: {
+            rentalType: true,
+            application: {
+                select: {
+                    advertisement: {
+                        select: { createdById: true },
+                    },
+                },
+            },
+        },
+    });
+
+    if (!stay) {
+        throw new AppError(httpStatus.NOT_FOUND, "Stay not found");
+    }
+
+    if (
+        stay.rentalType !== RentalType.SECONDARY_ROOM &&
+        stay.rentalType !== RentalType.SECONDARY_ROOM_SHARING
+    ) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Utility bills only exist for roommate stays",
+        );
+    }
+
+    if (stay.application.advertisement.createdById !== tenantId) {
+        throw new AppError(
+            httpStatus.FORBIDDEN,
+            "Only the advertise tenant can view utility bills for this stay",
+        );
+    }
+
+    const bills = await prisma.invoice.findMany({
+        where: { stayId, type: InvoiceType.UTILITY },
+        orderBy: { createdAt: "desc" },
+        select: {
+            id: true,
+            type: true,
+            amount: true,
+            billingPeriodStart: true,
+            billingPeriodEnd: true,
+            dueDate: true,
+            status: true,
+            description: true,
+            createdAt: true,
+            updatedAt: true,
+            payer: { select: { id: true, name: true, email: true } },
+            receiver: { select: { id: true, name: true, email: true } },
+            payments: {
+                select: {
+                    id: true,
+                    amount: true,
+                    status: true,
+                    transactionReference: true,
+                    paidAt: true,
+                },
+                orderBy: { createdAt: "desc" },
+            },
+        },
+    });
+
+    return {
+        bills,
+    };
+};
+
+const createUtilityBill = async (
+    tenantId: string,
+    stayId: string,
+    payload: ICreateUtilityBill,
+) => {
+    const { amount, billingPeriodStart, billingPeriodEnd, description } =
+        payload;
+
+    const stay = await prisma.stay.findUnique({
+        where: { id: stayId },
+        select: {
+            status: true,
+            rentalType: true,
+            occupantId: true,
+            application: {
+                select: {
+                    advertisement: {
+                        select: { createdById: true },
+                    },
+                },
+            },
+        },
+    });
+
+    if (!stay) {
+        throw new AppError(httpStatus.NOT_FOUND, "Stay not found");
+    }
+
+    if (
+        stay.rentalType !== RentalType.SECONDARY_ROOM &&
+        stay.rentalType !== RentalType.SECONDARY_ROOM_SHARING
+    ) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Utility bills can only be created for roommate stays",
+        );
+    }
+
+    if (stay.application.advertisement.createdById !== tenantId) {
+        throw new AppError(
+            httpStatus.FORBIDDEN,
+            "Only the advertise tenant can create utility bills for this stay",
+        );
+    }
+
+    if (stay.status !== StayStatus.CONFIRMED) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Can only create utility bills for confirmed stays",
+        );
+    }
+
+    if (billingPeriodStart >= billingPeriodEnd) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Billing period start must be before end",
+        );
+    }
+
+    return prisma.invoice.create({
+        data: {
+            stayId,
+            payerId: stay.occupantId,
+            receiverId: tenantId,
+            type: InvoiceType.UTILITY,
+            amount: new Prisma.Decimal(amount),
+            billingPeriodStart,
+            billingPeriodEnd,
+            status: BillStatus.PENDING,
+            description: description || null,
+        },
+        select: {
+            id: true,
+            type: true,
+            amount: true,
+            billingPeriodStart: true,
+            billingPeriodEnd: true,
+            dueDate: true,
+            status: true,
+            description: true,
+            createdAt: true,
+            updatedAt: true,
+            stay: {
+                select: {
+                    id: true,
+                    room: {
+                        select: { id: true, roomNumber: true, name: true },
+                    },
+                    flat: { select: { id: true, flatNumber: true } },
+                },
+            },
+            payer: { select: { id: true, name: true, email: true } },
+            receiver: { select: { id: true, name: true, email: true } },
+        },
+    });
+};
+
+const updateUtilityBill = async (
+    tenantId: string,
+    billId: string,
+    payload: IUpdateUtilityBill,
+) => {
+    const {
+        amount,
+        billingPeriodStart,
+        billingPeriodEnd,
+        description,
+        status,
+    } = payload;
+
+    const invoice = await prisma.invoice.findUnique({
+        where: { id: billId },
+        include: {
+            stay: {
+                select: {
+                    id: true,
+                    rentalType: true,
+                    application: {
+                        select: {
+                            advertisement: {
+                                select: { createdById: true },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    });
+
+    if (!invoice) {
+        throw new AppError(httpStatus.NOT_FOUND, "Utility bill not found");
+    }
+
+    if (invoice.type !== InvoiceType.UTILITY) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Only utility bills can be updated here",
+        );
+    }
+
+    if (
+        invoice.stay.rentalType !== RentalType.SECONDARY_ROOM &&
+        invoice.stay.rentalType !== RentalType.SECONDARY_ROOM_SHARING
+    ) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Utility bills only exist for roommate stays",
+        );
+    }
+
+    if (invoice.stay.application.advertisement.createdById !== tenantId) {
+        throw new AppError(
+            httpStatus.FORBIDDEN,
+            "Only the advertise tenant can update this utility bill",
+        );
+    }
+
+    if (invoice.status === BillStatus.PAID) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Paid utility bills cannot be updated",
+        );
+    }
+
+    const effectiveStart = billingPeriodStart ?? invoice.billingPeriodStart;
+    const effectiveEnd = billingPeriodEnd ?? invoice.billingPeriodEnd;
+
+    if (effectiveStart >= effectiveEnd) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Billing period start must be before end",
+        );
+    }
+
+    return prisma.invoice.update({
+        where: { id: billId },
+        data: {
+            amount: amount ?? invoice.amount,
+            billingPeriodStart: effectiveStart,
+            billingPeriodEnd: effectiveEnd,
+            description: description ?? invoice.description,
+            status: status ?? invoice.status,
+        },
+        select: {
+            id: true,
+            type: true,
+            amount: true,
+            billingPeriodStart: true,
+            billingPeriodEnd: true,
+            dueDate: true,
+            status: true,
+            description: true,
+            createdAt: true,
+            updatedAt: true,
+            payer: { select: { id: true, name: true, email: true } },
+            receiver: { select: { id: true, name: true, email: true } },
+        },
+    });
+};
+
 export const RoommateService = {
     createRoommateAdvertisement,
+    updateRoommateAdvertisement,
     getRoommateStays,
     getApplications,
     updateApplicationStatus,
+    createUtilityBill,
+    updateUtilityBill,
+    getUtilityBillsForStay,
 };

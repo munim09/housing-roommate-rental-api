@@ -1,10 +1,7 @@
 import { Router } from "express";
 import { Role } from "../../../generated/prisma/enums";
 import { auth } from "../../middlewares/checkAuth";
-import {
-    validateRequest,
-    validateRequestNew,
-} from "../../middlewares/validateRequest";
+import { validateRequest } from "../../middlewares/validateRequest";
 import { catchAsync } from "../../utils/catchAsync";
 import { AdvertisementController } from "./advertisement.controller";
 import { AdvertisementValidation } from "./advertisement.validation";
@@ -35,18 +32,6 @@ router.patch(
     "/:advertisementId",
     validateRequest(AdvertisementValidation.updateAdvertisement),
     catchAsync(AdvertisementController.updateAdvertisement),
-);
-
-router.post(
-    "/utility-invoices",
-    validateRequest(AdvertisementValidation.createUtilityInvoice),
-    catchAsync(AdvertisementController.createUtilityInvoice),
-);
-
-router.patch(
-    "/utility-invoices/:invoiceId",
-    validateRequestNew(AdvertisementValidation.updateUtilityInvoice),
-    catchAsync(AdvertisementController.updateUtilityInvoice),
 );
 
 export const AdvertisementRoutes = router;

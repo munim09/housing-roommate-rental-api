@@ -1,7 +1,10 @@
 import { Router } from "express";
 import { Role } from "../../../generated/prisma/enums";
 import { auth } from "../../middlewares/checkAuth";
-import { validateRequest } from "../../middlewares/validateRequest";
+import {
+    validateRequest,
+    validateRequestNew,
+} from "../../middlewares/validateRequest";
 import { catchAsync } from "../../utils/catchAsync";
 import { ManagerController } from "./manager.controller";
 import { ManagerValidation } from "./manager.validation";
@@ -15,7 +18,23 @@ router.get(
     catchAsync(ManagerController.getApplications),
 );
 
+router.post(
+    "/utility-invoices",
+    auth(Role.OWNER, Role.MANAGER),
+    validateRequest(ManagerValidation.createUtilityInvoice),
+    catchAsync(ManagerController.createUtilityInvoice),
+);
+
+router.patch(
+    "/utility-invoices/:invoiceId",
+    auth(Role.OWNER, Role.MANAGER),
+    validateRequestNew(ManagerValidation.updateUtilityInvoice),
+    catchAsync(ManagerController.updateUtilityInvoice),
+);
+
 router.use(auth(Role.MANAGER));
+
+router.get("/flats", catchAsync(ManagerController.getMyFlats));
 
 router.get(
     "/advertisements",

@@ -15,6 +15,18 @@ const getAllUsers = async (req: Request, res: Response) => {
     });
 };
 
+const getAllUsersWithProfiles = async (req: Request, res: Response) => {
+    const result = await AdminService.getAllUsersWithProfiles(req.query as any);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Users and profiles retrieved successfully",
+        data: result.users,
+        meta: result.meta,
+    });
+};
+
 const getUserById = async (req: Request, res: Response) => {
     const result = await AdminService.getUserById(req.params.id as string);
 
@@ -83,6 +95,7 @@ const createArea = async (req: Request, res: Response) => {
 
 export const AdminController = {
     getAllUsers,
+    getAllUsersWithProfiles,
     getUserById,
     updateUserStatus,
     updateUserRole,

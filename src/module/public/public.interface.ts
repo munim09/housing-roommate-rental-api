@@ -1,3 +1,5 @@
+import { RentalType } from "../../../generated/prisma/client";
+
 export interface IPublicCityQuery {
     search?: string;
     page?: number;
@@ -15,6 +17,7 @@ export interface IPublicAvailableAdvertisementQuery {
     areaId: string;
     from: string;
     to: string;
+    rentalType?: RentalType;
     page?: number;
     limit?: number;
 }

@@ -17,6 +17,21 @@ const createAdvertisement = async (req: Request, res: Response) => {
     });
 };
 
+const updateAdvertisement = async (req: Request, res: Response) => {
+    const result = await RoommateService.updateRoommateAdvertisement(
+        req.user!.userId,
+        req.params.advertisementId as string,
+        req.body,
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Roommate advertisement updated successfully",
+        data: result,
+    });
+};
+
 const getRoommateStays = async (req: Request, res: Response) => {
     const result = await RoommateService.getRoommateStays(req.user!.userId);
 
@@ -54,9 +69,57 @@ const updateApplicationStatus = async (req: Request, res: Response) => {
     });
 };
 
+const createUtilityBill = async (req: Request, res: Response) => {
+    const result = await RoommateService.createUtilityBill(
+        req.user!.userId,
+        req.params.stayId as string,
+        req.body,
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.CREATED,
+        success: true,
+        message: "Utility bill created successfully",
+        data: result,
+    });
+};
+
+const updateUtilityBill = async (req: Request, res: Response) => {
+    const result = await RoommateService.updateUtilityBill(
+        req.user!.userId,
+        req.params.billId as string,
+        req.body,
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Utility bill updated successfully",
+        data: result,
+    });
+};
+
+const getUtilityBills = async (req: Request, res: Response) => {
+    const result = await RoommateService.getUtilityBillsForStay(
+        req.user!.userId,
+        req.params.stayId as string,
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Utility bills retrieved successfully",
+        data: result.bills,
+    });
+};
+
 export const RoommateController = {
     createAdvertisement,
+    updateAdvertisement,
     getRoommateStays,
     getApplications,
     updateApplicationStatus,
+    createUtilityBill,
+    updateUtilityBill,
+    getUtilityBills,
 };

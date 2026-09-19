@@ -100,7 +100,7 @@ const googleLogin = async (req: Request, res: Response) => {
 
     const result = await AuthService.googleLogin(payload);
 
-    const { accessToken, refreshToken } = result;
+    const { accessToken, refreshToken, user } = result;
 
     res.cookie("accessToken", accessToken, {
         httpOnly: true,
@@ -122,6 +122,7 @@ const googleLogin = async (req: Request, res: Response) => {
         data: {
             accessToken,
             refreshToken,
+            user,
         },
     });
 };

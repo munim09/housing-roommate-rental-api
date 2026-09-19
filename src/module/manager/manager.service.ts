@@ -1,10 +1,86 @@
+import httpStatus from "http-status";
 import {
+    BillStatus,
+    InvoiceType,
     ManagerAssignmentStatus,
     Prisma,
+    RentalType,
     Role,
+    StayStatus,
 } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
-import { IManagerApplicationQuery } from "./manager.interface";
+import { AppError } from "../../utils/AppError";
+import {
+    ICreateUtilityInvoice,
+    IManagerApplicationQuery,
+    IUpdateUtilityInvoice,
+} from "./manager.interface";
+
+const getMyFlats = async (managerId: string) => {
+    const assignments = await prisma.managerAssignment.findMany({
+        where: {
+            managerId,
+            status: ManagerAssignmentStatus.ACTIVE,
+        },
+        select: {
+            id: true,
+            flatId: true,
+            status: true,
+            flat: {
+                select: {
+                    id: true,
+                    flatNumber: true,
+                    floorNumber: true,
+                    bedrooms: true,
+                    bathrooms: true,
+                    areaSqFt: true,
+                    status: true,
+                    property: {
+                        select: {
+                            id: true,
+                            name: true,
+                            area: true,
+                        },
+                    },
+                    rooms: {
+                        select: {
+                            id: true,
+                            roomNumber: true,
+                            name: true,
+                            status: true,
+                            images: {
+                                orderBy: { sortOrder: "asc" },
+                                select: {
+                                    id: true,
+                                    imageUrl: true,
+                                    isPrimary: true,
+                                },
+                            },
+                        },
+                    },
+                    images: {
+                        orderBy: { sortOrder: "asc" },
+                        select: {
+                            id: true,
+                            imageUrl: true,
+                            isPrimary: true,
+                        },
+                    },
+                },
+            },
+        },
+        orderBy: { createdAt: "desc" },
+    });
+
+    if (assignments.length === 0) {
+        throw new AppError(
+            httpStatus.FORBIDDEN,
+            "You are not assigned to manage any flat",
+        );
+    }
+
+    return assignments;
+};
 
 const getMyAdvertisements = async (managerId: string) => {
     const assignedFlatIds = (
@@ -15,7 +91,10 @@ const getMyAdvertisements = async (managerId: string) => {
     ).map((assignment) => assignment.flatId);
 
     if (assignedFlatIds.length === 0) {
-        return [];
+        throw new AppError(
+            httpStatus.FORBIDDEN,
+            "You are not assigned to manage any flat",
+        );
     }
 
     const advertisements = await prisma.advertisement.findMany({
@@ -30,8 +109,7 @@ const getMyAdvertisements = async (managerId: string) => {
             title: true,
             description: true,
             monthlyRent: true,
-            category: true,
-            target: true,
+            rentalType: true,
             status: true,
             availableFrom: true,
             availableTo: true,
@@ -56,8 +134,6 @@ const getMyAdvertisements = async (managerId: string) => {
                         select: {
                             id: true,
                             name: true,
-                            city: true,
-                            district: true,
                         },
                     },
                 },
@@ -92,7 +168,9 @@ const getApplications = async (
 
     if (role === Role.OWNER) {
         where.advertisement = {
-            category: "RENTAL",
+            rentalType: {
+                in: [RentalType.PRIMARY_ENTIRE_FLAT, RentalType.PRIMARY_ROOM],
+            },
             OR: [
                 { createdById: userId },
                 {
@@ -115,7 +193,9 @@ const getApplications = async (
         };
     } else {
         where.advertisement = {
-            category: "RENTAL",
+            rentalType: {
+                in: [RentalType.PRIMARY_ENTIRE_FLAT, RentalType.PRIMARY_ROOM],
+            },
             OR: [
                 { createdById: userId },
                 {
@@ -144,7 +224,7 @@ const getApplications = async (
         where,
         select: {
             id: true,
-            type: true,
+            rentalType: true,
             status: true,
             requestedStartDate: true,
             requestedEndDate: true,
@@ -166,8 +246,7 @@ const getApplications = async (
                     id: true,
                     title: true,
                     description: true,
-                    category: true,
-                    target: true,
+                    rentalType: true,
                     monthlyRent: true,
                     status: true,
                     flatId: true,
@@ -207,7 +286,222 @@ const getApplications = async (
     };
 };
 
+const assertUtilityInvoiceAccess = async (
+    userId: string,
+    role: Role,
+    flatId: string,
+) => {
+    if (role === Role.MANAGER) {
+        const assignment = await prisma.managerAssignment.findFirst({
+            where: {
+                managerId: userId,
+                flatId,
+                status: ManagerAssignmentStatus.ACTIVE,
+            },
+        });
+
+        if (!assignment) {
+            throw new AppError(
+                httpStatus.FORBIDDEN,
+                "You are not assigned to manage this flat",
+            );
+        }
+    }
+
+    const ownership = await prisma.propertyOwnership.findFirst({
+        where: {
+            flatId,
+            status: "ACTIVE",
+        },
+    });
+
+    if (!ownership) {
+        throw new AppError(
+            httpStatus.NOT_FOUND,
+            "No active owner found for this flat",
+        );
+    }
+
+    if (role === Role.OWNER && ownership.ownerId !== userId) {
+        throw new AppError(httpStatus.FORBIDDEN, "You do not own this flat");
+    }
+
+    return ownership;
+};
+
+const createUtilityInvoice = async (
+    userId: string,
+    role: Role,
+    payload: ICreateUtilityInvoice,
+) => {
+    const {
+        stayId,
+        amount,
+        billingPeriodStart,
+        billingPeriodEnd,
+        description,
+    } = payload;
+
+    const stay = await prisma.stay.findUnique({
+        where: { id: stayId },
+        include: {
+            flat: true,
+            occupant: { select: { id: true, role: true } },
+            application: {
+                include: {
+                    advertisement: true,
+                },
+            },
+        },
+    });
+
+    if (!stay) {
+        throw new AppError(httpStatus.NOT_FOUND, "Stay not found");
+    }
+
+    if (stay.status !== StayStatus.CONFIRMED) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Can only create utility invoices for confirmed stays",
+        );
+    }
+
+    const payerId = stay.occupantId;
+
+    if (stay.occupant.role !== "TENANT") {
+        throw new AppError(httpStatus.BAD_REQUEST, "Payer must be a tenant");
+    }
+
+    const ownership = await assertUtilityInvoiceAccess(
+        userId,
+        role,
+        stay.flatId,
+    );
+
+    if (billingPeriodStart >= billingPeriodEnd) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Billing period start must be before end",
+        );
+    }
+
+    let receiverId;
+    if (
+        stay.rentalType === RentalType.PRIMARY_ENTIRE_FLAT ||
+        stay.rentalType === RentalType.PRIMARY_ROOM
+    ) {
+        receiverId = ownership.ownerId;
+    } else {
+        receiverId = stay.application.advertisement.createdById;
+    }
+
+    const invoice = await prisma.invoice.create({
+        data: {
+            stayId,
+            payerId,
+            receiverId: receiverId,
+            type: InvoiceType.UTILITY,
+            amount,
+            billingPeriodStart,
+            billingPeriodEnd,
+            status: BillStatus.PENDING,
+            description,
+        },
+        include: {
+            stay: {
+                select: {
+                    id: true,
+                    flat: { select: { id: true, flatNumber: true } },
+                },
+            },
+            payer: { select: { id: true, name: true, email: true } },
+            receiver: { select: { id: true, name: true, email: true } },
+        },
+    });
+
+    return invoice;
+};
+
+const updateUtilityInvoice = async (
+    userId: string,
+    role: Role,
+    invoiceId: string,
+    payload: IUpdateUtilityInvoice,
+) => {
+    const {
+        amount,
+        billingPeriodStart,
+        billingPeriodEnd,
+        description,
+        status,
+    } = payload;
+
+    const invoice = await prisma.invoice.findUnique({
+        where: { id: invoiceId },
+        include: { stay: true },
+    });
+
+    if (!invoice) {
+        throw new AppError(httpStatus.NOT_FOUND, "Invoice not found");
+    }
+
+    if (invoice.type !== InvoiceType.UTILITY) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Only utility invoices can be updated here",
+        );
+    }
+
+    if (invoice.status === BillStatus.PAID) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Paid invoices cannot be updated",
+        );
+    }
+
+    await assertUtilityInvoiceAccess(userId, role, invoice.stay.flatId);
+
+    const effectiveStart = billingPeriodStart ?? invoice.billingPeriodStart;
+    const effectiveEnd = billingPeriodEnd ?? invoice.billingPeriodEnd;
+    const amount_new = amount ?? invoice.amount;
+    const description_new = description ?? invoice.description;
+    const status_new = status ?? invoice.status;
+
+    if (effectiveStart >= effectiveEnd) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Billing period start must be before end",
+        );
+    }
+
+    const updatedInvoice = await prisma.invoice.update({
+        where: { id: invoiceId },
+        data: {
+            amount: amount_new,
+            billingPeriodStart: effectiveStart,
+            billingPeriodEnd: effectiveEnd,
+            description: description_new,
+            status: status_new,
+        },
+        include: {
+            stay: {
+                select: {
+                    id: true,
+                    flat: { select: { id: true, flatNumber: true } },
+                },
+            },
+            payer: { select: { id: true, name: true, email: true } },
+            receiver: { select: { id: true, name: true, email: true } },
+        },
+    });
+
+    return updatedInvoice;
+};
+
 export const ManagerService = {
+    getMyFlats,
     getMyAdvertisements,
     getApplications,
+    createUtilityInvoice,
+    updateUtilityInvoice,
 };

@@ -5,3 +5,19 @@ export interface IManagerApplicationQuery {
     page?: number;
     limit?: number;
 }
+
+export interface ICreateUtilityInvoice {
+    stayId: string;
+    amount: number;
+    billingPeriodStart: Date;
+    billingPeriodEnd: Date;
+    description?: string;
+}
+
+export interface IUpdateUtilityInvoice {
+    amount?: number;
+    billingPeriodStart?: Date;
+    billingPeriodEnd?: Date;
+    description?: string;
+    status?: "PENDING" | "PAID" | "CANCELLED";
+}

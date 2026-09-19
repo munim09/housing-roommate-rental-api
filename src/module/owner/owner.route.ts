@@ -9,6 +9,18 @@ import { OwnerValidation } from "./owner.validation";
 
 const router = Router();
 
+router.get(
+    "/flats",
+    auth(Role.OWNER, Role.MANAGER),
+    catchAsync(OwnerController.getMyFlats),
+);
+
+router.get(
+    "/advertisements",
+    auth(Role.OWNER, Role.MANAGER),
+    catchAsync(OwnerController.getMyAdvertisements),
+);
+
 router.use(auth(Role.OWNER));
 
 router.post(
@@ -18,10 +30,6 @@ router.post(
 );
 
 router.get("/properties", catchAsync(OwnerController.getMyProperties));
-
-router.get("/flats", catchAsync(OwnerController.getMyFlats));
-
-router.get("/advertisements", catchAsync(OwnerController.getMyAdvertisements));
 
 router.get("/managers", catchAsync(OwnerController.getActiveManagers));
 

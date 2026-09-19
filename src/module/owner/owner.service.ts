@@ -635,6 +635,20 @@ const assignManager = async (
         );
     }
 
+    const managerAssign = await prisma.managerAssignment.findFirst({
+        where: {
+            flatId,
+            status: "ACTIVE",
+        },
+    });
+
+    if (managerAssign) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Already one manager has been assigned. Remove the manager",
+        );
+    }
+
     const assignment = await prisma.$transaction(async (tx) => {
         await tx.managerAssignment.updateMany({
             where: { flatId, status: ManagerAssignmentStatus.ACTIVE },
@@ -749,91 +763,138 @@ const getMyProperties = async (ownerId: string) => {
     return properties;
 };
 
-const getMyFlats = async (ownerId: string) => {
-    const flats = await prisma.propertyOwnership.findMany({
-        where: { ownerId, status: "ACTIVE" },
-        select: {
-            id: true,
-            flatId: true,
-            status: true,
-            flat: {
-                select: {
-                    id: true,
-                    flatNumber: true,
-                    floorNumber: true,
-                    bedrooms: true,
-                    bathrooms: true,
-                    areaSqFt: true,
-                    status: true,
-                    property: {
-                        select: {
-                            id: true,
-                            name: true,
-                            area: true,
-                        },
-                    },
-                    rooms: {
-                        select: {
-                            id: true,
-                            roomNumber: true,
-                            name: true,
-                            status: true,
-                            images: {
-                                orderBy: { sortOrder: "asc" },
-                                select: {
-                                    id: true,
-                                    imageUrl: true,
-                                    isPrimary: true,
-                                },
-                            },
-                        },
-                    },
-                    images: {
-                        orderBy: { sortOrder: "asc" },
-                        select: {
-                            id: true,
-                            imageUrl: true,
-                            isPrimary: true,
-                        },
-                    },
-                    managerAssignments: {
-                        where: { status: "ACTIVE" },
-                        select: {
-                            id: true,
-                            manager: {
-                                select: {
-                                    id: true,
-                                    name: true,
-                                    email: true,
-                                },
-                            },
-                        },
+const flatWithDetailsSelect = {
+    select: {
+        id: true,
+        flatNumber: true,
+        floorNumber: true,
+        bedrooms: true,
+        bathrooms: true,
+        areaSqFt: true,
+        status: true,
+        property: {
+            select: {
+                id: true,
+                name: true,
+                area: true,
+            },
+        },
+        rooms: {
+            select: {
+                id: true,
+                roomNumber: true,
+                name: true,
+                status: true,
+                images: {
+                    orderBy: { sortOrder: "asc" },
+                    select: {
+                        id: true,
+                        imageUrl: true,
+                        isPrimary: true,
                     },
                 },
             },
         },
-    });
+        images: {
+            orderBy: { sortOrder: "asc" },
+            select: {
+                id: true,
+                imageUrl: true,
+                isPrimary: true,
+            },
+        },
+        managerAssignments: {
+            where: { status: "ACTIVE" },
+            select: {
+                id: true,
+                manager: {
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                    },
+                },
+            },
+        },
+    },
+} as const;
 
-    return flats;
+const getMyFlats = async (userId: string, role: Role) => {
+    if (role === Role.MANAGER) {
+        const assignments = await prisma.managerAssignment.findMany({
+            where: {
+                managerId: userId,
+                status: ManagerAssignmentStatus.ACTIVE,
+            },
+            select: {
+                id: true,
+                flatId: true,
+                status: true,
+                flat: flatWithDetailsSelect,
+            },
+            orderBy: { createdAt: "desc" },
+        });
+
+        if (assignments.length === 0) {
+            throw new AppError(
+                httpStatus.FORBIDDEN,
+                "You are not assigned to manage any flat",
+            );
+        }
+
+        return assignments;
+    }
+
+    return prisma.propertyOwnership.findMany({
+        where: { ownerId: userId, status: "ACTIVE" },
+        select: {
+            id: true,
+            flatId: true,
+            status: true,
+            flat: flatWithDetailsSelect,
+        },
+        orderBy: { createdAt: "desc" },
+    });
 };
 
-const getMyAdvertisements = async (ownerId: string) => {
-    const ownedFlatIds = (
-        await prisma.propertyOwnership.findMany({
-            where: { ownerId, status: "ACTIVE" },
-            select: { flatId: true },
-        })
-    ).map((ownership) => ownership.flatId);
+const getMyAdvertisements = async (userId: string, role: Role) => {
+    let bindingFlatIds: string[];
 
-    if (ownedFlatIds.length === 0) {
-        return [];
+    if (role === Role.MANAGER) {
+        bindingFlatIds = (
+            await prisma.managerAssignment.findMany({
+                where: {
+                    managerId: userId,
+                    status: ManagerAssignmentStatus.ACTIVE,
+                },
+                select: { flatId: true },
+            })
+        ).map((assignment) => assignment.flatId);
+
+        if (bindingFlatIds.length === 0) {
+            throw new AppError(
+                httpStatus.FORBIDDEN,
+                "You are not assigned to manage any flat",
+            );
+        }
+    } else {
+        bindingFlatIds = (
+            await prisma.propertyOwnership.findMany({
+                where: { ownerId: userId, status: "ACTIVE" },
+                select: { flatId: true },
+            })
+        ).map((ownership) => ownership.flatId);
+
+        if (bindingFlatIds.length === 0) {
+            return [];
+        }
     }
 
     const advertisements = await prisma.advertisement.findMany({
         where: {
             OR: [
-                { flatId: { in: ownedFlatIds } },
-                { room: { flatId: { in: ownedFlatIds } } },
+                { flatId: { in: bindingFlatIds } },
+                { room: { flatId: { in: bindingFlatIds } } },
             ],
         },
         select: {
@@ -841,8 +902,7 @@ const getMyAdvertisements = async (ownerId: string) => {
             title: true,
             description: true,
             monthlyRent: true,
-            category: true,
-            target: true,
+            rentalType: true,
             status: true,
             availableFrom: true,
             availableTo: true,
@@ -867,8 +927,6 @@ const getMyAdvertisements = async (ownerId: string) => {
                         select: {
                             id: true,
                             name: true,
-                            city: true,
-                            district: true,
                         },
                     },
                 },

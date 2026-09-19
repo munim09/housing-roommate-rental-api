@@ -67,6 +67,69 @@ const getAllUsers = async (query: IAdminUserQuery) => {
     };
 };
 
+const getAllUsersWithProfiles = async (query: IAdminUserQuery) => {
+    const {
+        role,
+        status,
+        search,
+        page = 1,
+        limit = 10,
+        sortBy = "createdAt",
+        sortOrder = "desc",
+    } = query;
+
+    const where: Prisma.UserWhereInput = {};
+
+    if (role) {
+        where.role = role;
+    }
+
+    if (status) {
+        where.status = status;
+    }
+
+    if (search) {
+        where.OR = [
+            { name: { contains: search, mode: "insensitive" } },
+            { email: { contains: search, mode: "insensitive" } },
+        ];
+    }
+
+    const total = await prisma.user.count({ where });
+
+    const users = await prisma.user.findMany({
+        where,
+        select: {
+            id: true,
+            name: true,
+            email: true,
+            phone: true,
+            role: true,
+            status: true,
+            emailVerified: true,
+            authProvider: true,
+            createdAt: true,
+            updatedAt: true,
+            ownerProfile: true,
+            managerProfile: true,
+            tenantProfile: true,
+        },
+        orderBy: { [sortBy]: sortOrder },
+        skip: (Number(page) - 1) * Number(limit),
+        take: Number(limit),
+    });
+
+    return {
+        users,
+        meta: {
+            page,
+            limit,
+            total,
+            totalPages: Math.ceil(Number(total) / Number(limit)),
+        },
+    };
+};
+
 const getUserById = async (userId: string) => {
     const user = await prisma.user.findUnique({
         where: { id: userId },
@@ -203,6 +266,7 @@ const createArea = async (data: IAdminCreateArea) => {
 
 export const AdminService = {
     getAllUsers,
+    getAllUsersWithProfiles,
     getUserById,
     updateUserStatus,
     updateUserRole,
