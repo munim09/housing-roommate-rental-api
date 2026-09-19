@@ -1,6 +1,6 @@
 # Housing Rental Backend
 
-Backend API for a housing matching platform. Owners and managers list flats/rooms, tenants apply for stays, invoices are generated for rent & utility bills, and payments are collected via SSLCommerz.
+Backend API for a housing matching platform. Owners and managers list flats/rooms, tenants apply for primary stays, and confirmed tenants can sublet their room to other tenants (roommate rentals). Invoices cover rent & utility bills, and payments flow through SSLCommerz. Confirmed primary stays get a generated PDF rental contract.
 
 ## Tech Stack
 
@@ -15,6 +15,7 @@ Backend API for a housing matching platform. Owners and managers list flats/room
 | Cache / OTP store | Redis |
 | Email | Nodemailer + EJS templates |
 | Images | Cloudinary (via Multer) |
+| Contracts | PDFKit (rental contract PDFs) |
 | Build | tsup |
 
 ## Getting Started
@@ -85,13 +86,14 @@ npx prisma generate  # Regenerate the Prisma client after schema changes
 │   │   ├── auth/               # Register, login, verify, tokens, password reset
 │   │   ├── admin/              # User management, cities, areas
 │   │   ├── owner/              # Properties, flats, rooms, manager assignment, images
-│   │   ├── manager/            # Applications, manager's advertisements
-│   │   ├── advertisement/      # Advertisements + utility invoices
-│   │   ├── tenant/             # Viewing requests, applications, invoices, stays
+│   │   ├── manager/            # Applications, utility invoices, assigned flats/ads
+│   │   ├── advertisement/      # Flat & room advertisements
+│   │   ├── tenant/             # Viewing requests, applications, invoices, stays, contract PDF
+│   │   ├── roommate/           # Secondary rentals: roommate ads, stays, applications, utility bills
 │   │   ├── payment/            # SSLCommerz payment flow
 │   │   └── public/             # Public endpoints (cities, areas, available ads)
 │   ├── templates/              # EJS email templates
-│   └── utils/                  # AppError, catchAsync, jwt, otp, sendEmail, sendResponse
+│   └── utils/                  # AppError, catchAsync, jwt, otp, sendEmail, sendResponse, pdfGenerator
 └── generated/prisma/           # Generated Prisma client (gitignored)
 ```
 
@@ -128,6 +130,8 @@ Client → Express App (app.ts)
 | `ViewingRequest` | Flat/room viewing requests |
 | `City` / `Area` | Location hierarchy for properties |
 | `Notification` | System notifications |
+
+Advertisements use `RentalType` to distinguish **primary** listings (`PRIMARY_ENTIRE_FLAT`, `PRIMARY_ROOM` — posted by owners/managers) from **roommate** listings (`SECONDARY_ROOM`, `SECONDARY_ROOM_SHARING` — posted by a tenant subletting a room of their own confirmed primary stay).
 
 ### Authentication & Authorization
 
@@ -174,20 +178,21 @@ Client → Express App (app.ts)
 | Method | Endpoint | Query / Body | Description |
 | --- | --- | --- | --- |
 | GET | `/users` | `?role=&status=&search=&page=&limit=&sortBy=&sortOrder=` | List users |
+| GET | `/users/profiles` | same query as `/users` | List users including their role profiles (`ownerProfile`, `managerProfile`, `tenantProfile`) |
 | GET | `/users/:id` | — | Get user by ID |
 | PATCH | `/users/:id/status` | `{ status: ACTIVE\|SUSPENDED\|REJECTED }` | Update user status |
 | PATCH | `/users/:id/role` | `{ role: OWNER\|MANAGER\|TENANT }` | Update user role |
 | POST | `/cities` | `{ name }` | Create a city |
 | POST | `/areas` | `{ cityId, name }` | Create an area |
 
-### Owner (`/api/v1/owner` — role: `OWNER`)
+### Owner (`/api/v1/owner` — `GET /flats` & `GET /advertisements`: `OWNER` or `MANAGER`; all other endpoints: `OWNER`)
 
 | Method | Endpoint | Request Body / Note | Description |
 | --- | --- | --- | --- |
 | POST | `/properties` | `{ name, type (SINGLE_FLAT\|MULTI_FLAT), description?, address, areaId, postalCode?, latitude?, longitude? }` | Create a property |
 | GET | `/properties` | — | List my properties |
-| GET | `/flats` | — | List my flats |
-| GET | `/advertisements` | — | List my advertisements |
+| GET | `/flats` | — | List my flats / my assigned flats (manager) |
+| GET | `/advertisements` | — | List my advertisements / assigned advertisements (manager) |
 | GET | `/managers` | — | List active managers |
 | POST | `/properties/:propertyId/flats` | `multipart/form-data` `images` (≤10) + flat fields | Add a flat with images |
 | POST | `/flats/:flatId/rooms` | `multipart/form-data` `images` (≤10) + room fields | Add a room with images |
@@ -210,15 +215,6 @@ Client → Express App (app.ts)
 | POST | `/rooms/:roomId` | `{ title, description?, monthlyRent, availableFrom, availableTo }` | Create a room advertisement |
 | PATCH | `/:advertisementId/status` | `{ status: PUBLISHED\|UNPUBLISHED\|ARCHIVED }` | Update advertisement status |
 | PATCH | `/:advertisementId` | `{ title?, description?, monthlyRent?, availableFrom?, availableTo? }` | Update advertisement details |
-| POST | `/utility-invoices` | `{ stayId, amount, billingPeriodStart, billingPeriodEnd, description? }` | Create a utility invoice for a confirmed stay |
-| PATCH | `/utility-invoices/:invoiceId` | `{ amount?, billingPeriodStart?, billingPeriodEnd?, description?, status? }` | Update a utility invoice (at least one field) |
-
-**Utility invoice notes:**
-
-- Created only for stays with status `CONFIRMED`; payer must be a tenant; receiver is the flat's active owner.
-- Only the flat's assigned manager or owning owner may create/update.
-- `status` may be `PENDING`, `PAID`, or `CANCELLED`. **Paid invoices cannot be updated.**
-- `billingPeriodStart` must be before `billingPeriodEnd`.
 
 **Contract conflict rules at creation:**
 - A flat/room cannot be advertised if it is already advertised in an overlapping period (statuses `DRAFT`/`PUBLISHED`/`UNPUBLISHED`/`RENTED`/`FULL`).
@@ -230,7 +226,17 @@ Client → Express App (app.ts)
 | Method | Endpoint | Auth | Query / Body | Description |
 | --- | --- | --- | --- | --- |
 | GET | `/applications` | OWNER, MANAGER | `?status=&page=&limit=` | List applications for owned/managed flats |
+| POST | `/utility-invoices` | OWNER, MANAGER | `{ stayId, amount, billingPeriodStart, billingPeriodEnd, description? }` | Create a utility invoice for a confirmed stay |
+| PATCH | `/utility-invoices/:invoiceId` | OWNER, MANAGER | `{ amount?, billingPeriodStart?, billingPeriodEnd?, description?, status? }` | Update a utility invoice (at least one field; paid invoices locked) |
+| GET | `/flats` | MANAGER | — | List flats assigned to me (403 if no active assignment) |
 | GET | `/advertisements` | MANAGER | — | List advertisements of assigned flats |
+
+**Utility invoice notes:**
+
+- Created only for stays with status `CONFIRMED`; the payer must be a tenant.
+- Receiver: the flat's active owner for **primary** stays, or the advertise tenant for **secondary** (roommate) stays.
+- `status` may be `PENDING`, `PAID`, or `CANCELLED`. **Paid invoices cannot be updated.**
+- `billingPeriodStart` must be before `billingPeriodEnd`.
 
 ### Tenant (`/api/v1/tenant`)
 
@@ -248,7 +254,8 @@ Client → Express App (app.ts)
 | GET | `/invoices` | TENANT, OWNER, MANAGER | `?status=&page=&limit=` | List invoices |
 | GET | `/invoices/by-stay` | TENANT, OWNER, MANAGER | `?applicationId=&stayId=` (one required) | List invoices for a stay |
 | GET | `/invoices/:id` | TENANT, OWNER, MANAGER | — | Get invoice by ID |
-| GET | `/stays` | TENANT, OWNER, MANAGER | — | List stays |
+| GET | `/stays` | TENANT, OWNER, MANAGER | — | List stays (confirmed primary stays include a `contractUrl` for the PDF contract) |
+| GET | `/stays/:stayId/contract` | TENANT, OWNER, MANAGER | — | Download the rental contract PDF (`rental-contract-<flatNumber>.pdf`; confirmed primary stays only) |
 
 ### Payment (`/api/v1/payments`)
 
@@ -260,17 +267,41 @@ Client → Express App (app.ts)
 | GET | `/` | TENANT | List my payments (`?page=&limit=`) |
 | GET | `/:id` | TENANT | Get payment details by ID |
 
+### Roommate (`/api/v1/roommate` — role: `TENANT`)
+
+Tenant-to-tenant subletting: a tenant with a confirmed **primary** stay posts a room for rent, accepts applications, and manages rent + utility billing on the resulting secondary stay.
+
+| Method | Endpoint | Auth | Request Body | Description |
+| --- | --- | --- | --- | --- |
+| POST | `/advertisements` | TENANT | `{ stayId, roomId, title, advertisementTarget (SECONDARY_ROOM\|SECONDARY_ROOM_SHARING), description?, monthlyRent, availableFrom, availableTo }` | Create a roommate advertisement from my confirmed primary stay |
+| PATCH | `/advertisements/:advertisementId` | TENANT | `{ title?, advertisementTarget?, status?, description?, monthlyRent?, availableFrom?, availableTo? }` (≥1 field) | Update my roommate advertisement |
+| GET | `/stays` | TENANT | — | List stays where I am the advertise tenant (secondary stays) |
+| POST | `/stays/:stayId/utility-bills` | TENANT | `{ amount, billingPeriodStart, billingPeriodEnd, description? }` | Issue a utility bill on a roommate stay |
+| GET | `/stays/:stayId/utility-bills` | TENANT | — | List utility bills of a roommate stay |
+| PATCH | `/utility-bills/:billId` | TENANT | `{ amount?, billingPeriodStart?, billingPeriodEnd?, description?, status? (PENDING\|CANCELLED) }` (≥1 field) | Update an unpaid utility bill |
+| GET | `/applications` | TENANT | — | List applications on my roommate advertisements |
+| PATCH | `/applications/:applicationId/status` | TENANT | `{ status: APPROVED\|REJECTED }` | Approve/reject a roommate application |
+
+**Roommate rules:**
+
+- The advertise tenant must have a confirmed primary stay covering the room being posted; overlapping roommate ads on the same room are rejected; `availableTo` must be after `availableFrom`.
+- All advertisement/utility-bill mutations are creator-only.
+- Approving an application creates a `WAITING_FOR_PAYMENT` stay and its first **RENT** invoice (payer = applicant, receiver = advertise tenant).
+- Utility bills are created only for `CONFIRMED` **secondary** stays; **paid bills cannot be updated**.
+
 ### Public (`/api/v1` — no auth)
 
 | Method | Endpoint | Query | Description |
 | --- | --- | --- | --- |
 | GET | `/cities` | `?search=&page=&limit=` | List cities with their areas |
 | GET | `/areas` | `?cityId=&search=&page=&limit=` | List areas with property counts |
-| GET | `/available-advertisements` | `?areaId=&from=&to=&page=&limit=` (`areaId` required) | List published ads available in a date range |
+| GET | `/available-advertisements` | `?areaId=&from=&to=&rentalType=&page=&limit=` (`areaId` required; `to` after `from`) | List published ads available in a date range. `rentalType` (optional) filters by `RentalType`; availability conflicts are resolved separately per primary/secondary group, and an advertiser's own stay/application never blocks their listing |
 | GET | `/available-advertisements/:advertisementId` | — | Get public advertisement details |
 
 ## Notes
 
 - This is an early-stage project; some routes/middleware structure may still change.
+- **Roommate flow:** a tenant with a `CONFIRMED` primary stay (entire flat or room) can set a room up for subletting via the roommate module. Approval of a roommate application creates the secondary stay + first rent invoice, payable like any other invoice through SSLCommerz. Utility bills for secondary stays are issued by the advertise tenant; utility invoices for primary (owner) stays are issued by owners/managers.
+- **Contract PDF:** `GET /api/v1/tenant/stays/:stayId/contract` downloads the generated rental contract for confirmed primary stays. Access is limited to the occupant tenant and the flat's owner/manager.
 - The seed script (`prisma/seed.ts`) uses hardcoded `providerId` and `categoryId` UUIDs and will fail if those records don't already exist. Uncomment/adjust seed data before running.
 - The Prisma schema is split across `prisma/schema/*.prisma` (one file per model, plus `enums.prisma`). The Prisma client is generated to `generated/prisma/`.
