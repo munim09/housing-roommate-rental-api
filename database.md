@@ -34,6 +34,7 @@ This document describes the PostgreSQL database for the Housing & Roommate platf
 | 16 | `Invoice` | Rent (RENT) and utility (UTILITY) bills |
 | 17 | `Payment` | Payments with gateway metadata |
 | 18 | `ViewingRequest` | Requests to view an advertised flat/room |
+| 19 | `Notification` | Per-user system/application notifications |
 
 
 ## ERD
@@ -56,12 +57,13 @@ erDiagram
     User ||--o{ Payment : "as receiver"
     User ||--o{ ViewingRequest : "requests"
     User ||--o{ ViewingRequest : "reviews"
+    User ||--o{ Notification : "receives"
 
     City ||--o{ Area : "contains"
     Area ||--o{ Property : "located in"
 
     Property ||--o{ Flat : "has"
-    Property }o--|| Area : "belongs to"
+    Property ||--o{ Stay : "hosts stays"
 
     Flat ||--o{ Room : "has"
     Flat ||--o{ PropertyOwnership : "owned by"
@@ -79,6 +81,7 @@ erDiagram
 
     Application ||--o| Stay : "produces"
 
+    Stay ||--o{ Advertisement : "source of roommate ads"
     Stay ||--o{ Invoice : "billed"
     Stay ||--o{ Payment : "paid for"
 
@@ -91,21 +94,24 @@ erDiagram
 | --- | --- | --- | --- |
 | `User` | `OwnerProfile` / `ManagerProfile` / `TenantProfile` | 1 → 0..1 | One profile per user depending on role (`userId` unique) |
 | `User` | `Property` | 1 → 0..N | `createdById` |
-| `User` | `PropertyOwnership` | 1 → 0..N | as **owner** (`FlatManager` relation) |
-| `User` | `ManagerAssignment` | 1 → 0..N | as **manager** (`FlatOwner` relation) |
+| `User` | `PropertyOwnership` | 1 → 0..N | as **owner** (`FlatOwner` relation) |
+| `User` | `ManagerAssignment` | 1 → 0..N | as **manager** (`FlatManager` relation) |
 | `User` | `Advertisement` | 1 → 0..N | `createdById` |
 | `User` | `Application` | 1 → 0..N | as **applicant** and as **reviewer** (`reviewedById` nullable) |
 | `User` | `Stay` | 1 → 0..N | `occupantId` |
 | `User` | `Invoice` | 1 → 0..N | as **payer** and as **receiver** (two FKs) |
 | `User` | `Payment` | 1 → 0..N | as **payer** and as **receiver** (two FKs) |
 | `User` | `ViewingRequest` | 1 → 0..N | as **requester** and as **reviewer** (`reviewedById` nullable) |
+| `User` | `Notification` | 1 → 0..N | `userId` |
 | `City` | `Area` | 1 → 0..N | `cityId`; unique on `(cityId, name)` |
 | `Area` | `Property` | 1 → 0..N | `areaId` (mandatory) |
 | `Property` | `Flat` | 1 → 0..N | unique on `(propertyId, flatNumber)` |
+| `Property` | `Stay` | 1 → 0..N | `propertyId` |
 | `Flat` | `Room` | 1 → 0..N | unique on `(flatId, roomNumber)` |
 | `Flat` | `PropertyOwnership` / `ManagerAssignment` | 1 → 0..N | flat-level ownership & management |
 | `Flat` / `Room` | `AccommodationImage` | 1 → 0..N | exactly one of `flatId`/`roomId` set; cascade delete |
 | `Flat` / `Room` | `Advertisement` | 1 → 0..N | exactly one of `flatId`/`roomId` may be set |
+| `Stay` | `Advertisement` | 1 → 0..N | `createdByTenantStayId` — the primary stay backing a roommate ad |
 | `Advertisement` | `Application` / `ViewingRequest` | 1 → 0..N | `advertisementId` |
 | `Application` | `Stay` | 1 → 0..1 | `applicationId` is unique on `Stay` |
 | `Stay` | `Invoice` / `Payment` | 1 → 0..N | `stayId` |
@@ -252,11 +258,11 @@ Single table for rental and roommate listings.
 | Field | Type | Notes |
 | --- | --- | --- |
 | `id` | String (uuid) | PK |
-| `createdById` | String | FK → `User` |
+| `createdById` | String | FK → `User` (owner/manager or advertise tenant) |
 | `flatId` | String? | FK → `Flat` (entire-flat target) |
 | `roomId` | String? | FK → `Room` (room target) |
-| `category` | `AdvertisementCategory` | `RENTAL` / `ROOMMATE` |
-| `target` | `AdvertisementTarget` | `ENTIRE_FLAT` / `ROOM` |
+| `createdByTenantStayId` | String? | FK → `Stay`; set for roommate ads — the advertise tenant's primary stay |
+| `rentalType` | `RentalType` | default `PRIMARY_ENTIRE_FLAT` (replaces legacy `category`/`target`) |
 | `title` | String | |
 | `description` | String? | |
 | `monthlyRent` | Decimal(12, 2) | |
@@ -274,7 +280,7 @@ Single table for rental and roommate applications.
 | `id` | String (uuid) | PK |
 | `advertisementId` | String | FK → `Advertisement` |
 | `applicantId` | String | FK → `User` |
-| `type` | `ApplicationType` | default `RENTAL` |
+| `rentalType` | `RentalType` | default `PRIMARY_ENTIRE_FLAT` (derived from the target advertisement) |
 | `status` | `ApplicationStatus` | default `PENDING` |
 | `requestedStartDate` | DateTime | |
 | `requestedEndDate` | DateTime | |
@@ -295,7 +301,7 @@ Single table for primary tenant stays and roommate stays.
 | `propertyId` | String | FK → `Property` |
 | `flatId` | String | FK → `Flat` |
 | `roomId` | String? | FK → `Room` |
-| `type` | `StayType` | `PRIMARY` / `ROOMMATE` |
+| `rentalType` | `RentalType` | default `PRIMARY_ENTIRE_FLAT` — `PRIMARY_*` = primary stay, `SECONDARY_*` = roommate stay |
 | `status` | `StayStatus` | default `WAITING_FOR_PAYMENT` |
 | `startDate` / `endDate` | DateTime | |
 | `monthlyRent` | Decimal(12, 2) | Rent snapshot at approval time |
@@ -361,6 +367,18 @@ Single table for viewing any advertisement.
 | `noteByReviewer` | String? | from reviewer |
 | `createdAt` / `updatedAt` | DateTime | |
 
+### 19. Notification
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `id` | String (uuid) | PK |
+| `userId` | String | FK → `User` |
+| `type` | `NotificationType` | `SYSTEM` / `APPLICATION` / `PAYMENT` / `UTILITY` / `VIEWING` / `MAINTENANCE` / `ROOMMATE` |
+| `title` | String | |
+| `message` | String | |
+| `readAt` | DateTime? | |
+| `createdAt` | DateTime | no `updatedAt` |
+
 ## Enums
 
 | Enum | Values | Used by |
@@ -374,18 +392,16 @@ Single table for viewing any advertisement.
 | `RoomStatus` | `ACTIVE`, `INACTIVE`, `ARCHIVED` | `Room.status` |
 | `OwnershipStatus` | `ACTIVE`, `ENDED` | `PropertyOwnership.status` |
 | `ManagerAssignmentStatus` | `ACTIVE`, `ENDED` | `ManagerAssignment.status` |
-| `AdvertisementCategory` | `RENTAL`, `ROOMMATE` | `Advertisement.category` |
-| `AdvertisementTarget` | `ENTIRE_FLAT`, `ROOM` | `Advertisement.target` |
+| `RentalType` | `PRIMARY_ENTIRE_FLAT`, `PRIMARY_ROOM`, `SECONDARY_ROOM`, `SECONDARY_ROOM_SHARING` | `Advertisement.rentalType`, `Application.rentalType`, `Stay.rentalType` |
 | `AdvertisementStatus` | `DRAFT`, `PUBLISHED`, `UNPUBLISHED`, `RENTED`, `FULL`, `EXPIRED`, `ARCHIVED` | `Advertisement.status` |
-| `ApplicationType` | `RENTAL`, `ROOMMATE` | `Application.type` |
 | `ApplicationStatus` | `PENDING`, `APPROVED`, `REJECTED`, `WITHDRAWN`, `EXPIRED` | `Application.status` |
-| `StayType` | `PRIMARY`, `ROOMMATE` | `Stay.type` |
 | `StayStatus` | `WAITING_FOR_PAYMENT`, `CONFIRMED`, `COMPLETED`, `TERMINATED`, `CANCELLED`, `EXPIRED` | `Stay.status` |
 | `InvoiceType` | `RENT`, `UTILITY` | `Invoice.type` |
 | `BillStatus` | `PENDING`, `PAID`, `CANCELLED` | `Invoice.status` |
 | `PaymentType` | `RENT`, `UTILITY` | `Payment.type` |
 | `PaymentStatus` | `PENDING`, `PROCESSING`, `SUCCESS`, `FAILED`, `CANCELLED`, `REFUNDED`, `PARTIALLY_REFUNDED` | `Payment.status` |
 | `ViewingRequestStatus` | `PENDING`, `APPROVED`, `REJECTED`, `CANCELLED`, `COMPLETED`, `NO_SHOW` | `ViewingRequest.status` |
+| `NotificationType` | `SYSTEM`, `APPLICATION`, `PAYMENT`, `UTILITY`, `VIEWING`, `MAINTENANCE`, `ROOMMATE` | `Notification.type` |
 | `MaintenanceStatus` | `OPEN`, `IN_PROGRESS`, `RESOLVED`, `CLOSED`, `CANCELLED` | *(unused — reserved)* |
 | `MaintenancePriority` | `LOW`, `MEDIUM`, `HIGH`, `URGENT` | *(unused — reserved)* |
 
@@ -395,11 +411,13 @@ Single table for viewing any advertisement.
 - **Flat-level ownership/management.** `PropertyOwnership` and `ManagerAssignment` always reference a `Flat`, never a `Property`.
 - **Self-referential users.** A single `User` can be both an invoice payer and receiver, application reviewer, viewing-request reviewer, etc., via multiple named FK relations on the same table.
 - **One type per row.** `Advertisement`, `AccommodationImage`, and `Payment` use optional FKs to either a flat or a room; exactly one should be populated per business rule (enforced in application logic, not the DB).
+- **Rental type instead of separate type columns.** `RentalType` on `Advertisement`, `Application`, and `Stay` replaces the legacy `category`/`target`/`type` enum columns — `PRIMARY_*` values mark owner/manager listings and the resulting stays, `SECONDARY_*` mark roommate (tenant-subletting) listings.
+- **Roommate ads source their stay.** A roommate `Advertisement.createdByTenantStayId` links to the advertise tenant's primary `Stay`; it keeps the sublet window inside the tenant's own stay and lets availability searches exclude the advertiser's own stay/application from conflicts.
 - **Stay from application.** Each `Stay` maps 1:1 to an approved `Application` (unique `applicationId`).
 - **Rent snapshot.** `Stay.monthlyRent` is frozen at application approval time; later advertisement price changes do not affect existing stays.
 - **Invoice due date.** Defaults to 12 hours after creation (`CURRENT_TIMESTAMP + INTERVAL '12 hours'`).
 - **Money & coordinates.** Use `Decimal` types to avoid floating-point issues — never `Float` for monetary or geo fields.
-- **Indexes.** Composite indexes are defined for the most common lookups (e.g. `Advertisement(category, status)`, `Stay(startDate, endDate)`, `AccommodationImage(flatId, sortOrder)`).
+- **Indexes.** Composite indexes are defined for the most common lookups (e.g. `Stay(startDate, endDate)`, `AccommodationImage(flatId, sortOrder)`, `AccommodationImage(roomId, sortOrder)`).
 
 ## Indexes at a Glance
 
@@ -415,9 +433,10 @@ Single table for viewing any advertisement.
 | `PropertyOwnership` | — | `flatId`, `ownerId`, `status` |
 | `ManagerAssignment` | — | `flatId`, `managerId`, `status` |
 | `AccommodationImage` | — | `flatId`, `roomId`, `(flatId, sortOrder)`, `(roomId, sortOrder)` |
-| `Advertisement` | — | `createdById`, `flatId`, `roomId`, `(category, status)` |
+| `Advertisement` | — | `createdById`, `flatId`, `roomId` |
 | `Application` | — | `advertisementId`, `applicantId`, `status` |
 | `Stay` | `applicationId` | `occupantId`, `propertyId`, `flatId`, `roomId`, `status`, `(startDate, endDate)` |
 | `Invoice` | — | `stayId`, `payerId`, `receiverId`, `status`, `dueDate` |
 | `Payment` | — | `stayId`, `invoiceId`, `payerId`, `receiverId`, `status` |
 | `ViewingRequest` | — | `advertisementId`, `requesterId`, `status`, `requestedDate` |
+| `Notification` | — | `userId`, `readAt`, `createdAt` |
