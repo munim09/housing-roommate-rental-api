@@ -98,4 +98,10 @@ router.get(
     catchAsync(TenantController.getStays),
 );
 
+router.get(
+    "/stays/:stayId/contract",
+    auth(Role.TENANT, Role.OWNER, Role.MANAGER),
+    catchAsync(TenantController.downloadStayContract),
+);
+
 export const TenantRoutes = router;

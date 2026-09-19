@@ -13,6 +13,7 @@ import {
 } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
+import { generateContractPdf } from "../../utils/pdfGenerator";
 import {
     IApplicationQuery,
     ICreateApplication,
@@ -465,6 +466,13 @@ const createApplication = async (
         },
     });
 
+    // if (advertisement?.createdById === tenantId) {
+    //     throw new AppError(
+    //         httpStatus.NOT_FOUND,
+    //         "Advertisement publisher cannot apply.",
+    //     );
+    // }
+
     if (!advertisement) {
         throw new AppError(httpStatus.NOT_FOUND, "Advertisement not found");
     }
@@ -591,6 +599,8 @@ const createApplication = async (
         );
     }
 
+    // console.log("advertisement", advertisement);
+
     if (
         advertisement.rentalType === RentalType.SECONDARY_ROOM ||
         advertisement.rentalType === RentalType.SECONDARY_ROOM_SHARING
@@ -619,6 +629,7 @@ const createApplication = async (
                 startDate: true,
                 endDate: true,
                 applicationId: true,
+                occupantId: true,
             },
         });
 
@@ -639,12 +650,15 @@ const createApplication = async (
             );
         }
 
-        if (advertiserStay.applicationId === tenantId) {
+        if (advertiserStay.occupantId === tenantId) {
             throw new AppError(
                 httpStatus.BAD_REQUEST,
                 "Advertiser can not apply for stay",
             );
         }
+
+        // console.log("advertiserStay.occupantId", advertiserStay.occupantId);
+        // console.log("tenantId", tenantId);
 
         const conflictingRoommateStay = await prisma.stay.findFirst({
             where: {
@@ -1690,6 +1704,133 @@ const getStays = async (userId: string, role: Role) => {
     };
 };
 
+const getStayContract = async (stayId: string, userId: string, role: Role) => {
+    const where: Prisma.StayWhereInput = { id: stayId };
+
+    applyStayAccessScope(where, userId, role);
+
+    const stay = await prisma.stay.findFirst({
+        where,
+        include: {
+            occupant: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    phone: true,
+                },
+            },
+            flat: {
+                select: {
+                    id: true,
+                    flatNumber: true,
+                    floorNumber: true,
+                    property: {
+                        select: {
+                            id: true,
+                            name: true,
+                            address: true,
+                            postalCode: true,
+                            area: {
+                                select: {
+                                    name: true,
+                                    city: {
+                                        select: {
+                                            name: true,
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    ownerships: {
+                        where: { status: "ACTIVE" },
+                        take: 1,
+                        select: {
+                            owner: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                    email: true,
+                                    phone: true,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            room: {
+                select: {
+                    id: true,
+                    roomNumber: true,
+                    name: true,
+                },
+            },
+        },
+    });
+
+    if (!stay) {
+        throw new AppError(httpStatus.NOT_FOUND, "Stay not found");
+    }
+
+    if (stay.status !== StayStatus.CONFIRMED) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Contract is only available for confirmed stays",
+        );
+    }
+
+    if (
+        stay.rentalType !== RentalType.PRIMARY_ENTIRE_FLAT &&
+        stay.rentalType !== RentalType.PRIMARY_ROOM
+    ) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Contract is only available for primary stays",
+        );
+    }
+
+    const owner = stay.flat.ownerships[0]?.owner;
+
+    if (!owner) {
+        throw new AppError(httpStatus.NOT_FOUND, "Flat owner not found");
+    }
+
+    const buffer = await generateContractPdf({
+        contractRef: stay.id,
+        issuedAt: new Date(),
+        startDate: stay.startDate,
+        endDate: stay.endDate,
+        monthlyRent: `BDT ${stay.monthlyRent.toString()}/-`,
+        owner: {
+            name: owner.name,
+            email: owner.email,
+            phone: owner.phone,
+        },
+        tenant: {
+            name: stay.occupant.name,
+            email: stay.occupant.email,
+            phone: stay.occupant.phone,
+        },
+        premises: {
+            propertyName: stay.flat.property.name,
+            address: stay.flat.property.address,
+            postalCode: stay.flat.property.postalCode,
+            areaName: stay.flat.property.area?.name,
+            cityName: stay.flat.property.area?.city?.name,
+            flatNumber: stay.flat.flatNumber,
+            floorNumber: stay.flat.floorNumber,
+            roomNumber: stay.room?.roomNumber ?? null,
+            roomName: stay.room?.name ?? null,
+        },
+    });
+
+    return {
+        buffer,
+        filename: `rental-contract-${stay.flat.flatNumber}.pdf`,
+    };
+};
+
 export const TenantService = {
     createViewingRequest,
     getViewingRequests,
@@ -1704,4 +1845,5 @@ export const TenantService = {
     getInvoicesByStay,
     getInvoiceById,
     getStays,
+    getStayContract,
 };

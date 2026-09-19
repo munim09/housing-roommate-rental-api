@@ -1,5 +1,9 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
+import {
+    RentalType,
+    StayStatus,
+} from "../../../generated/prisma/client";
 import { sendResponse } from "../../utils/sendResponse";
 import { TenantService } from "./tenant.service";
 
@@ -192,12 +196,40 @@ const getStays = async (req: Request, res: Response) => {
         req.user!.role,
     );
 
+    const baseUrl = `${req.protocol}://${req.get("host")}`;
+
+    const stays = result.stays.map((stay) => ({
+        ...stay,
+        contractUrl:
+            stay.status === StayStatus.CONFIRMED &&
+            (stay.rentalType === RentalType.PRIMARY_ENTIRE_FLAT ||
+                stay.rentalType === RentalType.PRIMARY_ROOM)
+                ? `${baseUrl}/api/v1/tenant/stays/${stay.id}/contract`
+                : null,
+    }));
+
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
         message: "Stays retrieved successfully",
-        data: result.stays,
+        data: stays,
     });
+};
+
+const downloadStayContract = async (req: Request, res: Response) => {
+    const result = await TenantService.getStayContract(
+        req.params.stayId as string,
+        req.user!.userId,
+        req.user!.role,
+    );
+
+    res.setHeader(
+        "Content-Disposition",
+        `attachment; filename="${result.filename}"`,
+    );
+    res.setHeader("Content-Type", "application/pdf");
+
+    res.send(result.buffer);
 };
 
 export const TenantController = {
@@ -214,4 +246,5 @@ export const TenantController = {
     getInvoicesByStay,
     getInvoiceById,
     getStays,
+    downloadStayContract,
 };

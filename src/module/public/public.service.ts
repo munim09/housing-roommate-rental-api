@@ -397,6 +397,9 @@ const getAvailableAdvertisements = async (
         take: Number(limit),
     });
 
+    console.log("total", total);
+    console.log("total", advertisements);
+
     return {
         advertisements,
         meta: {
