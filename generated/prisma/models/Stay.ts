@@ -288,6 +288,7 @@ export type StayWhereInput = {
   advertisement?: Prisma.AdvertisementListRelationFilter
   invoices?: Prisma.InvoiceListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
+  maintenanceRequests?: Prisma.MaintenanceListRelationFilter
 }
 
 export type StayOrderByWithRelationInput = {
@@ -312,6 +313,7 @@ export type StayOrderByWithRelationInput = {
   advertisement?: Prisma.AdvertisementOrderByRelationAggregateInput
   invoices?: Prisma.InvoiceOrderByRelationAggregateInput
   payments?: Prisma.PaymentOrderByRelationAggregateInput
+  maintenanceRequests?: Prisma.MaintenanceOrderByRelationAggregateInput
 }
 
 export type StayWhereUniqueInput = Prisma.AtLeast<{
@@ -339,6 +341,7 @@ export type StayWhereUniqueInput = Prisma.AtLeast<{
   advertisement?: Prisma.AdvertisementListRelationFilter
   invoices?: Prisma.InvoiceListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
+  maintenanceRequests?: Prisma.MaintenanceListRelationFilter
 }, "id" | "applicationId">
 
 export type StayOrderByWithAggregationInput = {
@@ -398,6 +401,7 @@ export type StayCreateInput = {
   advertisement?: Prisma.AdvertisementCreateNestedManyWithoutStayInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutStayInput
   payments?: Prisma.PaymentCreateNestedManyWithoutStayInput
+  maintenanceRequests?: Prisma.MaintenanceCreateNestedManyWithoutStayInput
 }
 
 export type StayUncheckedCreateInput = {
@@ -417,6 +421,7 @@ export type StayUncheckedCreateInput = {
   advertisement?: Prisma.AdvertisementUncheckedCreateNestedManyWithoutStayInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutStayInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutStayInput
+  maintenanceRequests?: Prisma.MaintenanceUncheckedCreateNestedManyWithoutStayInput
 }
 
 export type StayUpdateInput = {
@@ -436,6 +441,7 @@ export type StayUpdateInput = {
   advertisement?: Prisma.AdvertisementUpdateManyWithoutStayNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutStayNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutStayNestedInput
+  maintenanceRequests?: Prisma.MaintenanceUpdateManyWithoutStayNestedInput
 }
 
 export type StayUncheckedUpdateInput = {
@@ -455,6 +461,7 @@ export type StayUncheckedUpdateInput = {
   advertisement?: Prisma.AdvertisementUncheckedUpdateManyWithoutStayNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutStayNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutStayNestedInput
+  maintenanceRequests?: Prisma.MaintenanceUncheckedUpdateManyWithoutStayNestedInput
 }
 
 export type StayCreateManyInput = {
@@ -680,6 +687,20 @@ export type StayUpdateOneRequiredWithoutInvoicesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.StayUpdateToOneWithWhereWithoutInvoicesInput, Prisma.StayUpdateWithoutInvoicesInput>, Prisma.StayUncheckedUpdateWithoutInvoicesInput>
 }
 
+export type StayCreateNestedOneWithoutMaintenanceRequestsInput = {
+  create?: Prisma.XOR<Prisma.StayCreateWithoutMaintenanceRequestsInput, Prisma.StayUncheckedCreateWithoutMaintenanceRequestsInput>
+  connectOrCreate?: Prisma.StayCreateOrConnectWithoutMaintenanceRequestsInput
+  connect?: Prisma.StayWhereUniqueInput
+}
+
+export type StayUpdateOneRequiredWithoutMaintenanceRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.StayCreateWithoutMaintenanceRequestsInput, Prisma.StayUncheckedCreateWithoutMaintenanceRequestsInput>
+  connectOrCreate?: Prisma.StayCreateOrConnectWithoutMaintenanceRequestsInput
+  upsert?: Prisma.StayUpsertWithoutMaintenanceRequestsInput
+  connect?: Prisma.StayWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StayUpdateToOneWithWhereWithoutMaintenanceRequestsInput, Prisma.StayUpdateWithoutMaintenanceRequestsInput>, Prisma.StayUncheckedUpdateWithoutMaintenanceRequestsInput>
+}
+
 export type StayCreateNestedOneWithoutPaymentsInput = {
   create?: Prisma.XOR<Prisma.StayCreateWithoutPaymentsInput, Prisma.StayUncheckedCreateWithoutPaymentsInput>
   connectOrCreate?: Prisma.StayCreateOrConnectWithoutPaymentsInput
@@ -842,6 +863,7 @@ export type StayCreateWithoutAdvertisementInput = {
   room?: Prisma.RoomCreateNestedOneWithoutStaysInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutStayInput
   payments?: Prisma.PaymentCreateNestedManyWithoutStayInput
+  maintenanceRequests?: Prisma.MaintenanceCreateNestedManyWithoutStayInput
 }
 
 export type StayUncheckedCreateWithoutAdvertisementInput = {
@@ -860,6 +882,7 @@ export type StayUncheckedCreateWithoutAdvertisementInput = {
   updatedAt?: Date | string
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutStayInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutStayInput
+  maintenanceRequests?: Prisma.MaintenanceUncheckedCreateNestedManyWithoutStayInput
 }
 
 export type StayCreateOrConnectWithoutAdvertisementInput = {
@@ -894,6 +917,7 @@ export type StayUpdateWithoutAdvertisementInput = {
   room?: Prisma.RoomUpdateOneWithoutStaysNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutStayNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutStayNestedInput
+  maintenanceRequests?: Prisma.MaintenanceUpdateManyWithoutStayNestedInput
 }
 
 export type StayUncheckedUpdateWithoutAdvertisementInput = {
@@ -912,6 +936,7 @@ export type StayUncheckedUpdateWithoutAdvertisementInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutStayNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutStayNestedInput
+  maintenanceRequests?: Prisma.MaintenanceUncheckedUpdateManyWithoutStayNestedInput
 }
 
 export type StayCreateWithoutApplicationInput = {
@@ -930,6 +955,7 @@ export type StayCreateWithoutApplicationInput = {
   advertisement?: Prisma.AdvertisementCreateNestedManyWithoutStayInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutStayInput
   payments?: Prisma.PaymentCreateNestedManyWithoutStayInput
+  maintenanceRequests?: Prisma.MaintenanceCreateNestedManyWithoutStayInput
 }
 
 export type StayUncheckedCreateWithoutApplicationInput = {
@@ -948,6 +974,7 @@ export type StayUncheckedCreateWithoutApplicationInput = {
   advertisement?: Prisma.AdvertisementUncheckedCreateNestedManyWithoutStayInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutStayInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutStayInput
+  maintenanceRequests?: Prisma.MaintenanceUncheckedCreateNestedManyWithoutStayInput
 }
 
 export type StayCreateOrConnectWithoutApplicationInput = {
@@ -982,6 +1009,7 @@ export type StayUpdateWithoutApplicationInput = {
   advertisement?: Prisma.AdvertisementUpdateManyWithoutStayNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutStayNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutStayNestedInput
+  maintenanceRequests?: Prisma.MaintenanceUpdateManyWithoutStayNestedInput
 }
 
 export type StayUncheckedUpdateWithoutApplicationInput = {
@@ -1000,6 +1028,7 @@ export type StayUncheckedUpdateWithoutApplicationInput = {
   advertisement?: Prisma.AdvertisementUncheckedUpdateManyWithoutStayNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutStayNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutStayNestedInput
+  maintenanceRequests?: Prisma.MaintenanceUncheckedUpdateManyWithoutStayNestedInput
 }
 
 export type StayCreateWithoutFlatInput = {
@@ -1018,6 +1047,7 @@ export type StayCreateWithoutFlatInput = {
   advertisement?: Prisma.AdvertisementCreateNestedManyWithoutStayInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutStayInput
   payments?: Prisma.PaymentCreateNestedManyWithoutStayInput
+  maintenanceRequests?: Prisma.MaintenanceCreateNestedManyWithoutStayInput
 }
 
 export type StayUncheckedCreateWithoutFlatInput = {
@@ -1036,6 +1066,7 @@ export type StayUncheckedCreateWithoutFlatInput = {
   advertisement?: Prisma.AdvertisementUncheckedCreateNestedManyWithoutStayInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutStayInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutStayInput
+  maintenanceRequests?: Prisma.MaintenanceUncheckedCreateNestedManyWithoutStayInput
 }
 
 export type StayCreateOrConnectWithoutFlatInput = {
@@ -1099,6 +1130,7 @@ export type StayCreateWithoutInvoicesInput = {
   room?: Prisma.RoomCreateNestedOneWithoutStaysInput
   advertisement?: Prisma.AdvertisementCreateNestedManyWithoutStayInput
   payments?: Prisma.PaymentCreateNestedManyWithoutStayInput
+  maintenanceRequests?: Prisma.MaintenanceCreateNestedManyWithoutStayInput
 }
 
 export type StayUncheckedCreateWithoutInvoicesInput = {
@@ -1117,6 +1149,7 @@ export type StayUncheckedCreateWithoutInvoicesInput = {
   updatedAt?: Date | string
   advertisement?: Prisma.AdvertisementUncheckedCreateNestedManyWithoutStayInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutStayInput
+  maintenanceRequests?: Prisma.MaintenanceUncheckedCreateNestedManyWithoutStayInput
 }
 
 export type StayCreateOrConnectWithoutInvoicesInput = {
@@ -1151,6 +1184,7 @@ export type StayUpdateWithoutInvoicesInput = {
   room?: Prisma.RoomUpdateOneWithoutStaysNestedInput
   advertisement?: Prisma.AdvertisementUpdateManyWithoutStayNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutStayNestedInput
+  maintenanceRequests?: Prisma.MaintenanceUpdateManyWithoutStayNestedInput
 }
 
 export type StayUncheckedUpdateWithoutInvoicesInput = {
@@ -1168,6 +1202,99 @@ export type StayUncheckedUpdateWithoutInvoicesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   advertisement?: Prisma.AdvertisementUncheckedUpdateManyWithoutStayNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutStayNestedInput
+  maintenanceRequests?: Prisma.MaintenanceUncheckedUpdateManyWithoutStayNestedInput
+}
+
+export type StayCreateWithoutMaintenanceRequestsInput = {
+  id?: string
+  rentalType?: $Enums.RentalType
+  status?: $Enums.StayStatus
+  startDate: Date | string
+  endDate: Date | string
+  monthlyRent: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  application: Prisma.ApplicationCreateNestedOneWithoutStayInput
+  occupant: Prisma.UserCreateNestedOneWithoutStaysInput
+  property: Prisma.PropertyCreateNestedOneWithoutStaysInput
+  flat: Prisma.FlatCreateNestedOneWithoutStaysInput
+  room?: Prisma.RoomCreateNestedOneWithoutStaysInput
+  advertisement?: Prisma.AdvertisementCreateNestedManyWithoutStayInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutStayInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutStayInput
+}
+
+export type StayUncheckedCreateWithoutMaintenanceRequestsInput = {
+  id?: string
+  applicationId: string
+  occupantId: string
+  propertyId: string
+  flatId: string
+  roomId?: string | null
+  rentalType?: $Enums.RentalType
+  status?: $Enums.StayStatus
+  startDate: Date | string
+  endDate: Date | string
+  monthlyRent: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  advertisement?: Prisma.AdvertisementUncheckedCreateNestedManyWithoutStayInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutStayInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutStayInput
+}
+
+export type StayCreateOrConnectWithoutMaintenanceRequestsInput = {
+  where: Prisma.StayWhereUniqueInput
+  create: Prisma.XOR<Prisma.StayCreateWithoutMaintenanceRequestsInput, Prisma.StayUncheckedCreateWithoutMaintenanceRequestsInput>
+}
+
+export type StayUpsertWithoutMaintenanceRequestsInput = {
+  update: Prisma.XOR<Prisma.StayUpdateWithoutMaintenanceRequestsInput, Prisma.StayUncheckedUpdateWithoutMaintenanceRequestsInput>
+  create: Prisma.XOR<Prisma.StayCreateWithoutMaintenanceRequestsInput, Prisma.StayUncheckedCreateWithoutMaintenanceRequestsInput>
+  where?: Prisma.StayWhereInput
+}
+
+export type StayUpdateToOneWithWhereWithoutMaintenanceRequestsInput = {
+  where?: Prisma.StayWhereInput
+  data: Prisma.XOR<Prisma.StayUpdateWithoutMaintenanceRequestsInput, Prisma.StayUncheckedUpdateWithoutMaintenanceRequestsInput>
+}
+
+export type StayUpdateWithoutMaintenanceRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
+  status?: Prisma.EnumStayStatusFieldUpdateOperationsInput | $Enums.StayStatus
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  monthlyRent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  application?: Prisma.ApplicationUpdateOneRequiredWithoutStayNestedInput
+  occupant?: Prisma.UserUpdateOneRequiredWithoutStaysNestedInput
+  property?: Prisma.PropertyUpdateOneRequiredWithoutStaysNestedInput
+  flat?: Prisma.FlatUpdateOneRequiredWithoutStaysNestedInput
+  room?: Prisma.RoomUpdateOneWithoutStaysNestedInput
+  advertisement?: Prisma.AdvertisementUpdateManyWithoutStayNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutStayNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutStayNestedInput
+}
+
+export type StayUncheckedUpdateWithoutMaintenanceRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  applicationId?: Prisma.StringFieldUpdateOperationsInput | string
+  occupantId?: Prisma.StringFieldUpdateOperationsInput | string
+  propertyId?: Prisma.StringFieldUpdateOperationsInput | string
+  flatId?: Prisma.StringFieldUpdateOperationsInput | string
+  roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rentalType?: Prisma.EnumRentalTypeFieldUpdateOperationsInput | $Enums.RentalType
+  status?: Prisma.EnumStayStatusFieldUpdateOperationsInput | $Enums.StayStatus
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  monthlyRent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  advertisement?: Prisma.AdvertisementUncheckedUpdateManyWithoutStayNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutStayNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutStayNestedInput
 }
 
@@ -1187,6 +1314,7 @@ export type StayCreateWithoutPaymentsInput = {
   room?: Prisma.RoomCreateNestedOneWithoutStaysInput
   advertisement?: Prisma.AdvertisementCreateNestedManyWithoutStayInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutStayInput
+  maintenanceRequests?: Prisma.MaintenanceCreateNestedManyWithoutStayInput
 }
 
 export type StayUncheckedCreateWithoutPaymentsInput = {
@@ -1205,6 +1333,7 @@ export type StayUncheckedCreateWithoutPaymentsInput = {
   updatedAt?: Date | string
   advertisement?: Prisma.AdvertisementUncheckedCreateNestedManyWithoutStayInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutStayInput
+  maintenanceRequests?: Prisma.MaintenanceUncheckedCreateNestedManyWithoutStayInput
 }
 
 export type StayCreateOrConnectWithoutPaymentsInput = {
@@ -1239,6 +1368,7 @@ export type StayUpdateWithoutPaymentsInput = {
   room?: Prisma.RoomUpdateOneWithoutStaysNestedInput
   advertisement?: Prisma.AdvertisementUpdateManyWithoutStayNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutStayNestedInput
+  maintenanceRequests?: Prisma.MaintenanceUpdateManyWithoutStayNestedInput
 }
 
 export type StayUncheckedUpdateWithoutPaymentsInput = {
@@ -1257,6 +1387,7 @@ export type StayUncheckedUpdateWithoutPaymentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   advertisement?: Prisma.AdvertisementUncheckedUpdateManyWithoutStayNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutStayNestedInput
+  maintenanceRequests?: Prisma.MaintenanceUncheckedUpdateManyWithoutStayNestedInput
 }
 
 export type StayCreateWithoutPropertyInput = {
@@ -1275,6 +1406,7 @@ export type StayCreateWithoutPropertyInput = {
   advertisement?: Prisma.AdvertisementCreateNestedManyWithoutStayInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutStayInput
   payments?: Prisma.PaymentCreateNestedManyWithoutStayInput
+  maintenanceRequests?: Prisma.MaintenanceCreateNestedManyWithoutStayInput
 }
 
 export type StayUncheckedCreateWithoutPropertyInput = {
@@ -1293,6 +1425,7 @@ export type StayUncheckedCreateWithoutPropertyInput = {
   advertisement?: Prisma.AdvertisementUncheckedCreateNestedManyWithoutStayInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutStayInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutStayInput
+  maintenanceRequests?: Prisma.MaintenanceUncheckedCreateNestedManyWithoutStayInput
 }
 
 export type StayCreateOrConnectWithoutPropertyInput = {
@@ -1337,6 +1470,7 @@ export type StayCreateWithoutRoomInput = {
   advertisement?: Prisma.AdvertisementCreateNestedManyWithoutStayInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutStayInput
   payments?: Prisma.PaymentCreateNestedManyWithoutStayInput
+  maintenanceRequests?: Prisma.MaintenanceCreateNestedManyWithoutStayInput
 }
 
 export type StayUncheckedCreateWithoutRoomInput = {
@@ -1355,6 +1489,7 @@ export type StayUncheckedCreateWithoutRoomInput = {
   advertisement?: Prisma.AdvertisementUncheckedCreateNestedManyWithoutStayInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutStayInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutStayInput
+  maintenanceRequests?: Prisma.MaintenanceUncheckedCreateNestedManyWithoutStayInput
 }
 
 export type StayCreateOrConnectWithoutRoomInput = {
@@ -1399,6 +1534,7 @@ export type StayCreateWithoutOccupantInput = {
   advertisement?: Prisma.AdvertisementCreateNestedManyWithoutStayInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutStayInput
   payments?: Prisma.PaymentCreateNestedManyWithoutStayInput
+  maintenanceRequests?: Prisma.MaintenanceCreateNestedManyWithoutStayInput
 }
 
 export type StayUncheckedCreateWithoutOccupantInput = {
@@ -1417,6 +1553,7 @@ export type StayUncheckedCreateWithoutOccupantInput = {
   advertisement?: Prisma.AdvertisementUncheckedCreateNestedManyWithoutStayInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutStayInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutStayInput
+  maintenanceRequests?: Prisma.MaintenanceUncheckedCreateNestedManyWithoutStayInput
 }
 
 export type StayCreateOrConnectWithoutOccupantInput = {
@@ -1476,6 +1613,7 @@ export type StayUpdateWithoutFlatInput = {
   advertisement?: Prisma.AdvertisementUpdateManyWithoutStayNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutStayNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutStayNestedInput
+  maintenanceRequests?: Prisma.MaintenanceUpdateManyWithoutStayNestedInput
 }
 
 export type StayUncheckedUpdateWithoutFlatInput = {
@@ -1494,6 +1632,7 @@ export type StayUncheckedUpdateWithoutFlatInput = {
   advertisement?: Prisma.AdvertisementUncheckedUpdateManyWithoutStayNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutStayNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutStayNestedInput
+  maintenanceRequests?: Prisma.MaintenanceUncheckedUpdateManyWithoutStayNestedInput
 }
 
 export type StayUncheckedUpdateManyWithoutFlatInput = {
@@ -1542,6 +1681,7 @@ export type StayUpdateWithoutPropertyInput = {
   advertisement?: Prisma.AdvertisementUpdateManyWithoutStayNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutStayNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutStayNestedInput
+  maintenanceRequests?: Prisma.MaintenanceUpdateManyWithoutStayNestedInput
 }
 
 export type StayUncheckedUpdateWithoutPropertyInput = {
@@ -1560,6 +1700,7 @@ export type StayUncheckedUpdateWithoutPropertyInput = {
   advertisement?: Prisma.AdvertisementUncheckedUpdateManyWithoutStayNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutStayNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutStayNestedInput
+  maintenanceRequests?: Prisma.MaintenanceUncheckedUpdateManyWithoutStayNestedInput
 }
 
 export type StayUncheckedUpdateManyWithoutPropertyInput = {
@@ -1608,6 +1749,7 @@ export type StayUpdateWithoutRoomInput = {
   advertisement?: Prisma.AdvertisementUpdateManyWithoutStayNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutStayNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutStayNestedInput
+  maintenanceRequests?: Prisma.MaintenanceUpdateManyWithoutStayNestedInput
 }
 
 export type StayUncheckedUpdateWithoutRoomInput = {
@@ -1626,6 +1768,7 @@ export type StayUncheckedUpdateWithoutRoomInput = {
   advertisement?: Prisma.AdvertisementUncheckedUpdateManyWithoutStayNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutStayNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutStayNestedInput
+  maintenanceRequests?: Prisma.MaintenanceUncheckedUpdateManyWithoutStayNestedInput
 }
 
 export type StayUncheckedUpdateManyWithoutRoomInput = {
@@ -1674,6 +1817,7 @@ export type StayUpdateWithoutOccupantInput = {
   advertisement?: Prisma.AdvertisementUpdateManyWithoutStayNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutStayNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutStayNestedInput
+  maintenanceRequests?: Prisma.MaintenanceUpdateManyWithoutStayNestedInput
 }
 
 export type StayUncheckedUpdateWithoutOccupantInput = {
@@ -1692,6 +1836,7 @@ export type StayUncheckedUpdateWithoutOccupantInput = {
   advertisement?: Prisma.AdvertisementUncheckedUpdateManyWithoutStayNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutStayNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutStayNestedInput
+  maintenanceRequests?: Prisma.MaintenanceUncheckedUpdateManyWithoutStayNestedInput
 }
 
 export type StayUncheckedUpdateManyWithoutOccupantInput = {
@@ -1718,12 +1863,14 @@ export type StayCountOutputType = {
   advertisement: number
   invoices: number
   payments: number
+  maintenanceRequests: number
 }
 
 export type StayCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   advertisement?: boolean | StayCountOutputTypeCountAdvertisementArgs
   invoices?: boolean | StayCountOutputTypeCountInvoicesArgs
   payments?: boolean | StayCountOutputTypeCountPaymentsArgs
+  maintenanceRequests?: boolean | StayCountOutputTypeCountMaintenanceRequestsArgs
 }
 
 /**
@@ -1757,6 +1904,13 @@ export type StayCountOutputTypeCountPaymentsArgs<ExtArgs extends runtime.Types.E
   where?: Prisma.PaymentWhereInput
 }
 
+/**
+ * StayCountOutputType without action
+ */
+export type StayCountOutputTypeCountMaintenanceRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MaintenanceWhereInput
+}
+
 
 export type StaySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1780,6 +1934,7 @@ export type StaySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   advertisement?: boolean | Prisma.Stay$advertisementArgs<ExtArgs>
   invoices?: boolean | Prisma.Stay$invoicesArgs<ExtArgs>
   payments?: boolean | Prisma.Stay$paymentsArgs<ExtArgs>
+  maintenanceRequests?: boolean | Prisma.Stay$maintenanceRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.StayCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["stay"]>
 
@@ -1851,6 +2006,7 @@ export type StayInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   advertisement?: boolean | Prisma.Stay$advertisementArgs<ExtArgs>
   invoices?: boolean | Prisma.Stay$invoicesArgs<ExtArgs>
   payments?: boolean | Prisma.Stay$paymentsArgs<ExtArgs>
+  maintenanceRequests?: boolean | Prisma.Stay$maintenanceRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.StayCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type StayIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1879,6 +2035,7 @@ export type $StayPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     advertisement: Prisma.$AdvertisementPayload<ExtArgs>[]
     invoices: Prisma.$InvoicePayload<ExtArgs>[]
     payments: Prisma.$PaymentPayload<ExtArgs>[]
+    maintenanceRequests: Prisma.$MaintenancePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2296,6 +2453,7 @@ export interface Prisma__StayClient<T, Null = never, ExtArgs extends runtime.Typ
   advertisement<T extends Prisma.Stay$advertisementArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Stay$advertisementArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdvertisementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   invoices<T extends Prisma.Stay$invoicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Stay$invoicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payments<T extends Prisma.Stay$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Stay$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  maintenanceRequests<T extends Prisma.Stay$maintenanceRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Stay$maintenanceRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MaintenancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2827,6 +2985,30 @@ export type Stay$paymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.PaymentScalarFieldEnum | Prisma.PaymentScalarFieldEnum[]
+}
+
+/**
+ * Stay.maintenanceRequests
+ */
+export type Stay$maintenanceRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Maintenance
+   */
+  select?: Prisma.MaintenanceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Maintenance
+   */
+  omit?: Prisma.MaintenanceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MaintenanceInclude<ExtArgs> | null
+  where?: Prisma.MaintenanceWhereInput
+  orderBy?: Prisma.MaintenanceOrderByWithRelationInput | Prisma.MaintenanceOrderByWithRelationInput[]
+  cursor?: Prisma.MaintenanceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MaintenanceScalarFieldEnum | Prisma.MaintenanceScalarFieldEnum[]
 }
 
 /**

@@ -15,7 +15,7 @@ redis.on("error", (err) => {
     console.error("Redis connection error:", err);
 });
 
-export default redis;
+// export default redis;
 
 // export const redisClient = createClient({
 // 	username: config.redis_user,

@@ -102,6 +102,28 @@ const getStayInvoicesValidation = z.object({
         }),
 });
 
+const createMaintenanceRequestValidation = z.object({
+    stayId: z.string().uuid("Invalid stay id"),
+    issue: z
+        .string()
+        .min(3, "Issue must be at least 3 characters")
+        .max(500, "Issue must be at most 500 characters"),
+    description: z
+        .string()
+        .max(1000, "Description must be at most 1000 characters")
+        .optional(),
+    priority: z.enum(["LOW", "MEDIUM", "HIGH", "URGENT"]).optional(),
+});
+
+const getMaintenanceRequestsValidation = z.object({
+    status: z
+        .enum(["OPEN", "IN_PROGRESS", "RESOLVED", "CLOSED", "CANCELLED"])
+        .optional(),
+    priority: z.enum(["LOW", "MEDIUM", "HIGH", "URGENT"]).optional(),
+    page: z.coerce.number().int().min(1).default(1),
+    limit: z.coerce.number().int().min(1).max(100).default(10),
+});
+
 export const TenantValidation = {
     createViewingRequest: createViewingRequestValidation,
     getViewingRequests: getViewingRequestsValidation,
@@ -112,4 +134,6 @@ export const TenantValidation = {
     updateApplication: updateApplicationValidation,
     getInvoices: getInvoicesValidation,
     getStayInvoices: getStayInvoicesValidation,
+    createMaintenanceRequest: createMaintenanceRequestValidation,
+    getMaintenanceRequests: getMaintenanceRequestsValidation,
 };

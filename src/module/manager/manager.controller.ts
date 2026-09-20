@@ -72,10 +72,44 @@ const updateUtilityInvoice = async (req: Request, res: Response) => {
     });
 };
 
+const getMaintenanceRequests = async (req: Request, res: Response) => {
+    const result = await ManagerService.getMaintenanceRequests(
+        req.user!.userId,
+        req.user!.role,
+        req.query as any,
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Maintenance requests retrieved successfully",
+        data: result.maintenanceRequests,
+        // meta: result.meta,
+    });
+};
+
+const updateMaintenanceRequest = async (req: Request, res: Response) => {
+    const result = await ManagerService.updateMaintenanceRequest(
+        req.user!.userId,
+        req.user!.role,
+        req.params.maintenanceId as string,
+        req.body,
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Maintenance request updated successfully",
+        data: result,
+    });
+};
+
 export const ManagerController = {
     getMyFlats,
     getMyAdvertisements,
     getApplications,
     createUtilityInvoice,
     updateUtilityInvoice,
+    getMaintenanceRequests,
+    updateMaintenanceRequest,
 };

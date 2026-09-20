@@ -21,3 +21,17 @@ export interface IUpdateUtilityInvoice {
     description?: string;
     status?: "PENDING" | "PAID" | "CANCELLED";
 }
+
+export interface IManagerMaintenanceRequestQuery {
+    status?: "OPEN" | "IN_PROGRESS" | "RESOLVED" | "CLOSED" | "CANCELLED";
+    priority?: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+    stayId?: string;
+    page?: number;
+    limit?: number;
+}
+
+export interface IUpdateMaintenanceRequest {
+    status?: "OPEN" | "IN_PROGRESS" | "RESOLVED" | "CLOSED" | "CANCELLED";
+    scheduledFor?: Date;
+    resolvedAt?: Date;
+}

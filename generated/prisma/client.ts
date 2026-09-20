@@ -77,6 +77,11 @@ export type Flat = Prisma.FlatModel
  */
 export type Invoice = Prisma.InvoiceModel
 /**
+ * Model Maintenance
+ * 
+ */
+export type Maintenance = Prisma.MaintenanceModel
+/**
  * Model ManagerAssignment
  * 
  */

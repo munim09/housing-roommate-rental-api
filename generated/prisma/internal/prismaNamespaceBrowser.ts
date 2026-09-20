@@ -58,6 +58,7 @@ export const ModelName = {
   City: 'City',
   Flat: 'Flat',
   Invoice: 'Invoice',
+  Maintenance: 'Maintenance',
   ManagerAssignment: 'ManagerAssignment',
   ManagerProfile: 'ManagerProfile',
   OwnerProfile: 'OwnerProfile',
@@ -197,6 +198,24 @@ export const InvoiceScalarFieldEnum = {
 } as const
 
 export type InvoiceScalarFieldEnum = (typeof InvoiceScalarFieldEnum)[keyof typeof InvoiceScalarFieldEnum]
+
+
+export const MaintenanceScalarFieldEnum = {
+  id: 'id',
+  stayId: 'stayId',
+  issue: 'issue',
+  description: 'description',
+  images: 'images',
+  status: 'status',
+  priority: 'priority',
+  reportedById: 'reportedById',
+  scheduledFor: 'scheduledFor',
+  resolvedAt: 'resolvedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MaintenanceScalarFieldEnum = (typeof MaintenanceScalarFieldEnum)[keyof typeof MaintenanceScalarFieldEnum]
 
 
 export const ManagerAssignmentScalarFieldEnum = {

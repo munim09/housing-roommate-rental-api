@@ -1,9 +1,6 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
-import {
-    RentalType,
-    StayStatus,
-} from "../../../generated/prisma/client";
+import { RentalType, StayStatus } from "../../../generated/prisma/client";
 import { sendResponse } from "../../utils/sendResponse";
 import { TenantService } from "./tenant.service";
 
@@ -232,6 +229,36 @@ const downloadStayContract = async (req: Request, res: Response) => {
     res.send(result.buffer);
 };
 
+const createMaintenanceRequest = async (req: Request, res: Response) => {
+    const result = await TenantService.createMaintenanceRequest(
+        req.user!.userId,
+        req.body,
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.CREATED,
+        success: true,
+        message: "Maintenance request created successfully",
+        data: result,
+    });
+};
+
+const getMaintenanceRequests = async (req: Request, res: Response) => {
+    const result = await TenantService.getMaintenanceRequests(
+        req.user!.userId,
+        req.user!.role,
+        req.query as any,
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Maintenance requests retrieved successfully",
+        data: result.maintenanceRequests,
+        // meta: result.meta,
+    });
+};
+
 export const TenantController = {
     createViewingRequest,
     getViewingRequests,
@@ -247,4 +274,6 @@ export const TenantController = {
     getInvoiceById,
     getStays,
     downloadStayContract,
+    createMaintenanceRequest,
+    getMaintenanceRequests,
 };

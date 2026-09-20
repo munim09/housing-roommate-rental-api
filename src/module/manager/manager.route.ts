@@ -32,6 +32,20 @@ router.patch(
     catchAsync(ManagerController.updateUtilityInvoice),
 );
 
+router.get(
+    "/maintenance-requests",
+    auth(Role.OWNER, Role.MANAGER),
+    validateRequest(ManagerValidation.getMaintenanceRequests),
+    catchAsync(ManagerController.getMaintenanceRequests),
+);
+
+router.patch(
+    "/maintenance-requests/:maintenanceId",
+    auth(Role.OWNER, Role.MANAGER),
+    validateRequestNew(ManagerValidation.updateMaintenanceRequest),
+    catchAsync(ManagerController.updateMaintenanceRequest),
+);
+
 router.use(auth(Role.MANAGER));
 
 router.get("/flats", catchAsync(ManagerController.getMyFlats));

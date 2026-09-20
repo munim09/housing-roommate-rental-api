@@ -104,4 +104,17 @@ router.get(
     catchAsync(TenantController.downloadStayContract),
 );
 
+router.post(
+    "/maintenance-requests",
+    auth(Role.TENANT),
+    validateRequest(TenantValidation.createMaintenanceRequest),
+    catchAsync(TenantController.createMaintenanceRequest),
+);
+
+router.get(
+    "/maintenance-requests",
+    auth(Role.TENANT, Role.OWNER, Role.MANAGER),
+    catchAsync(TenantController.getMaintenanceRequests),
+);
+
 export const TenantRoutes = router;

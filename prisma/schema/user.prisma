@@ -66,6 +66,10 @@ model User {
 
   stays Stay[] @relation("StayOccupant")
 
+  // Maintenance
+  reportedMaintenanceRequests Maintenance[] @relation("MaintenanceReporter")
+
+
   // ----------------------------------------------------------
   // Invoices
   // ----------------------------------------------------------

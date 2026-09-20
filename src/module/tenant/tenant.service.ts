@@ -5,6 +5,7 @@ import {
     BillStatus,
     FlatStatus,
     InvoiceType,
+    MaintenancePriority,
     Prisma,
     RentalType,
     Role,
@@ -17,8 +18,10 @@ import { generateContractPdf } from "../../utils/pdfGenerator";
 import {
     IApplicationQuery,
     ICreateApplication,
+    ICreateMaintenanceRequest,
     ICreateViewingRequest,
     IInvoiceQuery,
+    IMaintenanceRequestQuery,
     IStayInvoiceQuery,
     IUpdateViewingRequest,
     IViewingRequestQuery,
@@ -798,6 +801,11 @@ const getApplications = async (userId: string, query: IApplicationQuery) => {
                     status: true,
                     flatId: true,
                     roomId: true,
+                    flat: {
+                        select: {
+                            rooms: true,
+                        },
+                    },
                     createdBy: {
                         select: {
                             id: true,
@@ -923,6 +931,11 @@ const getApplicationById = async (
                     status: true,
                     flatId: true,
                     roomId: true,
+                    flat: {
+                        select: {
+                            rooms: true,
+                        },
+                    },
                     createdBy: {
                         select: {
                             id: true,
@@ -1831,6 +1844,193 @@ const getStayContract = async (stayId: string, userId: string, role: Role) => {
     };
 };
 
+const createMaintenanceRequest = async (
+    tenantId: string,
+    payload: ICreateMaintenanceRequest,
+) => {
+    const stay = await prisma.stay.findFirst({
+        where: {
+            id: payload.stayId,
+            occupantId: tenantId,
+            status: StayStatus.CONFIRMED,
+            rentalType: {
+                in: [RentalType.PRIMARY_ENTIRE_FLAT, RentalType.PRIMARY_ROOM],
+            },
+            startDate: { lte: new Date() },
+            endDate: { gte: new Date() },
+        },
+        select: { id: true, status: true },
+    });
+
+    if (!stay) {
+        throw new AppError(
+            httpStatus.NOT_FOUND,
+            "Stay not found or maintenance is not allowed for this stay",
+        );
+    }
+
+    if (stay.status !== StayStatus.CONFIRMED) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Maintenance requests can only be created for a confirmed stay",
+        );
+    }
+
+    return prisma.maintenance.create({
+        data: {
+            stayId: payload.stayId,
+            reportedById: tenantId,
+            issue: payload.issue,
+            description: payload.description || null,
+            priority: payload.priority ?? MaintenancePriority.MEDIUM,
+        },
+        select: {
+            id: true,
+            stayId: true,
+            issue: true,
+            description: true,
+            status: true,
+            priority: true,
+            reportedById: true,
+            createdAt: true,
+            updatedAt: true,
+            stay: {
+                select: {
+                    id: true,
+                    status: true,
+                    rentalType: true,
+                    property: {
+                        select: { id: true, name: true, address: true },
+                    },
+                    flat: {
+                        select: { id: true, flatNumber: true },
+                    },
+                    room: {
+                        select: { id: true, roomNumber: true },
+                    },
+                },
+            },
+        },
+    });
+};
+
+const applyMaintenanceAccessScope = (
+    where: Prisma.MaintenanceWhereInput,
+    userId: string,
+    role: Role,
+) => {
+    if (role === Role.TENANT) {
+        where.reportedById = userId;
+    } else if (role === Role.OWNER) {
+        where.stay = {
+            rentalType: {
+                in: [RentalType.PRIMARY_ENTIRE_FLAT, RentalType.PRIMARY_ROOM],
+            },
+            flat: {
+                ownerships: {
+                    some: { ownerId: userId, status: "ACTIVE" },
+                },
+            },
+        };
+    } else {
+        where.stay = {
+            rentalType: {
+                in: [RentalType.PRIMARY_ENTIRE_FLAT, RentalType.PRIMARY_ROOM],
+            },
+            flat: {
+                managerAssignments: {
+                    some: { managerId: userId, status: "ACTIVE" },
+                },
+            },
+        };
+    }
+};
+
+const getMaintenanceRequests = async (
+    userId: string,
+    role: Role,
+    query: IMaintenanceRequestQuery,
+) => {
+    // const { status, priority, page = 1, limit = 10 } = query;
+
+    const where: Prisma.MaintenanceWhereInput = {};
+
+    // if (status) {
+    //     where.status = status;
+    // }
+
+    // if (priority) {
+    //     where.priority = priority;
+    // }
+
+    applyMaintenanceAccessScope(where, userId, role);
+
+    const total = await prisma.maintenance.count({ where });
+
+    const maintenanceRequests = await prisma.maintenance.findMany({
+        where,
+        select: {
+            id: true,
+            stayId: true,
+            issue: true,
+            description: true,
+            images: true,
+            status: true,
+            priority: true,
+            reportedById: true,
+            scheduledFor: true,
+            resolvedAt: true,
+            createdAt: true,
+            updatedAt: true,
+            stay: {
+                select: {
+                    id: true,
+                    status: true,
+                    rentalType: true,
+                    property: {
+                        select: { id: true, name: true, address: true },
+                    },
+                    flat: {
+                        select: { id: true, flatNumber: true },
+                    },
+                    room: {
+                        select: { id: true, roomNumber: true },
+                    },
+                },
+            },
+            reportedBy: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    phone: true,
+                },
+            },
+            // assignedTo: {
+            //     select: {
+            //         id: true,
+            //         name: true,
+            //         email: true,
+            //         phone: true,
+            //     },
+            // },
+        },
+        orderBy: { createdAt: "desc" },
+        // skip: (Number(page) - 1) * Number(limit),
+        // take: Number(limit),
+    });
+
+    return {
+        maintenanceRequests,
+        // meta: {
+        //     page,
+        //     limit,
+        //     total,
+        //     totalPages: Math.ceil(Number(total) / Number(limit)),
+        // },
+    };
+};
+
 export const TenantService = {
     createViewingRequest,
     getViewingRequests,
@@ -1846,4 +2046,6 @@ export const TenantService = {
     getInvoiceById,
     getStays,
     getStayContract,
+    createMaintenanceRequest,
+    getMaintenanceRequests,
 };

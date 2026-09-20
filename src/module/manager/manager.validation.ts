@@ -36,8 +36,43 @@ const updateUtilityInvoiceValidation = z.object({
     }),
 });
 
+const getMaintenanceRequestsValidation = z.object({
+    status: z
+        .enum(["OPEN", "IN_PROGRESS", "RESOLVED", "CLOSED", "CANCELLED"])
+        .optional(),
+    priority: z.enum(["LOW", "MEDIUM", "HIGH", "URGENT"]).optional(),
+    stayId: z.string().uuid("Invalid stay ID").optional(),
+    page: z.coerce.number().int().min(1).default(1),
+    limit: z.coerce.number().int().min(1).max(100).default(10),
+});
+
+const updateMaintenanceRequestValidation = z.object({
+    body: z
+        .object({
+            status: z
+                .enum(["OPEN", "IN_PROGRESS", "RESOLVED", "CLOSED", "CANCELLED"])
+                .optional(),
+            scheduledFor: z.coerce.date().optional(),
+            resolvedAt: z.coerce.date().optional(),
+        })
+        .refine(
+            (data) =>
+                data.status !== undefined ||
+                data.scheduledFor !== undefined ||
+                data.resolvedAt !== undefined,
+            {
+                message: "At least one of status, scheduledFor, or resolvedAt must be provided",
+            },
+        ),
+    params: z.object({
+        maintenanceId: z.string().uuid("Invalid maintenance ID"),
+    }),
+});
+
 export const ManagerValidation = {
     getApplications: getApplicationsValidation,
     createUtilityInvoice: createUtilityInvoiceValidation,
     updateUtilityInvoice: updateUtilityInvoiceValidation,
+    getMaintenanceRequests: getMaintenanceRequestsValidation,
+    updateMaintenanceRequest: updateMaintenanceRequestValidation,
 };

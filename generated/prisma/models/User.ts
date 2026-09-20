@@ -248,6 +248,7 @@ export type UserWhereInput = {
   applications?: Prisma.ApplicationListRelationFilter
   reviewedApplications?: Prisma.ApplicationListRelationFilter
   stays?: Prisma.StayListRelationFilter
+  reportedMaintenanceRequests?: Prisma.MaintenanceListRelationFilter
   invoicesAsPayer?: Prisma.InvoiceListRelationFilter
   invoicesAsReceiver?: Prisma.InvoiceListRelationFilter
   paymentsAsPayer?: Prisma.PaymentListRelationFilter
@@ -280,6 +281,7 @@ export type UserOrderByWithRelationInput = {
   applications?: Prisma.ApplicationOrderByRelationAggregateInput
   reviewedApplications?: Prisma.ApplicationOrderByRelationAggregateInput
   stays?: Prisma.StayOrderByRelationAggregateInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceOrderByRelationAggregateInput
   invoicesAsPayer?: Prisma.InvoiceOrderByRelationAggregateInput
   invoicesAsReceiver?: Prisma.InvoiceOrderByRelationAggregateInput
   paymentsAsPayer?: Prisma.PaymentOrderByRelationAggregateInput
@@ -315,6 +317,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   applications?: Prisma.ApplicationListRelationFilter
   reviewedApplications?: Prisma.ApplicationListRelationFilter
   stays?: Prisma.StayListRelationFilter
+  reportedMaintenanceRequests?: Prisma.MaintenanceListRelationFilter
   invoicesAsPayer?: Prisma.InvoiceListRelationFilter
   invoicesAsReceiver?: Prisma.InvoiceListRelationFilter
   paymentsAsPayer?: Prisma.PaymentListRelationFilter
@@ -383,6 +386,7 @@ export type UserCreateInput = {
   applications?: Prisma.ApplicationCreateNestedManyWithoutApplicantInput
   reviewedApplications?: Prisma.ApplicationCreateNestedManyWithoutReviewedByInput
   stays?: Prisma.StayCreateNestedManyWithoutOccupantInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceCreateNestedManyWithoutReportedByInput
   invoicesAsPayer?: Prisma.InvoiceCreateNestedManyWithoutPayerInput
   invoicesAsReceiver?: Prisma.InvoiceCreateNestedManyWithoutReceiverInput
   paymentsAsPayer?: Prisma.PaymentCreateNestedManyWithoutPayerInput
@@ -415,6 +419,7 @@ export type UserUncheckedCreateInput = {
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutApplicantInput
   reviewedApplications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutReviewedByInput
   stays?: Prisma.StayUncheckedCreateNestedManyWithoutOccupantInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedCreateNestedManyWithoutReportedByInput
   invoicesAsPayer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPayerInput
   invoicesAsReceiver?: Prisma.InvoiceUncheckedCreateNestedManyWithoutReceiverInput
   paymentsAsPayer?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
@@ -447,6 +452,7 @@ export type UserUpdateInput = {
   applications?: Prisma.ApplicationUpdateManyWithoutApplicantNestedInput
   reviewedApplications?: Prisma.ApplicationUpdateManyWithoutReviewedByNestedInput
   stays?: Prisma.StayUpdateManyWithoutOccupantNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUpdateManyWithoutReportedByNestedInput
   invoicesAsPayer?: Prisma.InvoiceUpdateManyWithoutPayerNestedInput
   invoicesAsReceiver?: Prisma.InvoiceUpdateManyWithoutReceiverNestedInput
   paymentsAsPayer?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
@@ -479,6 +485,7 @@ export type UserUncheckedUpdateInput = {
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutApplicantNestedInput
   reviewedApplications?: Prisma.ApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
   stays?: Prisma.StayUncheckedUpdateManyWithoutOccupantNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedUpdateManyWithoutReportedByNestedInput
   invoicesAsPayer?: Prisma.InvoiceUncheckedUpdateManyWithoutPayerNestedInput
   invoicesAsReceiver?: Prisma.InvoiceUncheckedUpdateManyWithoutReceiverNestedInput
   paymentsAsPayer?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
@@ -658,6 +665,20 @@ export type UserUpdateOneRequiredWithoutInvoicesAsReceiverNestedInput = {
   upsert?: Prisma.UserUpsertWithoutInvoicesAsReceiverInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutInvoicesAsReceiverInput, Prisma.UserUpdateWithoutInvoicesAsReceiverInput>, Prisma.UserUncheckedUpdateWithoutInvoicesAsReceiverInput>
+}
+
+export type UserCreateNestedOneWithoutReportedMaintenanceRequestsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReportedMaintenanceRequestsInput, Prisma.UserUncheckedCreateWithoutReportedMaintenanceRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReportedMaintenanceRequestsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutReportedMaintenanceRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReportedMaintenanceRequestsInput, Prisma.UserUncheckedCreateWithoutReportedMaintenanceRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReportedMaintenanceRequestsInput
+  upsert?: Prisma.UserUpsertWithoutReportedMaintenanceRequestsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReportedMaintenanceRequestsInput, Prisma.UserUpdateWithoutReportedMaintenanceRequestsInput>, Prisma.UserUncheckedUpdateWithoutReportedMaintenanceRequestsInput>
 }
 
 export type UserCreateNestedOneWithoutManagedFlatsInput = {
@@ -864,6 +885,7 @@ export type UserCreateWithoutAdvertisementsInput = {
   applications?: Prisma.ApplicationCreateNestedManyWithoutApplicantInput
   reviewedApplications?: Prisma.ApplicationCreateNestedManyWithoutReviewedByInput
   stays?: Prisma.StayCreateNestedManyWithoutOccupantInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceCreateNestedManyWithoutReportedByInput
   invoicesAsPayer?: Prisma.InvoiceCreateNestedManyWithoutPayerInput
   invoicesAsReceiver?: Prisma.InvoiceCreateNestedManyWithoutReceiverInput
   paymentsAsPayer?: Prisma.PaymentCreateNestedManyWithoutPayerInput
@@ -895,6 +917,7 @@ export type UserUncheckedCreateWithoutAdvertisementsInput = {
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutApplicantInput
   reviewedApplications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutReviewedByInput
   stays?: Prisma.StayUncheckedCreateNestedManyWithoutOccupantInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedCreateNestedManyWithoutReportedByInput
   invoicesAsPayer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPayerInput
   invoicesAsReceiver?: Prisma.InvoiceUncheckedCreateNestedManyWithoutReceiverInput
   paymentsAsPayer?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
@@ -942,6 +965,7 @@ export type UserUpdateWithoutAdvertisementsInput = {
   applications?: Prisma.ApplicationUpdateManyWithoutApplicantNestedInput
   reviewedApplications?: Prisma.ApplicationUpdateManyWithoutReviewedByNestedInput
   stays?: Prisma.StayUpdateManyWithoutOccupantNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUpdateManyWithoutReportedByNestedInput
   invoicesAsPayer?: Prisma.InvoiceUpdateManyWithoutPayerNestedInput
   invoicesAsReceiver?: Prisma.InvoiceUpdateManyWithoutReceiverNestedInput
   paymentsAsPayer?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
@@ -973,6 +997,7 @@ export type UserUncheckedUpdateWithoutAdvertisementsInput = {
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutApplicantNestedInput
   reviewedApplications?: Prisma.ApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
   stays?: Prisma.StayUncheckedUpdateManyWithoutOccupantNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedUpdateManyWithoutReportedByNestedInput
   invoicesAsPayer?: Prisma.InvoiceUncheckedUpdateManyWithoutPayerNestedInput
   invoicesAsReceiver?: Prisma.InvoiceUncheckedUpdateManyWithoutReceiverNestedInput
   paymentsAsPayer?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
@@ -1004,6 +1029,7 @@ export type UserCreateWithoutApplicationsInput = {
   advertisements?: Prisma.AdvertisementCreateNestedManyWithoutCreatedByInput
   reviewedApplications?: Prisma.ApplicationCreateNestedManyWithoutReviewedByInput
   stays?: Prisma.StayCreateNestedManyWithoutOccupantInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceCreateNestedManyWithoutReportedByInput
   invoicesAsPayer?: Prisma.InvoiceCreateNestedManyWithoutPayerInput
   invoicesAsReceiver?: Prisma.InvoiceCreateNestedManyWithoutReceiverInput
   paymentsAsPayer?: Prisma.PaymentCreateNestedManyWithoutPayerInput
@@ -1035,6 +1061,7 @@ export type UserUncheckedCreateWithoutApplicationsInput = {
   advertisements?: Prisma.AdvertisementUncheckedCreateNestedManyWithoutCreatedByInput
   reviewedApplications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutReviewedByInput
   stays?: Prisma.StayUncheckedCreateNestedManyWithoutOccupantInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedCreateNestedManyWithoutReportedByInput
   invoicesAsPayer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPayerInput
   invoicesAsReceiver?: Prisma.InvoiceUncheckedCreateNestedManyWithoutReceiverInput
   paymentsAsPayer?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
@@ -1071,6 +1098,7 @@ export type UserCreateWithoutReviewedApplicationsInput = {
   advertisements?: Prisma.AdvertisementCreateNestedManyWithoutCreatedByInput
   applications?: Prisma.ApplicationCreateNestedManyWithoutApplicantInput
   stays?: Prisma.StayCreateNestedManyWithoutOccupantInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceCreateNestedManyWithoutReportedByInput
   invoicesAsPayer?: Prisma.InvoiceCreateNestedManyWithoutPayerInput
   invoicesAsReceiver?: Prisma.InvoiceCreateNestedManyWithoutReceiverInput
   paymentsAsPayer?: Prisma.PaymentCreateNestedManyWithoutPayerInput
@@ -1102,6 +1130,7 @@ export type UserUncheckedCreateWithoutReviewedApplicationsInput = {
   advertisements?: Prisma.AdvertisementUncheckedCreateNestedManyWithoutCreatedByInput
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutApplicantInput
   stays?: Prisma.StayUncheckedCreateNestedManyWithoutOccupantInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedCreateNestedManyWithoutReportedByInput
   invoicesAsPayer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPayerInput
   invoicesAsReceiver?: Prisma.InvoiceUncheckedCreateNestedManyWithoutReceiverInput
   paymentsAsPayer?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
@@ -1149,6 +1178,7 @@ export type UserUpdateWithoutApplicationsInput = {
   advertisements?: Prisma.AdvertisementUpdateManyWithoutCreatedByNestedInput
   reviewedApplications?: Prisma.ApplicationUpdateManyWithoutReviewedByNestedInput
   stays?: Prisma.StayUpdateManyWithoutOccupantNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUpdateManyWithoutReportedByNestedInput
   invoicesAsPayer?: Prisma.InvoiceUpdateManyWithoutPayerNestedInput
   invoicesAsReceiver?: Prisma.InvoiceUpdateManyWithoutReceiverNestedInput
   paymentsAsPayer?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
@@ -1180,6 +1210,7 @@ export type UserUncheckedUpdateWithoutApplicationsInput = {
   advertisements?: Prisma.AdvertisementUncheckedUpdateManyWithoutCreatedByNestedInput
   reviewedApplications?: Prisma.ApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
   stays?: Prisma.StayUncheckedUpdateManyWithoutOccupantNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedUpdateManyWithoutReportedByNestedInput
   invoicesAsPayer?: Prisma.InvoiceUncheckedUpdateManyWithoutPayerNestedInput
   invoicesAsReceiver?: Prisma.InvoiceUncheckedUpdateManyWithoutReceiverNestedInput
   paymentsAsPayer?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
@@ -1222,6 +1253,7 @@ export type UserUpdateWithoutReviewedApplicationsInput = {
   advertisements?: Prisma.AdvertisementUpdateManyWithoutCreatedByNestedInput
   applications?: Prisma.ApplicationUpdateManyWithoutApplicantNestedInput
   stays?: Prisma.StayUpdateManyWithoutOccupantNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUpdateManyWithoutReportedByNestedInput
   invoicesAsPayer?: Prisma.InvoiceUpdateManyWithoutPayerNestedInput
   invoicesAsReceiver?: Prisma.InvoiceUpdateManyWithoutReceiverNestedInput
   paymentsAsPayer?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
@@ -1253,6 +1285,7 @@ export type UserUncheckedUpdateWithoutReviewedApplicationsInput = {
   advertisements?: Prisma.AdvertisementUncheckedUpdateManyWithoutCreatedByNestedInput
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutApplicantNestedInput
   stays?: Prisma.StayUncheckedUpdateManyWithoutOccupantNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedUpdateManyWithoutReportedByNestedInput
   invoicesAsPayer?: Prisma.InvoiceUncheckedUpdateManyWithoutPayerNestedInput
   invoicesAsReceiver?: Prisma.InvoiceUncheckedUpdateManyWithoutReceiverNestedInput
   paymentsAsPayer?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
@@ -1285,6 +1318,7 @@ export type UserCreateWithoutInvoicesAsPayerInput = {
   applications?: Prisma.ApplicationCreateNestedManyWithoutApplicantInput
   reviewedApplications?: Prisma.ApplicationCreateNestedManyWithoutReviewedByInput
   stays?: Prisma.StayCreateNestedManyWithoutOccupantInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceCreateNestedManyWithoutReportedByInput
   invoicesAsReceiver?: Prisma.InvoiceCreateNestedManyWithoutReceiverInput
   paymentsAsPayer?: Prisma.PaymentCreateNestedManyWithoutPayerInput
   paymentsAsReceiver?: Prisma.PaymentCreateNestedManyWithoutReceiverInput
@@ -1316,6 +1350,7 @@ export type UserUncheckedCreateWithoutInvoicesAsPayerInput = {
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutApplicantInput
   reviewedApplications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutReviewedByInput
   stays?: Prisma.StayUncheckedCreateNestedManyWithoutOccupantInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedCreateNestedManyWithoutReportedByInput
   invoicesAsReceiver?: Prisma.InvoiceUncheckedCreateNestedManyWithoutReceiverInput
   paymentsAsPayer?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
   paymentsAsReceiver?: Prisma.PaymentUncheckedCreateNestedManyWithoutReceiverInput
@@ -1352,6 +1387,7 @@ export type UserCreateWithoutInvoicesAsReceiverInput = {
   applications?: Prisma.ApplicationCreateNestedManyWithoutApplicantInput
   reviewedApplications?: Prisma.ApplicationCreateNestedManyWithoutReviewedByInput
   stays?: Prisma.StayCreateNestedManyWithoutOccupantInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceCreateNestedManyWithoutReportedByInput
   invoicesAsPayer?: Prisma.InvoiceCreateNestedManyWithoutPayerInput
   paymentsAsPayer?: Prisma.PaymentCreateNestedManyWithoutPayerInput
   paymentsAsReceiver?: Prisma.PaymentCreateNestedManyWithoutReceiverInput
@@ -1383,6 +1419,7 @@ export type UserUncheckedCreateWithoutInvoicesAsReceiverInput = {
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutApplicantInput
   reviewedApplications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutReviewedByInput
   stays?: Prisma.StayUncheckedCreateNestedManyWithoutOccupantInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedCreateNestedManyWithoutReportedByInput
   invoicesAsPayer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPayerInput
   paymentsAsPayer?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
   paymentsAsReceiver?: Prisma.PaymentUncheckedCreateNestedManyWithoutReceiverInput
@@ -1430,6 +1467,7 @@ export type UserUpdateWithoutInvoicesAsPayerInput = {
   applications?: Prisma.ApplicationUpdateManyWithoutApplicantNestedInput
   reviewedApplications?: Prisma.ApplicationUpdateManyWithoutReviewedByNestedInput
   stays?: Prisma.StayUpdateManyWithoutOccupantNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUpdateManyWithoutReportedByNestedInput
   invoicesAsReceiver?: Prisma.InvoiceUpdateManyWithoutReceiverNestedInput
   paymentsAsPayer?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
   paymentsAsReceiver?: Prisma.PaymentUpdateManyWithoutReceiverNestedInput
@@ -1461,6 +1499,7 @@ export type UserUncheckedUpdateWithoutInvoicesAsPayerInput = {
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutApplicantNestedInput
   reviewedApplications?: Prisma.ApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
   stays?: Prisma.StayUncheckedUpdateManyWithoutOccupantNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedUpdateManyWithoutReportedByNestedInput
   invoicesAsReceiver?: Prisma.InvoiceUncheckedUpdateManyWithoutReceiverNestedInput
   paymentsAsPayer?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
   paymentsAsReceiver?: Prisma.PaymentUncheckedUpdateManyWithoutReceiverNestedInput
@@ -1503,6 +1542,7 @@ export type UserUpdateWithoutInvoicesAsReceiverInput = {
   applications?: Prisma.ApplicationUpdateManyWithoutApplicantNestedInput
   reviewedApplications?: Prisma.ApplicationUpdateManyWithoutReviewedByNestedInput
   stays?: Prisma.StayUpdateManyWithoutOccupantNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUpdateManyWithoutReportedByNestedInput
   invoicesAsPayer?: Prisma.InvoiceUpdateManyWithoutPayerNestedInput
   paymentsAsPayer?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
   paymentsAsReceiver?: Prisma.PaymentUpdateManyWithoutReceiverNestedInput
@@ -1534,7 +1574,152 @@ export type UserUncheckedUpdateWithoutInvoicesAsReceiverInput = {
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutApplicantNestedInput
   reviewedApplications?: Prisma.ApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
   stays?: Prisma.StayUncheckedUpdateManyWithoutOccupantNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedUpdateManyWithoutReportedByNestedInput
   invoicesAsPayer?: Prisma.InvoiceUncheckedUpdateManyWithoutPayerNestedInput
+  paymentsAsPayer?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
+  paymentsAsReceiver?: Prisma.PaymentUncheckedUpdateManyWithoutReceiverNestedInput
+  viewingRequests?: Prisma.ViewingRequestUncheckedUpdateManyWithoutRequesterNestedInput
+  reviewedViewingRequests?: Prisma.ViewingRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutReportedMaintenanceRequestsInput = {
+  id?: string
+  name: string
+  email: string
+  phone: string
+  password?: string | null
+  role?: $Enums.Role
+  status?: $Enums.UserStatus
+  emailVerified?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
+  ownerProfile?: Prisma.OwnerProfileCreateNestedOneWithoutUserInput
+  managerProfile?: Prisma.ManagerProfileCreateNestedOneWithoutUserInput
+  tenantProfile?: Prisma.TenantProfileCreateNestedOneWithoutUserInput
+  createdProperties?: Prisma.PropertyCreateNestedManyWithoutCreatedByInput
+  ownedFlats?: Prisma.PropertyOwnershipCreateNestedManyWithoutOwnerInput
+  managedFlats?: Prisma.ManagerAssignmentCreateNestedManyWithoutManagerInput
+  advertisements?: Prisma.AdvertisementCreateNestedManyWithoutCreatedByInput
+  applications?: Prisma.ApplicationCreateNestedManyWithoutApplicantInput
+  reviewedApplications?: Prisma.ApplicationCreateNestedManyWithoutReviewedByInput
+  stays?: Prisma.StayCreateNestedManyWithoutOccupantInput
+  invoicesAsPayer?: Prisma.InvoiceCreateNestedManyWithoutPayerInput
+  invoicesAsReceiver?: Prisma.InvoiceCreateNestedManyWithoutReceiverInput
+  paymentsAsPayer?: Prisma.PaymentCreateNestedManyWithoutPayerInput
+  paymentsAsReceiver?: Prisma.PaymentCreateNestedManyWithoutReceiverInput
+  viewingRequests?: Prisma.ViewingRequestCreateNestedManyWithoutRequesterInput
+  reviewedViewingRequests?: Prisma.ViewingRequestCreateNestedManyWithoutReviewedByInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutReportedMaintenanceRequestsInput = {
+  id?: string
+  name: string
+  email: string
+  phone: string
+  password?: string | null
+  role?: $Enums.Role
+  status?: $Enums.UserStatus
+  emailVerified?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider | null
+  ownerProfile?: Prisma.OwnerProfileUncheckedCreateNestedOneWithoutUserInput
+  managerProfile?: Prisma.ManagerProfileUncheckedCreateNestedOneWithoutUserInput
+  tenantProfile?: Prisma.TenantProfileUncheckedCreateNestedOneWithoutUserInput
+  createdProperties?: Prisma.PropertyUncheckedCreateNestedManyWithoutCreatedByInput
+  ownedFlats?: Prisma.PropertyOwnershipUncheckedCreateNestedManyWithoutOwnerInput
+  managedFlats?: Prisma.ManagerAssignmentUncheckedCreateNestedManyWithoutManagerInput
+  advertisements?: Prisma.AdvertisementUncheckedCreateNestedManyWithoutCreatedByInput
+  applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutApplicantInput
+  reviewedApplications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutReviewedByInput
+  stays?: Prisma.StayUncheckedCreateNestedManyWithoutOccupantInput
+  invoicesAsPayer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPayerInput
+  invoicesAsReceiver?: Prisma.InvoiceUncheckedCreateNestedManyWithoutReceiverInput
+  paymentsAsPayer?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
+  paymentsAsReceiver?: Prisma.PaymentUncheckedCreateNestedManyWithoutReceiverInput
+  viewingRequests?: Prisma.ViewingRequestUncheckedCreateNestedManyWithoutRequesterInput
+  reviewedViewingRequests?: Prisma.ViewingRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutReportedMaintenanceRequestsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutReportedMaintenanceRequestsInput, Prisma.UserUncheckedCreateWithoutReportedMaintenanceRequestsInput>
+}
+
+export type UserUpsertWithoutReportedMaintenanceRequestsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutReportedMaintenanceRequestsInput, Prisma.UserUncheckedUpdateWithoutReportedMaintenanceRequestsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutReportedMaintenanceRequestsInput, Prisma.UserUncheckedCreateWithoutReportedMaintenanceRequestsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutReportedMaintenanceRequestsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutReportedMaintenanceRequestsInput, Prisma.UserUncheckedUpdateWithoutReportedMaintenanceRequestsInput>
+}
+
+export type UserUpdateWithoutReportedMaintenanceRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
+  ownerProfile?: Prisma.OwnerProfileUpdateOneWithoutUserNestedInput
+  managerProfile?: Prisma.ManagerProfileUpdateOneWithoutUserNestedInput
+  tenantProfile?: Prisma.TenantProfileUpdateOneWithoutUserNestedInput
+  createdProperties?: Prisma.PropertyUpdateManyWithoutCreatedByNestedInput
+  ownedFlats?: Prisma.PropertyOwnershipUpdateManyWithoutOwnerNestedInput
+  managedFlats?: Prisma.ManagerAssignmentUpdateManyWithoutManagerNestedInput
+  advertisements?: Prisma.AdvertisementUpdateManyWithoutCreatedByNestedInput
+  applications?: Prisma.ApplicationUpdateManyWithoutApplicantNestedInput
+  reviewedApplications?: Prisma.ApplicationUpdateManyWithoutReviewedByNestedInput
+  stays?: Prisma.StayUpdateManyWithoutOccupantNestedInput
+  invoicesAsPayer?: Prisma.InvoiceUpdateManyWithoutPayerNestedInput
+  invoicesAsReceiver?: Prisma.InvoiceUpdateManyWithoutReceiverNestedInput
+  paymentsAsPayer?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
+  paymentsAsReceiver?: Prisma.PaymentUpdateManyWithoutReceiverNestedInput
+  viewingRequests?: Prisma.ViewingRequestUpdateManyWithoutRequesterNestedInput
+  reviewedViewingRequests?: Prisma.ViewingRequestUpdateManyWithoutReviewedByNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutReportedMaintenanceRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.NullableEnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider | null
+  ownerProfile?: Prisma.OwnerProfileUncheckedUpdateOneWithoutUserNestedInput
+  managerProfile?: Prisma.ManagerProfileUncheckedUpdateOneWithoutUserNestedInput
+  tenantProfile?: Prisma.TenantProfileUncheckedUpdateOneWithoutUserNestedInput
+  createdProperties?: Prisma.PropertyUncheckedUpdateManyWithoutCreatedByNestedInput
+  ownedFlats?: Prisma.PropertyOwnershipUncheckedUpdateManyWithoutOwnerNestedInput
+  managedFlats?: Prisma.ManagerAssignmentUncheckedUpdateManyWithoutManagerNestedInput
+  advertisements?: Prisma.AdvertisementUncheckedUpdateManyWithoutCreatedByNestedInput
+  applications?: Prisma.ApplicationUncheckedUpdateManyWithoutApplicantNestedInput
+  reviewedApplications?: Prisma.ApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
+  stays?: Prisma.StayUncheckedUpdateManyWithoutOccupantNestedInput
+  invoicesAsPayer?: Prisma.InvoiceUncheckedUpdateManyWithoutPayerNestedInput
+  invoicesAsReceiver?: Prisma.InvoiceUncheckedUpdateManyWithoutReceiverNestedInput
   paymentsAsPayer?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
   paymentsAsReceiver?: Prisma.PaymentUncheckedUpdateManyWithoutReceiverNestedInput
   viewingRequests?: Prisma.ViewingRequestUncheckedUpdateManyWithoutRequesterNestedInput
@@ -1564,6 +1749,7 @@ export type UserCreateWithoutManagedFlatsInput = {
   applications?: Prisma.ApplicationCreateNestedManyWithoutApplicantInput
   reviewedApplications?: Prisma.ApplicationCreateNestedManyWithoutReviewedByInput
   stays?: Prisma.StayCreateNestedManyWithoutOccupantInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceCreateNestedManyWithoutReportedByInput
   invoicesAsPayer?: Prisma.InvoiceCreateNestedManyWithoutPayerInput
   invoicesAsReceiver?: Prisma.InvoiceCreateNestedManyWithoutReceiverInput
   paymentsAsPayer?: Prisma.PaymentCreateNestedManyWithoutPayerInput
@@ -1595,6 +1781,7 @@ export type UserUncheckedCreateWithoutManagedFlatsInput = {
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutApplicantInput
   reviewedApplications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutReviewedByInput
   stays?: Prisma.StayUncheckedCreateNestedManyWithoutOccupantInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedCreateNestedManyWithoutReportedByInput
   invoicesAsPayer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPayerInput
   invoicesAsReceiver?: Prisma.InvoiceUncheckedCreateNestedManyWithoutReceiverInput
   paymentsAsPayer?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
@@ -1642,6 +1829,7 @@ export type UserUpdateWithoutManagedFlatsInput = {
   applications?: Prisma.ApplicationUpdateManyWithoutApplicantNestedInput
   reviewedApplications?: Prisma.ApplicationUpdateManyWithoutReviewedByNestedInput
   stays?: Prisma.StayUpdateManyWithoutOccupantNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUpdateManyWithoutReportedByNestedInput
   invoicesAsPayer?: Prisma.InvoiceUpdateManyWithoutPayerNestedInput
   invoicesAsReceiver?: Prisma.InvoiceUpdateManyWithoutReceiverNestedInput
   paymentsAsPayer?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
@@ -1673,6 +1861,7 @@ export type UserUncheckedUpdateWithoutManagedFlatsInput = {
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutApplicantNestedInput
   reviewedApplications?: Prisma.ApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
   stays?: Prisma.StayUncheckedUpdateManyWithoutOccupantNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedUpdateManyWithoutReportedByNestedInput
   invoicesAsPayer?: Prisma.InvoiceUncheckedUpdateManyWithoutPayerNestedInput
   invoicesAsReceiver?: Prisma.InvoiceUncheckedUpdateManyWithoutReceiverNestedInput
   paymentsAsPayer?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
@@ -1704,6 +1893,7 @@ export type UserCreateWithoutManagerProfileInput = {
   applications?: Prisma.ApplicationCreateNestedManyWithoutApplicantInput
   reviewedApplications?: Prisma.ApplicationCreateNestedManyWithoutReviewedByInput
   stays?: Prisma.StayCreateNestedManyWithoutOccupantInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceCreateNestedManyWithoutReportedByInput
   invoicesAsPayer?: Prisma.InvoiceCreateNestedManyWithoutPayerInput
   invoicesAsReceiver?: Prisma.InvoiceCreateNestedManyWithoutReceiverInput
   paymentsAsPayer?: Prisma.PaymentCreateNestedManyWithoutPayerInput
@@ -1735,6 +1925,7 @@ export type UserUncheckedCreateWithoutManagerProfileInput = {
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutApplicantInput
   reviewedApplications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutReviewedByInput
   stays?: Prisma.StayUncheckedCreateNestedManyWithoutOccupantInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedCreateNestedManyWithoutReportedByInput
   invoicesAsPayer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPayerInput
   invoicesAsReceiver?: Prisma.InvoiceUncheckedCreateNestedManyWithoutReceiverInput
   paymentsAsPayer?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
@@ -1782,6 +1973,7 @@ export type UserUpdateWithoutManagerProfileInput = {
   applications?: Prisma.ApplicationUpdateManyWithoutApplicantNestedInput
   reviewedApplications?: Prisma.ApplicationUpdateManyWithoutReviewedByNestedInput
   stays?: Prisma.StayUpdateManyWithoutOccupantNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUpdateManyWithoutReportedByNestedInput
   invoicesAsPayer?: Prisma.InvoiceUpdateManyWithoutPayerNestedInput
   invoicesAsReceiver?: Prisma.InvoiceUpdateManyWithoutReceiverNestedInput
   paymentsAsPayer?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
@@ -1813,6 +2005,7 @@ export type UserUncheckedUpdateWithoutManagerProfileInput = {
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutApplicantNestedInput
   reviewedApplications?: Prisma.ApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
   stays?: Prisma.StayUncheckedUpdateManyWithoutOccupantNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedUpdateManyWithoutReportedByNestedInput
   invoicesAsPayer?: Prisma.InvoiceUncheckedUpdateManyWithoutPayerNestedInput
   invoicesAsReceiver?: Prisma.InvoiceUncheckedUpdateManyWithoutReceiverNestedInput
   paymentsAsPayer?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
@@ -1844,6 +2037,7 @@ export type UserCreateWithoutOwnerProfileInput = {
   applications?: Prisma.ApplicationCreateNestedManyWithoutApplicantInput
   reviewedApplications?: Prisma.ApplicationCreateNestedManyWithoutReviewedByInput
   stays?: Prisma.StayCreateNestedManyWithoutOccupantInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceCreateNestedManyWithoutReportedByInput
   invoicesAsPayer?: Prisma.InvoiceCreateNestedManyWithoutPayerInput
   invoicesAsReceiver?: Prisma.InvoiceCreateNestedManyWithoutReceiverInput
   paymentsAsPayer?: Prisma.PaymentCreateNestedManyWithoutPayerInput
@@ -1875,6 +2069,7 @@ export type UserUncheckedCreateWithoutOwnerProfileInput = {
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutApplicantInput
   reviewedApplications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutReviewedByInput
   stays?: Prisma.StayUncheckedCreateNestedManyWithoutOccupantInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedCreateNestedManyWithoutReportedByInput
   invoicesAsPayer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPayerInput
   invoicesAsReceiver?: Prisma.InvoiceUncheckedCreateNestedManyWithoutReceiverInput
   paymentsAsPayer?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
@@ -1922,6 +2117,7 @@ export type UserUpdateWithoutOwnerProfileInput = {
   applications?: Prisma.ApplicationUpdateManyWithoutApplicantNestedInput
   reviewedApplications?: Prisma.ApplicationUpdateManyWithoutReviewedByNestedInput
   stays?: Prisma.StayUpdateManyWithoutOccupantNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUpdateManyWithoutReportedByNestedInput
   invoicesAsPayer?: Prisma.InvoiceUpdateManyWithoutPayerNestedInput
   invoicesAsReceiver?: Prisma.InvoiceUpdateManyWithoutReceiverNestedInput
   paymentsAsPayer?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
@@ -1953,6 +2149,7 @@ export type UserUncheckedUpdateWithoutOwnerProfileInput = {
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutApplicantNestedInput
   reviewedApplications?: Prisma.ApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
   stays?: Prisma.StayUncheckedUpdateManyWithoutOccupantNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedUpdateManyWithoutReportedByNestedInput
   invoicesAsPayer?: Prisma.InvoiceUncheckedUpdateManyWithoutPayerNestedInput
   invoicesAsReceiver?: Prisma.InvoiceUncheckedUpdateManyWithoutReceiverNestedInput
   paymentsAsPayer?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
@@ -1985,6 +2182,7 @@ export type UserCreateWithoutPaymentsAsPayerInput = {
   applications?: Prisma.ApplicationCreateNestedManyWithoutApplicantInput
   reviewedApplications?: Prisma.ApplicationCreateNestedManyWithoutReviewedByInput
   stays?: Prisma.StayCreateNestedManyWithoutOccupantInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceCreateNestedManyWithoutReportedByInput
   invoicesAsPayer?: Prisma.InvoiceCreateNestedManyWithoutPayerInput
   invoicesAsReceiver?: Prisma.InvoiceCreateNestedManyWithoutReceiverInput
   paymentsAsReceiver?: Prisma.PaymentCreateNestedManyWithoutReceiverInput
@@ -2016,6 +2214,7 @@ export type UserUncheckedCreateWithoutPaymentsAsPayerInput = {
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutApplicantInput
   reviewedApplications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutReviewedByInput
   stays?: Prisma.StayUncheckedCreateNestedManyWithoutOccupantInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedCreateNestedManyWithoutReportedByInput
   invoicesAsPayer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPayerInput
   invoicesAsReceiver?: Prisma.InvoiceUncheckedCreateNestedManyWithoutReceiverInput
   paymentsAsReceiver?: Prisma.PaymentUncheckedCreateNestedManyWithoutReceiverInput
@@ -2052,6 +2251,7 @@ export type UserCreateWithoutPaymentsAsReceiverInput = {
   applications?: Prisma.ApplicationCreateNestedManyWithoutApplicantInput
   reviewedApplications?: Prisma.ApplicationCreateNestedManyWithoutReviewedByInput
   stays?: Prisma.StayCreateNestedManyWithoutOccupantInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceCreateNestedManyWithoutReportedByInput
   invoicesAsPayer?: Prisma.InvoiceCreateNestedManyWithoutPayerInput
   invoicesAsReceiver?: Prisma.InvoiceCreateNestedManyWithoutReceiverInput
   paymentsAsPayer?: Prisma.PaymentCreateNestedManyWithoutPayerInput
@@ -2083,6 +2283,7 @@ export type UserUncheckedCreateWithoutPaymentsAsReceiverInput = {
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutApplicantInput
   reviewedApplications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutReviewedByInput
   stays?: Prisma.StayUncheckedCreateNestedManyWithoutOccupantInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedCreateNestedManyWithoutReportedByInput
   invoicesAsPayer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPayerInput
   invoicesAsReceiver?: Prisma.InvoiceUncheckedCreateNestedManyWithoutReceiverInput
   paymentsAsPayer?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
@@ -2130,6 +2331,7 @@ export type UserUpdateWithoutPaymentsAsPayerInput = {
   applications?: Prisma.ApplicationUpdateManyWithoutApplicantNestedInput
   reviewedApplications?: Prisma.ApplicationUpdateManyWithoutReviewedByNestedInput
   stays?: Prisma.StayUpdateManyWithoutOccupantNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUpdateManyWithoutReportedByNestedInput
   invoicesAsPayer?: Prisma.InvoiceUpdateManyWithoutPayerNestedInput
   invoicesAsReceiver?: Prisma.InvoiceUpdateManyWithoutReceiverNestedInput
   paymentsAsReceiver?: Prisma.PaymentUpdateManyWithoutReceiverNestedInput
@@ -2161,6 +2363,7 @@ export type UserUncheckedUpdateWithoutPaymentsAsPayerInput = {
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutApplicantNestedInput
   reviewedApplications?: Prisma.ApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
   stays?: Prisma.StayUncheckedUpdateManyWithoutOccupantNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedUpdateManyWithoutReportedByNestedInput
   invoicesAsPayer?: Prisma.InvoiceUncheckedUpdateManyWithoutPayerNestedInput
   invoicesAsReceiver?: Prisma.InvoiceUncheckedUpdateManyWithoutReceiverNestedInput
   paymentsAsReceiver?: Prisma.PaymentUncheckedUpdateManyWithoutReceiverNestedInput
@@ -2203,6 +2406,7 @@ export type UserUpdateWithoutPaymentsAsReceiverInput = {
   applications?: Prisma.ApplicationUpdateManyWithoutApplicantNestedInput
   reviewedApplications?: Prisma.ApplicationUpdateManyWithoutReviewedByNestedInput
   stays?: Prisma.StayUpdateManyWithoutOccupantNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUpdateManyWithoutReportedByNestedInput
   invoicesAsPayer?: Prisma.InvoiceUpdateManyWithoutPayerNestedInput
   invoicesAsReceiver?: Prisma.InvoiceUpdateManyWithoutReceiverNestedInput
   paymentsAsPayer?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
@@ -2234,6 +2438,7 @@ export type UserUncheckedUpdateWithoutPaymentsAsReceiverInput = {
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutApplicantNestedInput
   reviewedApplications?: Prisma.ApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
   stays?: Prisma.StayUncheckedUpdateManyWithoutOccupantNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedUpdateManyWithoutReportedByNestedInput
   invoicesAsPayer?: Prisma.InvoiceUncheckedUpdateManyWithoutPayerNestedInput
   invoicesAsReceiver?: Prisma.InvoiceUncheckedUpdateManyWithoutReceiverNestedInput
   paymentsAsPayer?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
@@ -2264,6 +2469,7 @@ export type UserCreateWithoutCreatedPropertiesInput = {
   applications?: Prisma.ApplicationCreateNestedManyWithoutApplicantInput
   reviewedApplications?: Prisma.ApplicationCreateNestedManyWithoutReviewedByInput
   stays?: Prisma.StayCreateNestedManyWithoutOccupantInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceCreateNestedManyWithoutReportedByInput
   invoicesAsPayer?: Prisma.InvoiceCreateNestedManyWithoutPayerInput
   invoicesAsReceiver?: Prisma.InvoiceCreateNestedManyWithoutReceiverInput
   paymentsAsPayer?: Prisma.PaymentCreateNestedManyWithoutPayerInput
@@ -2295,6 +2501,7 @@ export type UserUncheckedCreateWithoutCreatedPropertiesInput = {
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutApplicantInput
   reviewedApplications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutReviewedByInput
   stays?: Prisma.StayUncheckedCreateNestedManyWithoutOccupantInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedCreateNestedManyWithoutReportedByInput
   invoicesAsPayer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPayerInput
   invoicesAsReceiver?: Prisma.InvoiceUncheckedCreateNestedManyWithoutReceiverInput
   paymentsAsPayer?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
@@ -2342,6 +2549,7 @@ export type UserUpdateWithoutCreatedPropertiesInput = {
   applications?: Prisma.ApplicationUpdateManyWithoutApplicantNestedInput
   reviewedApplications?: Prisma.ApplicationUpdateManyWithoutReviewedByNestedInput
   stays?: Prisma.StayUpdateManyWithoutOccupantNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUpdateManyWithoutReportedByNestedInput
   invoicesAsPayer?: Prisma.InvoiceUpdateManyWithoutPayerNestedInput
   invoicesAsReceiver?: Prisma.InvoiceUpdateManyWithoutReceiverNestedInput
   paymentsAsPayer?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
@@ -2373,6 +2581,7 @@ export type UserUncheckedUpdateWithoutCreatedPropertiesInput = {
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutApplicantNestedInput
   reviewedApplications?: Prisma.ApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
   stays?: Prisma.StayUncheckedUpdateManyWithoutOccupantNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedUpdateManyWithoutReportedByNestedInput
   invoicesAsPayer?: Prisma.InvoiceUncheckedUpdateManyWithoutPayerNestedInput
   invoicesAsReceiver?: Prisma.InvoiceUncheckedUpdateManyWithoutReceiverNestedInput
   paymentsAsPayer?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
@@ -2404,6 +2613,7 @@ export type UserCreateWithoutOwnedFlatsInput = {
   applications?: Prisma.ApplicationCreateNestedManyWithoutApplicantInput
   reviewedApplications?: Prisma.ApplicationCreateNestedManyWithoutReviewedByInput
   stays?: Prisma.StayCreateNestedManyWithoutOccupantInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceCreateNestedManyWithoutReportedByInput
   invoicesAsPayer?: Prisma.InvoiceCreateNestedManyWithoutPayerInput
   invoicesAsReceiver?: Prisma.InvoiceCreateNestedManyWithoutReceiverInput
   paymentsAsPayer?: Prisma.PaymentCreateNestedManyWithoutPayerInput
@@ -2435,6 +2645,7 @@ export type UserUncheckedCreateWithoutOwnedFlatsInput = {
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutApplicantInput
   reviewedApplications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutReviewedByInput
   stays?: Prisma.StayUncheckedCreateNestedManyWithoutOccupantInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedCreateNestedManyWithoutReportedByInput
   invoicesAsPayer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPayerInput
   invoicesAsReceiver?: Prisma.InvoiceUncheckedCreateNestedManyWithoutReceiverInput
   paymentsAsPayer?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
@@ -2482,6 +2693,7 @@ export type UserUpdateWithoutOwnedFlatsInput = {
   applications?: Prisma.ApplicationUpdateManyWithoutApplicantNestedInput
   reviewedApplications?: Prisma.ApplicationUpdateManyWithoutReviewedByNestedInput
   stays?: Prisma.StayUpdateManyWithoutOccupantNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUpdateManyWithoutReportedByNestedInput
   invoicesAsPayer?: Prisma.InvoiceUpdateManyWithoutPayerNestedInput
   invoicesAsReceiver?: Prisma.InvoiceUpdateManyWithoutReceiverNestedInput
   paymentsAsPayer?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
@@ -2513,6 +2725,7 @@ export type UserUncheckedUpdateWithoutOwnedFlatsInput = {
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutApplicantNestedInput
   reviewedApplications?: Prisma.ApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
   stays?: Prisma.StayUncheckedUpdateManyWithoutOccupantNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedUpdateManyWithoutReportedByNestedInput
   invoicesAsPayer?: Prisma.InvoiceUncheckedUpdateManyWithoutPayerNestedInput
   invoicesAsReceiver?: Prisma.InvoiceUncheckedUpdateManyWithoutReceiverNestedInput
   paymentsAsPayer?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
@@ -2544,6 +2757,7 @@ export type UserCreateWithoutTenantProfileInput = {
   applications?: Prisma.ApplicationCreateNestedManyWithoutApplicantInput
   reviewedApplications?: Prisma.ApplicationCreateNestedManyWithoutReviewedByInput
   stays?: Prisma.StayCreateNestedManyWithoutOccupantInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceCreateNestedManyWithoutReportedByInput
   invoicesAsPayer?: Prisma.InvoiceCreateNestedManyWithoutPayerInput
   invoicesAsReceiver?: Prisma.InvoiceCreateNestedManyWithoutReceiverInput
   paymentsAsPayer?: Prisma.PaymentCreateNestedManyWithoutPayerInput
@@ -2575,6 +2789,7 @@ export type UserUncheckedCreateWithoutTenantProfileInput = {
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutApplicantInput
   reviewedApplications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutReviewedByInput
   stays?: Prisma.StayUncheckedCreateNestedManyWithoutOccupantInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedCreateNestedManyWithoutReportedByInput
   invoicesAsPayer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPayerInput
   invoicesAsReceiver?: Prisma.InvoiceUncheckedCreateNestedManyWithoutReceiverInput
   paymentsAsPayer?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
@@ -2622,6 +2837,7 @@ export type UserUpdateWithoutTenantProfileInput = {
   applications?: Prisma.ApplicationUpdateManyWithoutApplicantNestedInput
   reviewedApplications?: Prisma.ApplicationUpdateManyWithoutReviewedByNestedInput
   stays?: Prisma.StayUpdateManyWithoutOccupantNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUpdateManyWithoutReportedByNestedInput
   invoicesAsPayer?: Prisma.InvoiceUpdateManyWithoutPayerNestedInput
   invoicesAsReceiver?: Prisma.InvoiceUpdateManyWithoutReceiverNestedInput
   paymentsAsPayer?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
@@ -2653,6 +2869,7 @@ export type UserUncheckedUpdateWithoutTenantProfileInput = {
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutApplicantNestedInput
   reviewedApplications?: Prisma.ApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
   stays?: Prisma.StayUncheckedUpdateManyWithoutOccupantNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedUpdateManyWithoutReportedByNestedInput
   invoicesAsPayer?: Prisma.InvoiceUncheckedUpdateManyWithoutPayerNestedInput
   invoicesAsReceiver?: Prisma.InvoiceUncheckedUpdateManyWithoutReceiverNestedInput
   paymentsAsPayer?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
@@ -2685,6 +2902,7 @@ export type UserCreateWithoutNotificationsInput = {
   applications?: Prisma.ApplicationCreateNestedManyWithoutApplicantInput
   reviewedApplications?: Prisma.ApplicationCreateNestedManyWithoutReviewedByInput
   stays?: Prisma.StayCreateNestedManyWithoutOccupantInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceCreateNestedManyWithoutReportedByInput
   invoicesAsPayer?: Prisma.InvoiceCreateNestedManyWithoutPayerInput
   invoicesAsReceiver?: Prisma.InvoiceCreateNestedManyWithoutReceiverInput
   paymentsAsPayer?: Prisma.PaymentCreateNestedManyWithoutPayerInput
@@ -2716,6 +2934,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutApplicantInput
   reviewedApplications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutReviewedByInput
   stays?: Prisma.StayUncheckedCreateNestedManyWithoutOccupantInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedCreateNestedManyWithoutReportedByInput
   invoicesAsPayer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPayerInput
   invoicesAsReceiver?: Prisma.InvoiceUncheckedCreateNestedManyWithoutReceiverInput
   paymentsAsPayer?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
@@ -2763,6 +2982,7 @@ export type UserUpdateWithoutNotificationsInput = {
   applications?: Prisma.ApplicationUpdateManyWithoutApplicantNestedInput
   reviewedApplications?: Prisma.ApplicationUpdateManyWithoutReviewedByNestedInput
   stays?: Prisma.StayUpdateManyWithoutOccupantNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUpdateManyWithoutReportedByNestedInput
   invoicesAsPayer?: Prisma.InvoiceUpdateManyWithoutPayerNestedInput
   invoicesAsReceiver?: Prisma.InvoiceUpdateManyWithoutReceiverNestedInput
   paymentsAsPayer?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
@@ -2794,6 +3014,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutApplicantNestedInput
   reviewedApplications?: Prisma.ApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
   stays?: Prisma.StayUncheckedUpdateManyWithoutOccupantNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedUpdateManyWithoutReportedByNestedInput
   invoicesAsPayer?: Prisma.InvoiceUncheckedUpdateManyWithoutPayerNestedInput
   invoicesAsReceiver?: Prisma.InvoiceUncheckedUpdateManyWithoutReceiverNestedInput
   paymentsAsPayer?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
@@ -2824,6 +3045,7 @@ export type UserCreateWithoutStaysInput = {
   advertisements?: Prisma.AdvertisementCreateNestedManyWithoutCreatedByInput
   applications?: Prisma.ApplicationCreateNestedManyWithoutApplicantInput
   reviewedApplications?: Prisma.ApplicationCreateNestedManyWithoutReviewedByInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceCreateNestedManyWithoutReportedByInput
   invoicesAsPayer?: Prisma.InvoiceCreateNestedManyWithoutPayerInput
   invoicesAsReceiver?: Prisma.InvoiceCreateNestedManyWithoutReceiverInput
   paymentsAsPayer?: Prisma.PaymentCreateNestedManyWithoutPayerInput
@@ -2855,6 +3077,7 @@ export type UserUncheckedCreateWithoutStaysInput = {
   advertisements?: Prisma.AdvertisementUncheckedCreateNestedManyWithoutCreatedByInput
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutApplicantInput
   reviewedApplications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutReviewedByInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedCreateNestedManyWithoutReportedByInput
   invoicesAsPayer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPayerInput
   invoicesAsReceiver?: Prisma.InvoiceUncheckedCreateNestedManyWithoutReceiverInput
   paymentsAsPayer?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
@@ -2902,6 +3125,7 @@ export type UserUpdateWithoutStaysInput = {
   advertisements?: Prisma.AdvertisementUpdateManyWithoutCreatedByNestedInput
   applications?: Prisma.ApplicationUpdateManyWithoutApplicantNestedInput
   reviewedApplications?: Prisma.ApplicationUpdateManyWithoutReviewedByNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUpdateManyWithoutReportedByNestedInput
   invoicesAsPayer?: Prisma.InvoiceUpdateManyWithoutPayerNestedInput
   invoicesAsReceiver?: Prisma.InvoiceUpdateManyWithoutReceiverNestedInput
   paymentsAsPayer?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
@@ -2933,6 +3157,7 @@ export type UserUncheckedUpdateWithoutStaysInput = {
   advertisements?: Prisma.AdvertisementUncheckedUpdateManyWithoutCreatedByNestedInput
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutApplicantNestedInput
   reviewedApplications?: Prisma.ApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedUpdateManyWithoutReportedByNestedInput
   invoicesAsPayer?: Prisma.InvoiceUncheckedUpdateManyWithoutPayerNestedInput
   invoicesAsReceiver?: Prisma.InvoiceUncheckedUpdateManyWithoutReceiverNestedInput
   paymentsAsPayer?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
@@ -2965,6 +3190,7 @@ export type UserCreateWithoutViewingRequestsInput = {
   applications?: Prisma.ApplicationCreateNestedManyWithoutApplicantInput
   reviewedApplications?: Prisma.ApplicationCreateNestedManyWithoutReviewedByInput
   stays?: Prisma.StayCreateNestedManyWithoutOccupantInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceCreateNestedManyWithoutReportedByInput
   invoicesAsPayer?: Prisma.InvoiceCreateNestedManyWithoutPayerInput
   invoicesAsReceiver?: Prisma.InvoiceCreateNestedManyWithoutReceiverInput
   paymentsAsPayer?: Prisma.PaymentCreateNestedManyWithoutPayerInput
@@ -2996,6 +3222,7 @@ export type UserUncheckedCreateWithoutViewingRequestsInput = {
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutApplicantInput
   reviewedApplications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutReviewedByInput
   stays?: Prisma.StayUncheckedCreateNestedManyWithoutOccupantInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedCreateNestedManyWithoutReportedByInput
   invoicesAsPayer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPayerInput
   invoicesAsReceiver?: Prisma.InvoiceUncheckedCreateNestedManyWithoutReceiverInput
   paymentsAsPayer?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
@@ -3032,6 +3259,7 @@ export type UserCreateWithoutReviewedViewingRequestsInput = {
   applications?: Prisma.ApplicationCreateNestedManyWithoutApplicantInput
   reviewedApplications?: Prisma.ApplicationCreateNestedManyWithoutReviewedByInput
   stays?: Prisma.StayCreateNestedManyWithoutOccupantInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceCreateNestedManyWithoutReportedByInput
   invoicesAsPayer?: Prisma.InvoiceCreateNestedManyWithoutPayerInput
   invoicesAsReceiver?: Prisma.InvoiceCreateNestedManyWithoutReceiverInput
   paymentsAsPayer?: Prisma.PaymentCreateNestedManyWithoutPayerInput
@@ -3063,6 +3291,7 @@ export type UserUncheckedCreateWithoutReviewedViewingRequestsInput = {
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutApplicantInput
   reviewedApplications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutReviewedByInput
   stays?: Prisma.StayUncheckedCreateNestedManyWithoutOccupantInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedCreateNestedManyWithoutReportedByInput
   invoicesAsPayer?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPayerInput
   invoicesAsReceiver?: Prisma.InvoiceUncheckedCreateNestedManyWithoutReceiverInput
   paymentsAsPayer?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
@@ -3110,6 +3339,7 @@ export type UserUpdateWithoutViewingRequestsInput = {
   applications?: Prisma.ApplicationUpdateManyWithoutApplicantNestedInput
   reviewedApplications?: Prisma.ApplicationUpdateManyWithoutReviewedByNestedInput
   stays?: Prisma.StayUpdateManyWithoutOccupantNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUpdateManyWithoutReportedByNestedInput
   invoicesAsPayer?: Prisma.InvoiceUpdateManyWithoutPayerNestedInput
   invoicesAsReceiver?: Prisma.InvoiceUpdateManyWithoutReceiverNestedInput
   paymentsAsPayer?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
@@ -3141,6 +3371,7 @@ export type UserUncheckedUpdateWithoutViewingRequestsInput = {
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutApplicantNestedInput
   reviewedApplications?: Prisma.ApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
   stays?: Prisma.StayUncheckedUpdateManyWithoutOccupantNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedUpdateManyWithoutReportedByNestedInput
   invoicesAsPayer?: Prisma.InvoiceUncheckedUpdateManyWithoutPayerNestedInput
   invoicesAsReceiver?: Prisma.InvoiceUncheckedUpdateManyWithoutReceiverNestedInput
   paymentsAsPayer?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
@@ -3183,6 +3414,7 @@ export type UserUpdateWithoutReviewedViewingRequestsInput = {
   applications?: Prisma.ApplicationUpdateManyWithoutApplicantNestedInput
   reviewedApplications?: Prisma.ApplicationUpdateManyWithoutReviewedByNestedInput
   stays?: Prisma.StayUpdateManyWithoutOccupantNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUpdateManyWithoutReportedByNestedInput
   invoicesAsPayer?: Prisma.InvoiceUpdateManyWithoutPayerNestedInput
   invoicesAsReceiver?: Prisma.InvoiceUpdateManyWithoutReceiverNestedInput
   paymentsAsPayer?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
@@ -3214,6 +3446,7 @@ export type UserUncheckedUpdateWithoutReviewedViewingRequestsInput = {
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutApplicantNestedInput
   reviewedApplications?: Prisma.ApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
   stays?: Prisma.StayUncheckedUpdateManyWithoutOccupantNestedInput
+  reportedMaintenanceRequests?: Prisma.MaintenanceUncheckedUpdateManyWithoutReportedByNestedInput
   invoicesAsPayer?: Prisma.InvoiceUncheckedUpdateManyWithoutPayerNestedInput
   invoicesAsReceiver?: Prisma.InvoiceUncheckedUpdateManyWithoutReceiverNestedInput
   paymentsAsPayer?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
@@ -3235,6 +3468,7 @@ export type UserCountOutputType = {
   applications: number
   reviewedApplications: number
   stays: number
+  reportedMaintenanceRequests: number
   invoicesAsPayer: number
   invoicesAsReceiver: number
   paymentsAsPayer: number
@@ -3252,6 +3486,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   applications?: boolean | UserCountOutputTypeCountApplicationsArgs
   reviewedApplications?: boolean | UserCountOutputTypeCountReviewedApplicationsArgs
   stays?: boolean | UserCountOutputTypeCountStaysArgs
+  reportedMaintenanceRequests?: boolean | UserCountOutputTypeCountReportedMaintenanceRequestsArgs
   invoicesAsPayer?: boolean | UserCountOutputTypeCountInvoicesAsPayerArgs
   invoicesAsReceiver?: boolean | UserCountOutputTypeCountInvoicesAsReceiverArgs
   paymentsAsPayer?: boolean | UserCountOutputTypeCountPaymentsAsPayerArgs
@@ -3318,6 +3553,13 @@ export type UserCountOutputTypeCountReviewedApplicationsArgs<ExtArgs extends run
  */
 export type UserCountOutputTypeCountStaysArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.StayWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountReportedMaintenanceRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MaintenanceWhereInput
 }
 
 /**
@@ -3393,6 +3635,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   applications?: boolean | Prisma.User$applicationsArgs<ExtArgs>
   reviewedApplications?: boolean | Prisma.User$reviewedApplicationsArgs<ExtArgs>
   stays?: boolean | Prisma.User$staysArgs<ExtArgs>
+  reportedMaintenanceRequests?: boolean | Prisma.User$reportedMaintenanceRequestsArgs<ExtArgs>
   invoicesAsPayer?: boolean | Prisma.User$invoicesAsPayerArgs<ExtArgs>
   invoicesAsReceiver?: boolean | Prisma.User$invoicesAsReceiverArgs<ExtArgs>
   paymentsAsPayer?: boolean | Prisma.User$paymentsAsPayerArgs<ExtArgs>
@@ -3460,6 +3703,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   applications?: boolean | Prisma.User$applicationsArgs<ExtArgs>
   reviewedApplications?: boolean | Prisma.User$reviewedApplicationsArgs<ExtArgs>
   stays?: boolean | Prisma.User$staysArgs<ExtArgs>
+  reportedMaintenanceRequests?: boolean | Prisma.User$reportedMaintenanceRequestsArgs<ExtArgs>
   invoicesAsPayer?: boolean | Prisma.User$invoicesAsPayerArgs<ExtArgs>
   invoicesAsReceiver?: boolean | Prisma.User$invoicesAsReceiverArgs<ExtArgs>
   paymentsAsPayer?: boolean | Prisma.User$paymentsAsPayerArgs<ExtArgs>
@@ -3485,6 +3729,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     applications: Prisma.$ApplicationPayload<ExtArgs>[]
     reviewedApplications: Prisma.$ApplicationPayload<ExtArgs>[]
     stays: Prisma.$StayPayload<ExtArgs>[]
+    reportedMaintenanceRequests: Prisma.$MaintenancePayload<ExtArgs>[]
     invoicesAsPayer: Prisma.$InvoicePayload<ExtArgs>[]
     invoicesAsReceiver: Prisma.$InvoicePayload<ExtArgs>[]
     paymentsAsPayer: Prisma.$PaymentPayload<ExtArgs>[]
@@ -3910,6 +4155,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   applications<T extends Prisma.User$applicationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$applicationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reviewedApplications<T extends Prisma.User$reviewedApplicationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reviewedApplicationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   stays<T extends Prisma.User$staysArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$staysArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  reportedMaintenanceRequests<T extends Prisma.User$reportedMaintenanceRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reportedMaintenanceRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MaintenancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   invoicesAsPayer<T extends Prisma.User$invoicesAsPayerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$invoicesAsPayerArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   invoicesAsReceiver<T extends Prisma.User$invoicesAsReceiverArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$invoicesAsReceiverArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   paymentsAsPayer<T extends Prisma.User$paymentsAsPayerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$paymentsAsPayerArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -4573,6 +4819,30 @@ export type User$staysArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
   take?: number
   skip?: number
   distinct?: Prisma.StayScalarFieldEnum | Prisma.StayScalarFieldEnum[]
+}
+
+/**
+ * User.reportedMaintenanceRequests
+ */
+export type User$reportedMaintenanceRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Maintenance
+   */
+  select?: Prisma.MaintenanceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Maintenance
+   */
+  omit?: Prisma.MaintenanceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MaintenanceInclude<ExtArgs> | null
+  where?: Prisma.MaintenanceWhereInput
+  orderBy?: Prisma.MaintenanceOrderByWithRelationInput | Prisma.MaintenanceOrderByWithRelationInput[]
+  cursor?: Prisma.MaintenanceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MaintenanceScalarFieldEnum | Prisma.MaintenanceScalarFieldEnum[]
 }
 
 /**

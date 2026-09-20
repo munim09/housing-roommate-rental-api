@@ -2,6 +2,7 @@ import httpStatus from "http-status";
 import {
     BillStatus,
     InvoiceType,
+    MaintenanceStatus,
     ManagerAssignmentStatus,
     Prisma,
     RentalType,
@@ -13,6 +14,8 @@ import { AppError } from "../../utils/AppError";
 import {
     ICreateUtilityInvoice,
     IManagerApplicationQuery,
+    IManagerMaintenanceRequestQuery,
+    IUpdateMaintenanceRequest,
     IUpdateUtilityInvoice,
 } from "./manager.interface";
 
@@ -498,10 +501,196 @@ const updateUtilityInvoice = async (
     return updatedInvoice;
 };
 
+const getMaintenanceRequests = async (
+    userId: string,
+    role: Role,
+    query: IManagerMaintenanceRequestQuery,
+) => {
+    // const { status, priority, stayId, page = 1, limit = 10 } = query;
+
+    const where: Prisma.MaintenanceWhereInput = {};
+
+    // if (status) {
+    //     where.status = status;
+    // }
+
+    // if (priority) {
+    //     where.priority = priority;
+    // }
+
+    // if (stayId) {
+    //     where.stayId = stayId;
+    // }
+
+    if (role === Role.OWNER) {
+        where.stay = {
+            rentalType: {
+                in: [RentalType.PRIMARY_ENTIRE_FLAT, RentalType.PRIMARY_ROOM],
+            },
+            flat: {
+                ownerships: {
+                    some: { ownerId: userId, status: "ACTIVE" },
+                },
+            },
+        };
+    } else {
+        where.stay = {
+            rentalType: {
+                in: [RentalType.PRIMARY_ENTIRE_FLAT, RentalType.PRIMARY_ROOM],
+            },
+            flat: {
+                managerAssignments: {
+                    some: { managerId: userId, status: "ACTIVE" },
+                },
+            },
+        };
+    }
+
+    const total = await prisma.maintenance.count({ where });
+
+    const maintenanceRequests = await prisma.maintenance.findMany({
+        where,
+        select: {
+            id: true,
+            stayId: true,
+            issue: true,
+            description: true,
+            images: true,
+            status: true,
+            priority: true,
+            reportedById: true,
+
+            scheduledFor: true,
+            resolvedAt: true,
+            createdAt: true,
+            updatedAt: true,
+            stay: {
+                select: {
+                    id: true,
+                    status: true,
+                    rentalType: true,
+                    property: {
+                        select: { id: true, name: true, address: true },
+                    },
+                    flat: {
+                        select: { id: true, flatNumber: true },
+                    },
+                    room: {
+                        select: { id: true, roomNumber: true },
+                    },
+                },
+            },
+            reportedBy: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    phone: true,
+                },
+            },
+        },
+        orderBy: { createdAt: "desc" },
+    });
+
+    return {
+        maintenanceRequests,
+    };
+};
+
+const assertMaintenanceAccess = async (
+    userId: string,
+    role: Role,
+    flatId: string,
+) => {
+    if (role === Role.OWNER) {
+        const ownership = await prisma.propertyOwnership.findFirst({
+            where: { flatId, ownerId: userId, status: "ACTIVE" },
+        });
+
+        if (!ownership) {
+            throw new AppError(
+                httpStatus.FORBIDDEN,
+                "You do not own this flat",
+            );
+        }
+    } else {
+        const assignment = await prisma.managerAssignment.findFirst({
+            where: { flatId, managerId: userId, status: "ACTIVE" },
+        });
+
+        if (!assignment) {
+            throw new AppError(
+                httpStatus.FORBIDDEN,
+                "You are not assigned to manage this flat",
+            );
+        }
+    }
+};
+
+const updateMaintenanceRequest = async (
+    userId: string,
+    role: Role,
+    maintenanceId: string,
+    payload: IUpdateMaintenanceRequest,
+) => {
+    const { status, scheduledFor, resolvedAt } = payload;
+
+    const maintenance = await prisma.maintenance.findUnique({
+        where: { id: maintenanceId },
+        include: { stay: { select: { id: true, flatId: true } } },
+    });
+
+    if (!maintenance) {
+        throw new AppError(
+            httpStatus.NOT_FOUND,
+            "Maintenance request not found",
+        );
+    }
+
+    await assertMaintenanceAccess(userId, role, maintenance.stay.flatId);
+
+    let effectiveResolvedAt: Date | null | undefined = resolvedAt;
+
+    if (status) {
+        if (
+            status === MaintenanceStatus.RESOLVED ||
+            status === MaintenanceStatus.CLOSED
+        ) {
+            effectiveResolvedAt = effectiveResolvedAt ?? new Date();
+        } else if (effectiveResolvedAt === undefined) {
+            effectiveResolvedAt = null;
+        }
+    }
+
+    return prisma.maintenance.update({
+        where: { id: maintenanceId },
+        data: {
+            status: status ?? maintenance.status,
+            scheduledFor: scheduledFor ?? maintenance.scheduledFor,
+            resolvedAt: effectiveResolvedAt ?? maintenance.resolvedAt,
+        },
+        select: {
+            id: true,
+            stayId: true,
+            issue: true,
+            description: true,
+            status: true,
+            priority: true,
+            reportedById: true,
+            scheduledFor: true,
+            resolvedAt: true,
+            createdAt: true,
+            updatedAt: true,
+        },
+    });
+};
+
 export const ManagerService = {
     getMyFlats,
     getMyAdvertisements,
     getApplications,
     createUtilityInvoice,
     updateUtilityInvoice,
+    getMaintenanceRequests,
+    updateMaintenanceRequest,
 };

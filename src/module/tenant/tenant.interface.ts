@@ -48,3 +48,17 @@ export interface IStayInvoiceQuery {
     page?: number;
     limit?: number;
 }
+
+export interface ICreateMaintenanceRequest {
+    stayId: string;
+    issue: string;
+    description?: string;
+    priority?: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+}
+
+export interface IMaintenanceRequestQuery {
+    status?: "OPEN" | "IN_PROGRESS" | "RESOLVED" | "CLOSED" | "CANCELLED";
+    priority?: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+    page?: number;
+    limit?: number;
+}

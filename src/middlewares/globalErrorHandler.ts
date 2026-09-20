@@ -1,7 +1,11 @@
+// import type { NextFunction, Request, Response } from "express";
+// import httpStatus from "http-status";
+// import { Prisma } from "../../generated/prisma/client";
+// import { AppError } from "../utils/AppError";
+
 import type { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
 import { Prisma } from "../../generated/prisma/client";
-import config from "../config";
 import { AppError } from "../utils/AppError";
 
 export const globalErrorHandler = async (
@@ -10,9 +14,11 @@ export const globalErrorHandler = async (
     res: Response,
     _next: NextFunction,
 ) => {
-    if (config.node_env === "development") {
-        console.log("Error from Global Error Handler", err);
-    }
+    // if (config.node_env === "development") {
+    //     console.log("Error from Global Error Handler", err);
+    // }
+    console.log("Error occured ....... ");
+    console.log("Error from Global Error Handler", err);
 
     let statusCode: number = httpStatus.INTERNAL_SERVER_ERROR;
     let errorMessage = err.message || "Internal Server Error";
@@ -54,18 +60,89 @@ export const globalErrorHandler = async (
         errorMessage = err.message;
     }
 
+    // res.status(statusCode).json({
+    //     success: false,
+    //     statusCode: statusCode || httpStatus.INTERNAL_SERVER_ERROR,
+    //     name:
+    //         config.node_env === "development"
+    //             ? errorName
+    //             : "Internal Server Error",
+    //     message:
+    //         config.node_env === "development"
+    //             ? errorMessage
+    //             : "Internal Server Error",
+    //     error: config.node_env === "development" ? err : undefined,
+    //     stack: config.node_env === "development" ? err.stack : undefined,
+    // });
+
     res.status(statusCode).json({
         success: false,
         statusCode: statusCode || httpStatus.INTERNAL_SERVER_ERROR,
-        name:
-            config.node_env === "development"
-                ? errorName
-                : "Internal Server Error",
-        message:
-            config.node_env === "development"
-                ? errorMessage
-                : "Internal Server Error",
-        // error: config.node_env === "development" ? err : undefined,
-        // stack: config.node_env === "development" ? err.stack : undefined,
+        name: errorName,
+        message: errorMessage,
+        // error: err,
+        // stack: err.stack,
     });
 };
+
+// export const globalErrorHandler = (
+//     err: any,
+//     _req: Request,
+//     res: Response,
+//     _next: NextFunction,
+// ) => {
+//     console.error("Global Error:", err);
+
+//     let statusCode: number = httpStatus.INTERNAL_SERVER_ERROR;
+//     let errorMessage = "Internal Server Error";
+//     let errorName = "Error";
+
+//     if (err instanceof Prisma.PrismaClientValidationError) {
+//         statusCode = httpStatus.BAD_REQUEST;
+//         errorMessage =
+//             "You have provided incorrect field type or missing fields";
+//         errorName = err.name;
+//     } else if (err instanceof Prisma.PrismaClientKnownRequestError) {
+//         errorName = err.name;
+
+//         if (err.code === "P2002") {
+//             statusCode = httpStatus.BAD_REQUEST;
+//             errorMessage = "Duplicate Key Error";
+//         } else if (err.code === "P2003") {
+//             statusCode = httpStatus.BAD_REQUEST;
+//             errorMessage = "Foreign key constraint failed";
+//         } else if (err.code === "P2025") {
+//             statusCode = httpStatus.BAD_REQUEST;
+//             errorMessage =
+//                 "An operation failed because it depends on one or more records that were required but not found.";
+//         }
+//     } else if (err instanceof Prisma.PrismaClientInitializationError) {
+//         errorName = err.name;
+
+//         if (err.errorCode === "P1000") {
+//             statusCode = httpStatus.UNAUTHORIZED;
+//             errorMessage =
+//                 "Authentication failed against database server. Please check your credentials.";
+//         } else if (err.errorCode === "P1001") {
+//             statusCode = httpStatus.BAD_REQUEST;
+//             errorMessage = "Can't reach database server";
+//         }
+//     } else if (err instanceof AppError) {
+//         statusCode = err.statusCode;
+//         errorMessage = err.message;
+//         errorName = err.name;
+//     } else if (err instanceof Error) {
+//         statusCode = httpStatus.INTERNAL_SERVER_ERROR;
+//         errorMessage = err.message;
+//         errorName = err.name;
+//     }
+
+//     res.status(statusCode).json({
+//         success: false,
+//         statusCode,
+//         name: errorName,
+//         message: errorMessage,
+//         error: err,
+//         stack: err.stack,
+//     });
+// };

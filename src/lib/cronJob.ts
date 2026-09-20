@@ -6,8 +6,8 @@ import {
     StayStatus,
     UserStatus,
 } from "../../generated/prisma/client";
-import { prisma } from "./prisma";
 import { PaymentService } from "../module/payment/payment.service";
+import { prisma } from "./prisma";
 
 const OVERDUE_GRACE_MS = 60 * 60 * 1000;
 const UNVERIFIED_USER_GRACE_MS = 2 * 60 * 60 * 1000;
@@ -18,6 +18,8 @@ let isDeletingUnverifiedUsers = false;
 let isVerifyingPendingPayments = false;
 
 export const cancelOverdueStays = async () => {
+    console.log("[cron] cancelOverdueStays started");
+
     if (isRunning) {
         return;
     }
@@ -85,9 +87,12 @@ export const cancelOverdueStays = async () => {
     } finally {
         isRunning = false;
     }
+
+    console.log("[cron] cancelOverdueStays ended");
 };
 
 export const deleteUnverifiedUsers = async () => {
+    console.log("[cron] deleteUnverifiedUsers started");
     if (isDeletingUnverifiedUsers) {
         return;
     }
@@ -113,9 +118,11 @@ export const deleteUnverifiedUsers = async () => {
     } finally {
         isDeletingUnverifiedUsers = false;
     }
+    console.log("[cron] deleteUnverifiedUsers ended");
 };
 
 export const verifyPendingPayments = async () => {
+    console.log("[cron] verifyPendingPayments started");
     if (isVerifyingPendingPayments) {
         return;
     }
@@ -173,12 +180,17 @@ export const verifyPendingPayments = async () => {
     } finally {
         isVerifyingPendingPayments = false;
     }
+    console.log("[cron] verifyPendingPayments ended");
 };
 
 export const startCronJobs = async () => {
     cron.schedule("0 * * * *", cancelOverdueStays);
-    cron.schedule("0 * * * *", deleteUnverifiedUsers);
+    cron.schedule("0 */2 * * *", deleteUnverifiedUsers);
     cron.schedule("0 */12 * * *", verifyPendingPayments);
+
+    // cron.schedule("*/4 * * * *", cancelOverdueStays);
+    // cron.schedule("*/5 * * * *", deleteUnverifiedUsers);
+    // cron.schedule("*/6 * * * *", verifyPendingPayments);
 
     console.log(
         "[cron] Cron jobs started. Overdue stay and unverified user checks run every hour. Pending payment check runs every 12 hours.",

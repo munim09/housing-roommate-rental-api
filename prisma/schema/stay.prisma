@@ -56,6 +56,8 @@ model Stay {
 
   payments Payment[]
 
+  maintenanceRequests Maintenance[]
+
   @@index([occupantId])
   @@index([propertyId])
   @@index([flatId])

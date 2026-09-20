@@ -5,7 +5,9 @@ export const catchAsync = (fn: RequestHandler) => {
         try {
             await fn(req, res, next);
         } catch (error) {
+            console.log("Error from catchAsync Start");
             console.log(error);
+            console.log("Error from catchAsync End");
 
             // res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
             //     success: false,

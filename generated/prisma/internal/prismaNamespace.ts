@@ -404,6 +404,7 @@ export const ModelName = {
   City: 'City',
   Flat: 'Flat',
   Invoice: 'Invoice',
+  Maintenance: 'Maintenance',
   ManagerAssignment: 'ManagerAssignment',
   ManagerProfile: 'ManagerProfile',
   OwnerProfile: 'OwnerProfile',
@@ -431,7 +432,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "accommodationImage" | "advertisement" | "application" | "area" | "city" | "flat" | "invoice" | "managerAssignment" | "managerProfile" | "ownerProfile" | "payment" | "property" | "propertyOwnership" | "room" | "tenantProfile" | "notification" | "stay" | "user" | "viewingRequest"
+    modelProps: "accommodationImage" | "advertisement" | "application" | "area" | "city" | "flat" | "invoice" | "maintenance" | "managerAssignment" | "managerProfile" | "ownerProfile" | "payment" | "property" | "propertyOwnership" | "room" | "tenantProfile" | "notification" | "stay" | "user" | "viewingRequest"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -950,6 +951,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.InvoiceCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.InvoiceCountAggregateOutputType> | number
+        }
+      }
+    }
+    Maintenance: {
+      payload: Prisma.$MaintenancePayload<ExtArgs>
+      fields: Prisma.MaintenanceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MaintenanceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MaintenancePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MaintenanceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MaintenancePayload>
+        }
+        findFirst: {
+          args: Prisma.MaintenanceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MaintenancePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MaintenanceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MaintenancePayload>
+        }
+        findMany: {
+          args: Prisma.MaintenanceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MaintenancePayload>[]
+        }
+        create: {
+          args: Prisma.MaintenanceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MaintenancePayload>
+        }
+        createMany: {
+          args: Prisma.MaintenanceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MaintenanceCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MaintenancePayload>[]
+        }
+        delete: {
+          args: Prisma.MaintenanceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MaintenancePayload>
+        }
+        update: {
+          args: Prisma.MaintenanceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MaintenancePayload>
+        }
+        deleteMany: {
+          args: Prisma.MaintenanceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MaintenanceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MaintenanceUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MaintenancePayload>[]
+        }
+        upsert: {
+          args: Prisma.MaintenanceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MaintenancePayload>
+        }
+        aggregate: {
+          args: Prisma.MaintenanceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMaintenance>
+        }
+        groupBy: {
+          args: Prisma.MaintenanceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MaintenanceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MaintenanceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MaintenanceCountAggregateOutputType> | number
         }
       }
     }
@@ -1991,6 +2066,24 @@ export const InvoiceScalarFieldEnum = {
 export type InvoiceScalarFieldEnum = (typeof InvoiceScalarFieldEnum)[keyof typeof InvoiceScalarFieldEnum]
 
 
+export const MaintenanceScalarFieldEnum = {
+  id: 'id',
+  stayId: 'stayId',
+  issue: 'issue',
+  description: 'description',
+  images: 'images',
+  status: 'status',
+  priority: 'priority',
+  reportedById: 'reportedById',
+  scheduledFor: 'scheduledFor',
+  resolvedAt: 'resolvedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MaintenanceScalarFieldEnum = (typeof MaintenanceScalarFieldEnum)[keyof typeof MaintenanceScalarFieldEnum]
+
+
 export const ManagerAssignmentScalarFieldEnum = {
   id: 'id',
   flatId: 'flatId',
@@ -2375,6 +2468,34 @@ export type ListEnumBillStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$P
 
 
 /**
+ * Reference to a field of type 'MaintenanceStatus'
+ */
+export type EnumMaintenanceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MaintenanceStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'MaintenanceStatus[]'
+ */
+export type ListEnumMaintenanceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MaintenanceStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'MaintenancePriority'
+ */
+export type EnumMaintenancePriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MaintenancePriority'>
+    
+
+
+/**
+ * Reference to a field of type 'MaintenancePriority[]'
+ */
+export type ListEnumMaintenancePriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MaintenancePriority[]'>
+    
+
+
+/**
  * Reference to a field of type 'ManagerAssignmentStatus'
  */
 export type EnumManagerAssignmentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ManagerAssignmentStatus'>
@@ -2741,6 +2862,7 @@ export type GlobalOmitConfig = {
   city?: Prisma.CityOmit
   flat?: Prisma.FlatOmit
   invoice?: Prisma.InvoiceOmit
+  maintenance?: Prisma.MaintenanceOmit
   managerAssignment?: Prisma.ManagerAssignmentOmit
   managerProfile?: Prisma.ManagerProfileOmit
   ownerProfile?: Prisma.OwnerProfileOmit

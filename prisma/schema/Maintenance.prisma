@@ -1,0 +1,45 @@
+// ============================================================
+// MAINTENANCE
+// ============================================================
+//
+// A maintenance request raised against a stay.
+//
+// ============================================================
+
+model Maintenance {
+  id String @id @default(uuid())
+
+  stayId String
+
+  issue String
+
+  description String?
+
+  images String[]
+
+  status MaintenanceStatus @default(OPEN)
+
+  priority MaintenancePriority @default(MEDIUM)
+
+  reportedById String
+
+  scheduledFor DateTime?
+
+  resolvedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // ----------------------------------------------------------
+  // Relations
+  // ----------------------------------------------------------
+
+  stay Stay @relation(fields: [stayId], references: [id])
+
+  reportedBy User @relation("MaintenanceReporter", fields: [reportedById], references: [id])
+
+  @@index([stayId])
+  @@index([status])
+  @@index([priority])
+  @@index([reportedById])
+}

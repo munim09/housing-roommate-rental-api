@@ -57,6 +57,13 @@ const login = async (payload: { email: string; password: string }) => {
         );
     }
 
+    if (user.status === UserStatus.PENDING_APPROVAL) {
+        throw new AppError(
+            httpStatus.FORBIDDEN,
+            "Your account is not active. Please contact support.",
+        );
+    }
+
     if (user.status === UserStatus.SUSPENDED) {
         throw new AppError(
             httpStatus.FORBIDDEN,
@@ -120,6 +127,7 @@ const register = async (payload: {
 
     if (existingUser) {
         throw new AppError(httpStatus.BAD_REQUEST, "User already exists");
+        // throw new Error("User already exists");
     }
 
     const saltRounds = Number(config.BCRYPT_SALT_ROUNDS) || 10;
@@ -269,9 +277,10 @@ const refreshToken = async (token: string) => {
     if (!verifiedRefreshToken.success || !verifiedRefreshToken.data) {
         throw new AppError(
             httpStatus.UNAUTHORIZED,
-            config.node_env === "development"
-                ? verifiedRefreshToken.error
-                : "Invalid refresh token",
+            "Invalid refresh token",
+            // config.node_env === "development"
+            //     ? verifiedRefreshToken.error
+            //     : "Invalid refresh token",
         );
     }
 
