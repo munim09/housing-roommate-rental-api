@@ -1,0 +1,2969 @@
+{
+  "info": {
+    "_postman_id": "1255ae84-db9b-42c5-9313-57e2ec425a44",
+    "name": "Housing-Rental",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "564572"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"munim\",\n    \"email\": \"szmunim9@gmail.com\",\n    \"password\": \"password123\",\n    \"role\": \"TENANT\",\n    \"phone\" : \"0120000002\"\n\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/register",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Expected: **201**. Creates a `User` (`role: PATIENT`, `emailVerified: false`) and sends a 6-digit OTP to the given email (valid for a limited time). No tokens are issued yet — call **Verify Email** next with the OTP to receive `accessToken`/`refreshToken`.\n\n`patient` is optional; only `contactNumber` is accepted on it at registration time."
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Email",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();\n\nif (res && res.data && res.data.accessToken) {\n    pm.collectionVariables.set(\"accessToken\", res.data.accessToken);\n    pm.collectionVariables.set(\"refreshToken\", res.data.refreshToken || \"\");\n}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"szmunim9@gmail.com\",\n    \"otp\": \"897035\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/verify",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "verify"
+              ]
+            },
+            "description": "Expected: **201**. Confirms the OTP sent by **Register Patient**, marks the user verified, and returns `data: { accessToken, refreshToken, user, patient }` (also set as `accessToken`/`refreshToken` cookies). The test script saves both tokens as collection variables."
+          },
+          "response": []
+        },
+        {
+          "name": "Google Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();\n\nif (res && res.data && res.data.accessToken) {\n    pm.collectionVariables.set(\"accessToken\", res.data.accessToken);\n    pm.collectionVariables.set(\"refreshToken\", res.data.refreshToken || \"\");\n}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"idToken\": \"<google_token>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/google",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "google"
+              ]
+            },
+            "description": "Expected: **200**, returning the app's own `accessToken`/`refreshToken` (body + cookies).\n\nResolution order: (1) known `googleId` (matched by the stable `sub` claim), (2) an existing account with the same email gets linked (`googleId` set, `emailVerified` forced true; an existing password is preserved), (3) otherwise a new `PATIENT` user + `Patient` row is provisioned.\n\n`idToken` must be a real Google ID token verified against `GOOGLE_CLIENT_ID` — see `GOOGLE-LOGIN-TESTING.md` in the repo for how to obtain one for manual testing."
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();\n\nif (res && res.data && res.data.accessToken) {\n    pm.collectionVariables.set(\"accessToken\", res.data.accessToken);\n    pm.collectionVariables.set(\"refreshToken\", res.data.refreshToken || \"\");\n}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"szmunim9@gmail.com\",\n    \"password\": \"password123\"\n}\n\n/*\n    Tenant:\n    \"email\": \"szmunim9@gmail.com\",\n    \"password\": \"password123\"\n    \"email\": \"tenant1@housing.com\", \"tenant2@housing.com\", \"tenant3@housing.com\",\n\n    Manager: \n    \"email\": \"sz.munim@gmail.com\",\n    \"password\": \"password123\"\n\n    Owner:\n    \"email\": \"szdesco@gmail.com\",\n    \"password\": \"password123\"\n    \n    Admin:\n    \"email\": \"admin@housing.com\",\n    \"password\": \"password123\"\n*/",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Expected: **201**. Confirms the OTP sent by **Register Patient**, marks the user verified, and returns `data: { accessToken, refreshToken, user, patient }` (also set as `accessToken`/`refreshToken` cookies). The test script saves both tokens as collection variables."
+          },
+          "response": []
+        },
+        {
+          "name": "Login Owner",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();\n\nif (res && res.data && res.data.accessToken) {\n    pm.collectionVariables.set(\"accessToken\", res.data.accessToken);\n    pm.collectionVariables.set(\"refreshToken\", res.data.refreshToken || \"\");\n}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"szdesco@gmail.com\",\n    \"password\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Expected: **201**. Confirms the OTP sent by **Register Patient**, marks the user verified, and returns `data: { accessToken, refreshToken, user, patient }` (also set as `accessToken`/`refreshToken` cookies). The test script saves both tokens as collection variables."
+          },
+          "response": []
+        },
+        {
+          "name": "Login Manager",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();\n\nif (res && res.data && res.data.accessToken) {\n    pm.collectionVariables.set(\"accessToken\", res.data.accessToken);\n    pm.collectionVariables.set(\"refreshToken\", res.data.refreshToken || \"\");\n}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"sz.munim@gmail.com\",\n    \"password\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Expected: **201**. Confirms the OTP sent by **Register Patient**, marks the user verified, and returns `data: { accessToken, refreshToken, user, patient }` (also set as `accessToken`/`refreshToken` cookies). The test script saves both tokens as collection variables."
+          },
+          "response": []
+        },
+        {
+          "name": "Login admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();\n\nif (res && res.data && res.data.accessToken) {\n    pm.collectionVariables.set(\"accessToken\", res.data.accessToken);\n    pm.collectionVariables.set(\"refreshToken\", res.data.refreshToken || \"\");\n}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"admin@housing.com\",\n    \"password\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Expected: **201**. Confirms the OTP sent by **Register Patient**, marks the user verified, and returns `data: { accessToken, refreshToken, user, patient }` (also set as `accessToken`/`refreshToken` cookies). The test script saves both tokens as collection variables."
+          },
+          "response": []
+        },
+        {
+          "name": "Update-profile",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();\n\nif (res && res.data && res.data.accessToken) {\n    pm.collectionVariables.set(\"accessToken\", res.data.accessToken);\n    pm.collectionVariables.set(\"refreshToken\", res.data.refreshToken || \"\");\n}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nid\": \"sz.munim@gmail.com\",\n    \"address\": \"new address\",\n    \"occupation\" : \"Service holder\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/update-profile",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "update-profile"
+              ]
+            },
+            "description": "Expected: **201**. Confirms the OTP sent by **Register Patient**, marks the user verified, and returns `data: { accessToken, refreshToken, user, patient }` (also set as `accessToken`/`refreshToken` cookies). The test script saves both tokens as collection variables."
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh-token",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/refresh-token",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "refresh-token"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"szmunim9@gmail.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/forgot-password",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "forgot-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\" : \"szmunim9@gmail.com\",\r\n    \"newPassword\": \"password123\",\r\n    \"otp\": \"845118\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/reset-password",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "reset-password"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "All seven credential-auth endpoints under `/api/v1/auth`. `Get Me` is gated by `auth(ADMIN, DOCTOR, PATIENT, SUPER_ADMIN)` — every role passes, so the gate really just means \"authenticated\". Password rule enforced by Zod on register/login/reset: min 8 chars, at least one lowercase, one uppercase, one digit, one special character."
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Update User Status",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"status\" : \"ACTIVE\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/admin/users/a8fcd7d5-b451-4191-89ae-594a55222188/status",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "users",
+                "a8fcd7d5-b451-4191-89ae-594a55222188",
+                "status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add City",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Faridpur\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/admin/cities",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "cities"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Area",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "\r\n{\r\n  \"cityId\": \"47df0f2f-652d-402c-a471-05b3899d85ff\",\r\n  \"name\": \"Borobaza\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/admin/areas",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "areas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "All user",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/admin/users/profiles",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "users",
+                "profiles"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Owner",
+      "item": [
+        {
+          "name": "Add Property",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();\n\nif (res && res.data && res.data.accessToken) {\n    pm.collectionVariables.set(\"accessToken\", res.data.accessToken);\n    pm.collectionVariables.set(\"refreshToken\", res.data.refreshToken || \"\");\n}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Green View Residency\",\n  \"type\": \"MULTI_FLAT\",\n  \"description\": \"...\",\n  \"address\": \"House 12, Road 5, Dhanmondi\",\n  \"areaId\": \"db9dbe39-8bdc-42fc-86d3-1fd7d111a276\",\n  \"postalCode\": \"1205\",\n  \"latitude\": 23.7461,\n  \"longitude\": 90.3742\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/owner/properties",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "owner",
+                "properties"
+              ]
+            },
+            "description": "Expected: **201**. Confirms the OTP sent by **Register Patient**, marks the user verified, and returns `data: { accessToken, refreshToken, user, patient }` (also set as `accessToken`/`refreshToken` cookies). The test script saves both tokens as collection variables."
+          },
+          "response": []
+        },
+        {
+          "name": "Add Flat",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();\n\nif (res && res.data && res.data.accessToken) {\n    pm.collectionVariables.set(\"accessToken\", res.data.accessToken);\n    pm.collectionVariables.set(\"refreshToken\", res.data.refreshToken || \"\");\n}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "images",
+                  "type": "file",
+                  "src": [
+                    "/C:/Users/Shahiduz Zaman/Pictures/A_blank_Sign.jpg",
+                    "/C:/Users/Shahiduz Zaman/Pictures/black.PNG"
+                  ]
+                },
+                {
+                  "key": "data",
+                  "value": "{\n    \"flatNumber\": \"A1\",\n    \"floorNumber\": 3,\n    \"bedrooms\": 2,\n    \"bathrooms\": 1,\n    \"areaSqFt\": 1200,\n    \"description\": \"Corner flat with balcony\"\n}",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/owner/properties/ae27ea3f-2866-4686-a8da-9b01fa8cc17e/flats",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "owner",
+                "properties",
+                "ae27ea3f-2866-4686-a8da-9b01fa8cc17e",
+                "flats"
+              ]
+            },
+            "description": "Expected: **201**. Confirms the OTP sent by **Register Patient**, marks the user verified, and returns `data: { accessToken, refreshToken, user, patient }` (also set as `accessToken`/`refreshToken` cookies). The test script saves both tokens as collection variables."
+          },
+          "response": []
+        },
+        {
+          "name": "Add Flat Images",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();\n\nif (res && res.data && res.data.accessToken) {\n    pm.collectionVariables.set(\"accessToken\", res.data.accessToken);\n    pm.collectionVariables.set(\"refreshToken\", res.data.refreshToken || \"\");\n}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "images",
+                  "type": "file",
+                  "src": [
+                    "/C:/Users/Shahiduz Zaman/Pictures/A_blank_Sign.jpg",
+                    "/C:/Users/Shahiduz Zaman/Pictures/black.PNG"
+                  ]
+                },
+                {
+                  "key": "data",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/owner/flats/0d3757e9-e896-444a-831f-4c19dac4696c/images",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "owner",
+                "flats",
+                "0d3757e9-e896-444a-831f-4c19dac4696c",
+                "images"
+              ]
+            },
+            "description": "Expected: **201**. Confirms the OTP sent by **Register Patient**, marks the user verified, and returns `data: { accessToken, refreshToken, user, patient }` (also set as `accessToken`/`refreshToken` cookies). The test script saves both tokens as collection variables."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Flat",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();\n\nif (res && res.data && res.data.accessToken) {\n    pm.collectionVariables.set(\"accessToken\", res.data.accessToken);\n    pm.collectionVariables.set(\"refreshToken\", res.data.refreshToken || \"\");\n}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"flatNumber\": \"B2\",\n    \"floorNumber\": 3,\n    \"bedrooms\": 4,\n    \"bathrooms\": 3,\n    \"areaSqFt\": 1500,\n    \"description\": \"Corner flat with balcony\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/owner/flats/0d3757e9-e896-444a-831f-4c19dac4696c",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "owner",
+                "flats",
+                "0d3757e9-e896-444a-831f-4c19dac4696c"
+              ]
+            },
+            "description": "Expected: **201**. Confirms the OTP sent by **Register Patient**, marks the user verified, and returns `data: { accessToken, refreshToken, user, patient }` (also set as `accessToken`/`refreshToken` cookies). The test script saves both tokens as collection variables."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Flat Images",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();\n\nif (res && res.data && res.data.accessToken) {\n    pm.collectionVariables.set(\"accessToken\", res.data.accessToken);\n    pm.collectionVariables.set(\"refreshToken\", res.data.refreshToken || \"\");\n}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "images",
+                  "type": "file",
+                  "src": [
+                    "/C:/Users/Shahiduz Zaman/Pictures/A_blank_Sign.jpg",
+                    "/C:/Users/Shahiduz Zaman/Pictures/black.PNG"
+                  ]
+                },
+                {
+                  "key": "data",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/owner/flats/0d3757e9-e896-444a-831f-4c19dac4696c/images/0b566344-ed6b-422f-b733-b4cca57e44a0",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "owner",
+                "flats",
+                "0d3757e9-e896-444a-831f-4c19dac4696c",
+                "images",
+                "0b566344-ed6b-422f-b733-b4cca57e44a0"
+              ]
+            },
+            "description": "Expected: **201**. Confirms the OTP sent by **Register Patient**, marks the user verified, and returns `data: { accessToken, refreshToken, user, patient }` (also set as `accessToken`/`refreshToken` cookies). The test script saves both tokens as collection variables."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Flat",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();\n\nif (res && res.data && res.data.accessToken) {\n    pm.collectionVariables.set(\"accessToken\", res.data.accessToken);\n    pm.collectionVariables.set(\"refreshToken\", res.data.refreshToken || \"\");\n}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "images",
+                  "type": "file",
+                  "src": [
+                    "/C:/Users/Shahiduz Zaman/Pictures/A_blank_Sign.jpg",
+                    "/C:/Users/Shahiduz Zaman/Pictures/black.PNG"
+                  ]
+                },
+                {
+                  "key": "data",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/owner/flats/:flatId",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "owner",
+                "flats",
+                ":flatId"
+              ],
+              "variable": [
+                {
+                  "key": "flatId",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Expected: **201**. Confirms the OTP sent by **Register Patient**, marks the user verified, and returns `data: { accessToken, refreshToken, user, patient }` (also set as `accessToken`/`refreshToken` cookies). The test script saves both tokens as collection variables."
+          },
+          "response": []
+        },
+        {
+          "name": "Add Room",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();\n\nif (res && res.data && res.data.accessToken) {\n    pm.collectionVariables.set(\"accessToken\", res.data.accessToken);\n    pm.collectionVariables.set(\"refreshToken\", res.data.refreshToken || \"\");\n}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "images",
+                  "type": "file",
+                  "src": [
+                    "/C:/Users/Shahiduz Zaman/Pictures/A_blank_Sign.jpg",
+                    "/C:/Users/Shahiduz Zaman/Pictures/black.PNG"
+                  ]
+                },
+                {
+                  "key": "data",
+                  "value": "{\n    \"roomNumber\": \"B1-04\",\n    \"name\": \"Master Bedroom\",\n    \"areaSqFt\": 200,\n    \"description\": \"Attached bathroom\"\n}",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/owner/flats/0a783589-19b1-4dda-a433-4c958c2cf81e/rooms",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "owner",
+                "flats",
+                "0a783589-19b1-4dda-a433-4c958c2cf81e",
+                "rooms"
+              ]
+            },
+            "description": "Expected: **201**. Confirms the OTP sent by **Register Patient**, marks the user verified, and returns `data: { accessToken, refreshToken, user, patient }` (also set as `accessToken`/`refreshToken` cookies). The test script saves both tokens as collection variables."
+          },
+          "response": []
+        },
+        {
+          "name": "Add Room Images",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();\n\nif (res && res.data && res.data.accessToken) {\n    pm.collectionVariables.set(\"accessToken\", res.data.accessToken);\n    pm.collectionVariables.set(\"refreshToken\", res.data.refreshToken || \"\");\n}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "images",
+                  "type": "file",
+                  "src": [
+                    "/C:/Users/Shahiduz Zaman/Pictures/A_blank_Sign.jpg",
+                    "/C:/Users/Shahiduz Zaman/Pictures/black.PNG"
+                  ]
+                },
+                {
+                  "key": "data",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/owner/rooms/980b824c-775a-4902-9f5f-3d37bb0f64dc/images",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "owner",
+                "rooms",
+                "980b824c-775a-4902-9f5f-3d37bb0f64dc",
+                "images"
+              ]
+            },
+            "description": "Expected: **201**. Confirms the OTP sent by **Register Patient**, marks the user verified, and returns `data: { accessToken, refreshToken, user, patient }` (also set as `accessToken`/`refreshToken` cookies). The test script saves both tokens as collection variables."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Room Images",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();\n\nif (res && res.data && res.data.accessToken) {\n    pm.collectionVariables.set(\"accessToken\", res.data.accessToken);\n    pm.collectionVariables.set(\"refreshToken\", res.data.refreshToken || \"\");\n}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "images",
+                  "type": "file",
+                  "src": [
+                    "/C:/Users/Shahiduz Zaman/Pictures/A_blank_Sign.jpg",
+                    "/C:/Users/Shahiduz Zaman/Pictures/black.PNG"
+                  ]
+                },
+                {
+                  "key": "data",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/owner/rooms/980b824c-775a-4902-9f5f-3d37bb0f64dc/images/32b72c4f-ef6b-4917-978b-e09bcc301a00",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "owner",
+                "rooms",
+                "980b824c-775a-4902-9f5f-3d37bb0f64dc",
+                "images",
+                "32b72c4f-ef6b-4917-978b-e09bcc301a00"
+              ]
+            },
+            "description": "Expected: **201**. Confirms the OTP sent by **Register Patient**, marks the user verified, and returns `data: { accessToken, refreshToken, user, patient }` (also set as `accessToken`/`refreshToken` cookies). The test script saves both tokens as collection variables."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Room",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();\n\nif (res && res.data && res.data.accessToken) {\n    pm.collectionVariables.set(\"accessToken\", res.data.accessToken);\n    pm.collectionVariables.set(\"refreshToken\", res.data.refreshToken || \"\");\n}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "images",
+                  "type": "file",
+                  "src": [
+                    "/C:/Users/Shahiduz Zaman/Pictures/A_blank_Sign.jpg",
+                    "/C:/Users/Shahiduz Zaman/Pictures/black.PNG"
+                  ]
+                },
+                {
+                  "key": "data",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/owner/rooms/:roomId",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "owner",
+                "rooms",
+                ":roomId"
+              ],
+              "variable": [
+                {
+                  "key": "roomId",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Expected: **201**. Confirms the OTP sent by **Register Patient**, marks the user verified, and returns `data: { accessToken, refreshToken, user, patient }` (also set as `accessToken`/`refreshToken` cookies). The test script saves both tokens as collection variables."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Room",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();\n\nif (res && res.data && res.data.accessToken) {\n    pm.collectionVariables.set(\"accessToken\", res.data.accessToken);\n    pm.collectionVariables.set(\"refreshToken\", res.data.refreshToken || \"\");\n}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"roomNumber\": \"B2-02\",\n    \"name\": \"Guest Bedroom\",\n    \"areaSqFt\": 180,\n    \"description\": \"Face north, two windows\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/owner/rooms/980b824c-775a-4902-9f5f-3d37bb0f64dc",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "owner",
+                "rooms",
+                "980b824c-775a-4902-9f5f-3d37bb0f64dc"
+              ]
+            },
+            "description": "Expected: **201**. Confirms the OTP sent by **Register Patient**, marks the user verified, and returns `data: { accessToken, refreshToken, user, patient }` (also set as `accessToken`/`refreshToken` cookies). The test script saves both tokens as collection variables."
+          },
+          "response": []
+        },
+        {
+          "name": "Assign Manager",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();\n\nif (res && res.data && res.data.accessToken) {\n    pm.collectionVariables.set(\"accessToken\", res.data.accessToken);\n    pm.collectionVariables.set(\"refreshToken\", res.data.refreshToken || \"\");\n}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"managerId\": \"2d409cc3-1112-47ab-9d61-d35a1207a06e\" //2d409cc3-1112-47ab-9d61-d35a1207a06e\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/owner/flats/0a783589-19b1-4dda-a433-4c958c2cf81e/assign-manager",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "owner",
+                "flats",
+                "0a783589-19b1-4dda-a433-4c958c2cf81e",
+                "assign-manager"
+              ]
+            },
+            "description": "Expected: **201**. Confirms the OTP sent by **Register Patient**, marks the user verified, and returns `data: { accessToken, refreshToken, user, patient }` (also set as `accessToken`/`refreshToken` cookies). The test script saves both tokens as collection variables."
+          },
+          "response": []
+        },
+        {
+          "name": "Revoke Manager",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();\n\nif (res && res.data && res.data.accessToken) {\n    pm.collectionVariables.set(\"accessToken\", res.data.accessToken);\n    pm.collectionVariables.set(\"refreshToken\", res.data.refreshToken || \"\");\n}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/owner/flats/0d3757e9-e896-444a-831f-4c19dac4696c/revoke-manager",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "owner",
+                "flats",
+                "0d3757e9-e896-444a-831f-4c19dac4696c",
+                "revoke-manager"
+              ]
+            },
+            "description": "Expected: **201**. Confirms the OTP sent by **Register Patient**, marks the user verified, and returns `data: { accessToken, refreshToken, user, patient }` (also set as `accessToken`/`refreshToken` cookies). The test script saves both tokens as collection variables."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Properties",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/owner/properties",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "owner",
+                "properties"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Flats  (Owner/Manager)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/owner/flats",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "owner",
+                "flats"
+              ],
+              "query": [
+                {
+                  "key": "",
+                  "value": "",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Advertisement  (Owner/Manager)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/owner/advertisements",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "owner",
+                "advertisements"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Active Manager",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/owner/managers",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "owner",
+                "managers"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Advertisement",
+      "item": [
+        {
+          "name": "Advertisement for flat  (Owner/Manager)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();\n\nif (res && res.data && res.data.accessToken) {\n    pm.collectionVariables.set(\"accessToken\", res.data.accessToken);\n    pm.collectionVariables.set(\"refreshToken\", res.data.refreshToken || \"\");\n}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"2BHK flat near Dhanmondi\",\n  \"description\": \"A nice flat with gas and water\",\n  \"monthlyRent\": 25000,\n  \"availableFrom\": \"2026-09-20\",\n  \"availableTo\": \"2027-04-31\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/advertisements/flats/0a783589-19b1-4dda-a433-4c958c2cf81e",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "advertisements",
+                "flats",
+                "0a783589-19b1-4dda-a433-4c958c2cf81e"
+              ]
+            },
+            "description": "Expected: **201**. Confirms the OTP sent by **Register Patient**, marks the user verified, and returns `data: { accessToken, refreshToken, user, patient }` (also set as `accessToken`/`refreshToken` cookies). The test script saves both tokens as collection variables."
+          },
+          "response": []
+        },
+        {
+          "name": "Advertisement for room  (Owner/Manager)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();\n\nif (res && res.data && res.data.accessToken) {\n    pm.collectionVariables.set(\"accessToken\", res.data.accessToken);\n    pm.collectionVariables.set(\"refreshToken\", res.data.refreshToken || \"\");\n}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"2BHK flat near Dhanmondi\",\n  \"description\": \"A nice flat with gas and water\",\n  \"monthlyRent\": 25000,\n  \"availableFrom\": \"2026-09-24\",\n  \"availableTo\": \"2026-11-03\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/advertisements/rooms/1e744c15-ce40-4e3b-9752-7cf1ccbf74ce",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "advertisements",
+                "rooms",
+                "1e744c15-ce40-4e3b-9752-7cf1ccbf74ce"
+              ]
+            },
+            "description": "Expected: **201**. Confirms the OTP sent by **Register Patient**, marks the user verified, and returns `data: { accessToken, refreshToken, user, patient }` (also set as `accessToken`/`refreshToken` cookies). The test script saves both tokens as collection variables."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Advertisement  (Owner/Manager)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();\n\nif (res && res.data && res.data.accessToken) {\n    pm.collectionVariables.set(\"accessToken\", res.data.accessToken);\n    pm.collectionVariables.set(\"refreshToken\", res.data.refreshToken || \"\");\n}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"2BHK flat near Dhanmondi\",\n  \"description\": \"A nice flat with gas and water\",\n  \"monthlyRent\": 25000,\n  \"availableFrom\": \"2026-10-01\",\n  \"availableTo\": \"2027-03-31\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/advertisements/8ab19cd8-a4c0-4420-8596-99f20e14557e",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "advertisements",
+                "8ab19cd8-a4c0-4420-8596-99f20e14557e"
+              ]
+            },
+            "description": "Expected: **201**. Confirms the OTP sent by **Register Patient**, marks the user verified, and returns `data: { accessToken, refreshToken, user, patient }` (also set as `accessToken`/`refreshToken` cookies). The test script saves both tokens as collection variables."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Advertisement Status  (Owner/Manager)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();\n\nif (res && res.data && res.data.accessToken) {\n    pm.collectionVariables.set(\"accessToken\", res.data.accessToken);\n    pm.collectionVariables.set(\"refreshToken\", res.data.refreshToken || \"\");\n}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\" : \"PUBLISHED\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/advertisements/86791af2-2a48-477d-b62c-50db4b08084f/status",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "advertisements",
+                "86791af2-2a48-477d-b62c-50db4b08084f",
+                "status"
+              ]
+            },
+            "description": "Expected: **201**. Confirms the OTP sent by **Register Patient**, marks the user verified, and returns `data: { accessToken, refreshToken, user, patient }` (also set as `accessToken`/`refreshToken` cookies). The test script saves both tokens as collection variables."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Manager",
+      "item": [
+        {
+          "name": "Get Advertisement (Only Manager)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/manager/advertisements",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "manager",
+                "advertisements"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Application  (Owner/Manager)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/manager/applications?page=1&limit=10",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "manager",
+                "applications"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Application Status  (Owner/Manager)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \r\n    \"status\": \"APPROVED\" \r\n}\r\n\r\n/* PENDING\r\n  APPROVED\r\n  REJECTED\r\n  WITHDRAWN\r\n  EXPIRED\r\n  */",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/tenant/applications/b0d81bef-c93e-4290-b9c5-6ef7e3e824b4",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "tenant",
+                "applications",
+                "b0d81bef-c93e-4290-b9c5-6ef7e3e824b4"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Utility bill  (Owner/Manager)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"stayId\": \"c133ecb8-52db-4513-afaa-bfa9f9380926\",\r\n  \"amount\": 1250.50,\r\n  \"billingPeriodStart\": \"2026-10-01T00:00:00.000Z\",\r\n  \"billingPeriodEnd\": \"2026-10-15T23:59:59.000Z\",\r\n  \"description\": \"Electricity bill for September 2026\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/manager/utility-invoices",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "manager",
+                "utility-invoices"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Utility bill  (Owner/Manager)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"amount\": 150.50,\r\n  \"billingPeriodStart\": \"2026-09-01\",\r\n  \"billingPeriodEnd\": \"2026-09-30\",\r\n  \"description\": \"Electricity bill for September\",\r\n  \"status\": \"PENDING\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/manager/utility-invoices/779de5c2-6e43-4710-8f4b-6b6872c33c59",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "manager",
+                "utility-invoices",
+                "779de5c2-6e43-4710-8f4b-6b6872c33c59"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Stay List (Owner/Manager)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/tenant/stays",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "tenant",
+                "stays"
+              ],
+              "query": [
+                {
+                  "key": "applicationId",
+                  "value": "6e948f05-e3bb-4156-bd5c-19e434067dd5",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Invoice Details (Owner/Manager)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/tenant/invoices/9cf45997-3e8c-4c11-8aaa-4f056bf972e6",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "tenant",
+                "invoices",
+                "9cf45997-3e8c-4c11-8aaa-4f056bf972e6"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Invoice by Application or Stay (Owner/Manager)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/tenant/invoices/by-stay?applicationId=8d2968b3-9a1c-46f4-8835-68456c6c7c13",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "tenant",
+                "invoices",
+                "by-stay"
+              ],
+              "query": [
+                {
+                  "key": "applicationId",
+                  "value": "8d2968b3-9a1c-46f4-8835-68456c6c7c13"
+                },
+                {
+                  "key": "stayId",
+                  "value": "7b62641f-5ebb-4d12-8f70-57583c4591a0",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "All Invoice (Owner/Manager)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/tenant/invoices",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "tenant",
+                "invoices"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Maintenance Request (Owner/Manager)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"status\": \"IN_PROGRESS\",\r\n  \"scheduledFor\": \"2026-09-22T10:00:00.000Z\",\r\n  \"resolvedAt\": \"2026-09-23T15:30:00.000Z\"\r\n}\r\n\r\n/*\r\n  OPEN\r\n  IN_PROGRESS\r\n  RESOLVED\r\n  CLOSED\r\n  CANCELLED\r\n*/",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/manager/maintenance-requests/c592bbba-2702-488f-9a09-6749a4799829",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "manager",
+                "maintenance-requests",
+                "c592bbba-2702-488f-9a09-6749a4799829"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Maintenance",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/manager/maintenance-requests",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "manager",
+                "maintenance-requests"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Public",
+      "item": [
+        {
+          "name": "Get Cities",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/cities?search=dh&page=1&limit=10",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "cities"
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "dh"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Areas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/areas?search=dh&page=1&limit=10",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "areas"
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "dh"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search advertisement",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/available-advertisements?areaId=db9dbe39-8bdc-42fc-86d3-1fd7d111a276&from=2026-10-20&to=2026-11-02",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "available-advertisements"
+              ],
+              "query": [
+                {
+                  "key": "areaId",
+                  "value": "db9dbe39-8bdc-42fc-86d3-1fd7d111a276"
+                },
+                {
+                  "key": "from",
+                  "value": "2026-10-20"
+                },
+                {
+                  "key": "to",
+                  "value": "2026-11-02"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "View Advertisement",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/available-advertisements/27c45099-d0aa-4a07-8366-3a0466de088c",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "available-advertisements",
+                "27c45099-d0aa-4a07-8366-3a0466de088c"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Tenant",
+      "item": [
+        {
+          "name": "Create View requests",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"advertisementId\": \"bd4ff6de-2c2a-46a3-89cd-2159582e8c0c\",\r\n  \"requestedDate\": \"2026-09-25T10:00:00Z\",\r\n  \"note\": \"Prefer evening slot\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/tenant/viewing-requests",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "tenant",
+                "viewing-requests"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "View-request",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/tenant/viewing-requests/8b699927-94f0-4978-b9d1-d3be50279dc9",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "tenant",
+                "viewing-requests",
+                "8b699927-94f0-4978-b9d1-d3be50279dc9"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All View Requests",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/tenant/viewing-requests?status=PENDING&page=1&limit=10",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "tenant",
+                "viewing-requests"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "PENDING"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update View-request Status",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \r\n    \"status\": \"APPROVED\" \r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/tenant/viewing-requests/8b699927-94f0-4978-b9d1-d3be50279dc9/status",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "tenant",
+                "viewing-requests",
+                "8b699927-94f0-4978-b9d1-d3be50279dc9",
+                "status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update View-requests",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"status\": \"APPROVED\",\r\n  \"approvedDate\": \"2026-09-25T15:00:00Z\",\r\n  \"noteByReviewer\": \"Confirmed, evening slot\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/tenant/viewing-requests/8b699927-94f0-4978-b9d1-d3be50279dc9",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "tenant",
+                "viewing-requests",
+                "8b699927-94f0-4978-b9d1-d3be50279dc9"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Application",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"advertisementId\": \"86791af2-2a48-477d-b62c-50db4b08084f\",\r\n  \"requestedStartDate\": \"2026-10-20\",\r\n  \"requestedEndDate\": \"2026-11-15\",\r\n  \"note\": \"Working professional, no pets\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/tenant/applications",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "tenant",
+                "applications"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Application Status",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \r\n    \"status\": \"WITHDRAWN\"\r\n}\r\n\r\n/* PENDING\r\n  APPROVED\r\n  REJECTED\r\n  WITHDRAWN\r\n  EXPIRED\r\n  */",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/tenant/applications/ccee7981-cca5-4c8e-9524-e97ac2b8190e",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "tenant",
+                "applications",
+                "ccee7981-cca5-4c8e-9524-e97ac2b8190e"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Application",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/tenant/applications?page=1&limit=10",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "tenant",
+                "applications"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Application by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/tenant/applications/41fe8471-5b53-4cc5-a574-80f637a7502b",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "tenant",
+                "applications",
+                "41fe8471-5b53-4cc5-a574-80f637a7502b"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "View Application Details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/tenant/applications/b0d81bef-c93e-4290-b9c5-6ef7e3e824b4",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "tenant",
+                "applications",
+                "b0d81bef-c93e-4290-b9c5-6ef7e3e824b4"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "All Invoice",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/tenant/invoices",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "tenant",
+                "invoices"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Invoice Details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/tenant/invoices/9cf45997-3e8c-4c11-8aaa-4f056bf972e6",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "tenant",
+                "invoices",
+                "9cf45997-3e8c-4c11-8aaa-4f056bf972e6"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Invoice by Application or Stay",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/tenant/invoices/by-stay?applicationId=b0d81bef-c93e-4290-b9c5-6ef7e3e824b4",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "tenant",
+                "invoices",
+                "by-stay"
+              ],
+              "query": [
+                {
+                  "key": "stayId",
+                  "value": "c133ecb8-52db-4513-afaa-bfa9f9380926",
+                  "disabled": true
+                },
+                {
+                  "key": "applicationId",
+                  "value": "b0d81bef-c93e-4290-b9c5-6ef7e3e824b4"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Stay List",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/tenant/stays",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "tenant",
+                "stays"
+              ],
+              "query": [
+                {
+                  "key": "applicationId",
+                  "value": "6e948f05-e3bb-4156-bd5c-19e434067dd5",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Contract Agreement",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/tenant/stays/c133ecb8-52db-4513-afaa-bfa9f9380926/contract",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "tenant",
+                "stays",
+                "c133ecb8-52db-4513-afaa-bfa9f9380926",
+                "contract"
+              ],
+              "query": [
+                {
+                  "key": "applicationId",
+                  "value": "6e948f05-e3bb-4156-bd5c-19e434067dd5",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Maintenance Request",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"stayId\": \"9c3d6657-871f-4cb4-a99a-445f2cfd0fce\",\r\n  \"issue\": \"Water heater not working\",\r\n  \"description\": \"No hot water since yesterday morning\",\r\n  \"priority\": \"HIGH\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/tenant/maintenance-requests",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "tenant",
+                "maintenance-requests"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Maintenance Request",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"stayId\": \"a0000000-0000-4000-8000-000000000001\",\r\n  \"issue\": \"Water heater not working\",\r\n  \"description\": \"No hot water since yesterday morning\",\r\n  \"priority\": \"HIGH\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/tenant/maintenance-requests",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "tenant",
+                "maintenance-requests"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Payment",
+      "item": [
+        {
+          "name": "Create Pyament",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/payments/create/f57d7675-c8d7-4746-ade2-6859bdbb8276",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "payments",
+                "create",
+                "f57d7675-c8d7-4746-ade2-6859bdbb8276"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Confirm Payments",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/payments/confirm/success?tranId=<tranId>",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "payments",
+                "confirm",
+                "success"
+              ],
+              "query": [
+                {
+                  "key": "tranId",
+                  "value": "<tranId>"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Check Payment",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/payments/check/4b01f0fd-2406-49a1-a3d1-c5e8bde0fc36",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "payments",
+                "check",
+                "4b01f0fd-2406-49a1-a3d1-c5e8bde0fc36"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Payment Details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/payments/:paymentId",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "payments",
+                ":paymentId"
+              ],
+              "variable": [
+                {
+                  "key": "paymentId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Payment History",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/payments?page=1&limit=10",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "payments"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Roommate (Advertisement publisher)",
+      "item": [
+        {
+          "name": "Create Advertisement",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"stayId\": \"c133ecb8-52db-4513-afaa-bfa9f9380926\",\r\n  \"roomId\": \"adcaf585-b6c2-4990-97b2-842133a06aad\",\r\n  \"advertisementTarget\" : \"SECONDARY_ROOM\", // SECONDARY_ROOM/SECONDARY_ROOM_SHARING\r\n  \"title\": \"Roommate Wanted in Dhanmondi\",\r\n  \"description\": \"Looking for a friendly roommate.\",\r\n  \"monthlyRent\": 10000,\r\n  \"availableFrom\": \"2026-10-16T00:00:00Z\",\r\n  \"availableTo\": \"2026-11-26T00:00:00Z\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/roommate/advertisements",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "roommate",
+                "advertisements"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Advertisement",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"advertisementTarget\" : \"SECONDARY_ROOM\", // SECONDARY_ROOM/SECONDARY_ROOM_SHARING\r\n  \"title\": \"Roommate Wanted in Dhanmondi\",\r\n  \"description\": \"Looking for a friendly roommate.\",\r\n  \"monthlyRent\": 10000,\r\n  \"availableFrom\": \"2026-10-16T00:00:00Z\",\r\n  \"availableTo\": \"2026-11-26T00:00:00Z\",\r\n  \"status\": \"PUBLISHED\"\r\n}\r\n\r\n/*\r\n  DRAFT\r\n  PUBLISHED\r\n  UNPUBLISHED\r\n  RENTED\r\n  FULL\r\n  EXPIRED\r\n  ARCHIVED\r\n*/",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/roommate/advertisements/0016e3d3-38d9-4eb1-834a-6da43c7921b9",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "roommate",
+                "advertisements",
+                "0016e3d3-38d9-4eb1-834a-6da43c7921b9"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Roommate stays",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/roommate/stays",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "roommate",
+                "stays"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Roommate Applications",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/roommate/applications",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "roommate",
+                "applications"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Roommate Application",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": " { \r\n    \"status\": \"APPROVED\" \r\n }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/roommate/applications/:applicationId/status",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "roommate",
+                "applications",
+                ":applicationId",
+                "status"
+              ],
+              "variable": [
+                {
+                  "key": "applicationId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Utility bills",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"amount\": 1500.50,\r\n  \"billingPeriodStart\": \"2026-09-01\",\r\n  \"billingPeriodEnd\": \"2026-09-30\",\r\n  \"description\": \"Electricity bill for September\" \r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/roommate/api/v1/roommate/stays/:stayId/utility-bills",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "roommate",
+                "api",
+                "v1",
+                "roommate",
+                "stays",
+                ":stayId",
+                "utility-bills"
+              ],
+              "variable": [
+                {
+                  "key": "stayId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Utility Bills",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"amount\": 2200.50,\r\n  \"billingPeriodStart\": \"2026-09-01\",\r\n  \"billingPeriodEnd\": \"2026-09-30\",\r\n  \"description\": \"September electricity bill\",\r\n  \"status\": \"PENDING\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/roommate/utility-bills/:billId",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "roommate",
+                "utility-bills",
+                ":billId"
+              ],
+              "variable": [
+                {
+                  "key": "billId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Utility Bills",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/roommate/stays/:stayId/utility-bills",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "roommate",
+                "stays",
+                ":stayId",
+                "utility-bills"
+              ],
+              "variable": [
+                {
+                  "key": "stayId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "accessToken",
+      "value": ""
+    },
+    {
+      "key": "refreshToken",
+      "value": ""
+    }
+  ]
+}
