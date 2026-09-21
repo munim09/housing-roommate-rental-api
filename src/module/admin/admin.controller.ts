@@ -93,6 +93,17 @@ const createArea = async (req: Request, res: Response) => {
     });
 };
 
+const getDashboardStats = async (req: Request, res: Response) => {
+    const result = await AdminService.getDashboardStats();
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Dashboard stats retrieved successfully",
+        data: result,
+    });
+};
+
 export const AdminController = {
     getAllUsers,
     getAllUsersWithProfiles,
@@ -102,4 +113,5 @@ export const AdminController = {
     deleteUser,
     createCity,
     createArea,
+    getDashboardStats,
 };

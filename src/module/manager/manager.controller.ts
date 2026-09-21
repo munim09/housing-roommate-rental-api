@@ -104,6 +104,17 @@ const updateMaintenanceRequest = async (req: Request, res: Response) => {
     });
 };
 
+const getDashboardStats = async (req: Request, res: Response) => {
+    const result = await ManagerService.getDashboardStats(req.user!.userId);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Dashboard stats retrieved successfully",
+        data: result,
+    });
+};
+
 export const ManagerController = {
     getMyFlats,
     getMyAdvertisements,
@@ -112,4 +123,5 @@ export const ManagerController = {
     updateUtilityInvoice,
     getMaintenanceRequests,
     updateMaintenanceRequest,
+    getDashboardStats,
 };

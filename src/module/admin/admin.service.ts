@@ -5,6 +5,7 @@ import { AppError } from "../../utils/AppError";
 import {
     IAdminCreateArea,
     IAdminCreateCity,
+    IAdminDashboardStats,
     IAdminUserQuery,
 } from "./admin.interface";
 
@@ -264,6 +265,37 @@ const createArea = async (data: IAdminCreateArea) => {
     return area;
 };
 
+const getDashboardStats = async (): Promise<IAdminDashboardStats> => {
+    const [users, properties, flats, activeAdvertisements, currentConfirmedStays, activeOwners, activeManagers] =
+        await Promise.all([
+            prisma.user.count(),
+            prisma.property.count(),
+            prisma.flat.count(),
+            prisma.advertisement.count({
+                where: { status: "PUBLISHED" },
+            }),
+            prisma.stay.count({
+                where: { status: "CONFIRMED" },
+            }),
+            prisma.user.count({
+                where: { role: "OWNER", status: "ACTIVE" },
+            }),
+            prisma.user.count({
+                where: { role: "MANAGER", status: "ACTIVE" },
+            }),
+        ]);
+
+    return {
+        users,
+        properties,
+        flats,
+        activeAdvertisements,
+        currentConfirmedStays,
+        activeOwners,
+        activeManagers,
+    };
+};
+
 export const AdminService = {
     getAllUsers,
     getAllUsersWithProfiles,
@@ -273,4 +305,5 @@ export const AdminService = {
     deleteUser,
     createCity,
     createArea,
+    getDashboardStats,
 };

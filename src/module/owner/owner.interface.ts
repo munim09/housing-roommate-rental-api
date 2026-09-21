@@ -36,3 +36,13 @@ export interface IAssignManager {
 export type IUpdateFlat = Partial<IAddFlat>;
 
 export type IUpdateRoom = Partial<IAddRoom>;
+
+export interface IOwnerDashboardStats {
+    properties: number;
+    ownedFlats: number;
+    confirmedStays: number;
+    activeStays: number;
+    totalCollection: number;
+    rentCollectionThisMonth: number;
+    utilityCollectionThisMonth: number;
+}

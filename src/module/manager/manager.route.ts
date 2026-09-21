@@ -48,6 +48,8 @@ router.patch(
 
 router.use(auth(Role.MANAGER));
 
+router.get("/dashboard", catchAsync(ManagerController.getDashboardStats));
+
 router.get("/flats", catchAsync(ManagerController.getMyFlats));
 
 router.get(

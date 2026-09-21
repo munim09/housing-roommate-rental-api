@@ -90,6 +90,15 @@ const createRoommateAdvertisement = async (
 
     const room = await prisma.room.findUnique({ where: { id: roomId } });
 
+    if (stay.roomId) {
+        if (stay.roomId !== room?.id) {
+            throw new AppError(
+                httpStatus.BAD_REQUEST,
+                "Invalid room ID. Check you room ID.",
+            );
+        }
+    }
+
     if (!room || room.flatId !== stay.flatId) {
         throw new AppError(
             httpStatus.BAD_REQUEST,

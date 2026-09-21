@@ -10,6 +10,8 @@ const router = Router();
 
 router.use(auth(Role.ADMIN));
 
+router.get("/dashboard", catchAsync(AdminController.getDashboardStats));
+
 router.get(
     "/users",
     validateRequest(AdminValidation.getAllUsers),

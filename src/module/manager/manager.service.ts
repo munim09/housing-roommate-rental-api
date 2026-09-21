@@ -14,6 +14,7 @@ import { AppError } from "../../utils/AppError";
 import {
     ICreateUtilityInvoice,
     IManagerApplicationQuery,
+    IManagerDashboardStats,
     IManagerMaintenanceRequestQuery,
     IUpdateMaintenanceRequest,
     IUpdateUtilityInvoice,
@@ -685,6 +686,89 @@ const updateMaintenanceRequest = async (
     });
 };
 
+const getDashboardStats = async (
+    managerId: string,
+): Promise<IManagerDashboardStats> => {
+    const assignments = await prisma.managerAssignment.findMany({
+        where: { managerId, status: ManagerAssignmentStatus.ACTIVE },
+        select: { flatId: true },
+    });
+
+    const assignedFlatIds = assignments.map((assignment) => assignment.flatId);
+
+    const primaryRentalTypes = [
+        RentalType.PRIMARY_ENTIRE_FLAT,
+        RentalType.PRIMARY_ROOM,
+    ];
+
+    const stays = await prisma.stay.findMany({
+        where: {
+            flatId: { in: assignedFlatIds },
+            rentalType: { in: primaryRentalTypes },
+        },
+        select: { id: true },
+    });
+
+    const stayIds = stays.map((stay) => stay.id);
+
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const startOfNextMonth = new Date(
+        now.getFullYear(),
+        now.getMonth() + 1,
+        1,
+    );
+
+    const [
+        activeAdvertisements,
+        rentCollectionThisMonth,
+        utilityCollectionThisMonth,
+    ] = await Promise.all([
+        prisma.advertisement.count({
+            where: {
+                status: "PUBLISHED",
+                OR: [
+                    { flatId: { in: assignedFlatIds } },
+                    { room: { flatId: { in: assignedFlatIds } } },
+                ],
+            },
+        }),
+        prisma.invoice.aggregate({
+            where: {
+                stayId: { in: stayIds },
+                type: "RENT",
+                status: BillStatus.PAID,
+                billingPeriodStart: {
+                    gte: startOfMonth,
+                    lt: startOfNextMonth,
+                },
+            },
+            _sum: { amount: true },
+        }),
+        prisma.invoice.aggregate({
+            where: {
+                stayId: { in: stayIds },
+                type: "UTILITY",
+                status: BillStatus.PAID,
+                billingPeriodStart: {
+                    gte: startOfMonth,
+                    lt: startOfNextMonth,
+                },
+            },
+            _sum: { amount: true },
+        }),
+    ]);
+
+    return {
+        totalAssignedFlats: assignedFlatIds.length,
+        activeAdvertisements,
+        rentCollectionThisMonth:
+            rentCollectionThisMonth._sum.amount?.toNumber() ?? 0,
+        utilityCollectionThisMonth:
+            utilityCollectionThisMonth._sum.amount?.toNumber() ?? 0,
+    };
+};
+
 export const ManagerService = {
     getMyFlats,
     getMyAdvertisements,
@@ -693,4 +777,5 @@ export const ManagerService = {
     updateUtilityInvoice,
     getMaintenanceRequests,
     updateMaintenanceRequest,
+    getDashboardStats,
 };

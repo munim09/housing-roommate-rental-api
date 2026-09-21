@@ -23,6 +23,8 @@ router.get(
 
 router.use(auth(Role.OWNER));
 
+router.get("/dashboard", catchAsync(OwnerController.getDashboardStats));
+
 router.post(
     "/properties",
     validateRequest(OwnerValidation.createProperty),

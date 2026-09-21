@@ -16,6 +16,7 @@ import {
     IAddRoom,
     IAssignManager,
     ICreateProperty,
+    IOwnerDashboardStats,
     IUpdateFlat,
     IUpdateRoom,
 } from "./owner.interface";
@@ -973,6 +974,81 @@ const getActiveManagers = async () => {
     return managers;
 };
 
+const getDashboardStats = async (
+    ownerId: string,
+): Promise<IOwnerDashboardStats> => {
+    const ownedFlats = await prisma.propertyOwnership.findMany({
+        where: { ownerId, status: "ACTIVE" },
+        select: { flatId: true },
+    });
+
+    const ownedFlatIds = ownedFlats.map((ownership) => ownership.flatId);
+
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const startOfNextMonth = new Date(
+        now.getFullYear(),
+        now.getMonth() + 1,
+        1,
+    );
+
+    const [
+        properties,
+        confirmedStays,
+        activeStays,
+        totalCollection,
+        rentCollectionThisMonth,
+        utilityCollectionThisMonth,
+    ] = await Promise.all([
+        prisma.property.count({ where: { createdById: ownerId } }),
+        prisma.stay.count({
+            where: { flatId: { in: ownedFlatIds }, status: "CONFIRMED" },
+        }),
+        prisma.stay.count({
+            where: {
+                flatId: { in: ownedFlatIds },
+                status: "CONFIRMED",
+                startDate: { lte: now },
+                endDate: { gte: now },
+            },
+        }),
+        prisma.invoice.aggregate({
+            where: { receiverId: ownerId, status: "PAID" },
+            _sum: { amount: true },
+        }),
+        prisma.payment.aggregate({
+            where: {
+                receiverId: ownerId,
+                status: "SUCCESS",
+                type: "RENT",
+                paidAt: { gte: startOfMonth, lt: startOfNextMonth },
+            },
+            _sum: { amount: true },
+        }),
+        prisma.payment.aggregate({
+            where: {
+                receiverId: ownerId,
+                status: "SUCCESS",
+                type: "UTILITY",
+                paidAt: { gte: startOfMonth, lt: startOfNextMonth },
+            },
+            _sum: { amount: true },
+        }),
+    ]);
+
+    return {
+        properties,
+        ownedFlats: ownedFlatIds.length,
+        confirmedStays,
+        activeStays,
+        totalCollection: totalCollection._sum.amount?.toNumber() ?? 0,
+        rentCollectionThisMonth:
+            rentCollectionThisMonth._sum.amount?.toNumber() ?? 0,
+        utilityCollectionThisMonth:
+            utilityCollectionThisMonth._sum.amount?.toNumber() ?? 0,
+    };
+};
+
 export const OwnerService = {
     createProperty,
     addFlat,
@@ -991,4 +1067,5 @@ export const OwnerService = {
     getMyFlats,
     getMyAdvertisements,
     getActiveManagers,
+    getDashboardStats,
 };

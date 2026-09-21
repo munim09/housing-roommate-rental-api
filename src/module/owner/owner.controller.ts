@@ -298,6 +298,17 @@ const getActiveManagers = async (req: Request, res: Response) => {
     });
 };
 
+const getDashboardStats = async (req: Request, res: Response) => {
+    const result = await OwnerService.getDashboardStats(req.user!.userId);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Dashboard stats retrieved successfully",
+        data: result,
+    });
+};
+
 export const OwnerController = {
     createProperty,
     addFlat,
@@ -316,4 +327,5 @@ export const OwnerController = {
     getMyFlats,
     getMyAdvertisements,
     getActiveManagers,
+    getDashboardStats,
 };

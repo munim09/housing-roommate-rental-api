@@ -35,3 +35,10 @@ export interface IUpdateMaintenanceRequest {
     scheduledFor?: Date;
     resolvedAt?: Date;
 }
+
+export interface IManagerDashboardStats {
+    totalAssignedFlats: number;
+    activeAdvertisements: number;
+    rentCollectionThisMonth: number;
+    utilityCollectionThisMonth: number;
+}
