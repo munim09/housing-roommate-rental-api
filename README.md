@@ -298,6 +298,22 @@ Tenant-to-tenant subletting: a tenant with a confirmed **primary** stay posts a 
 | GET | `/available-advertisements` | `?areaId=&from=&to=&rentalType=&page=&limit=` (`areaId` required; `to` after `from`) | List published ads available in a date range. `rentalType` (optional) filters by `RentalType`; availability conflicts are resolved separately per primary/secondary group, and an advertiser's own stay/application never blocks their listing |
 | GET | `/available-advertisements/:advertisementId` | — | Get public advertisement details |
 
+
+## Cron Jobs
+
+All scheduled jobs live in `src/lib/cronJob.ts` and are started from the server entry point via `startCronJobs()` (uses `node-cron`). Each job is guarded against concurrent re-runs so overlapping executions are skipped.
+
+| Job | Schedule (cron) | Frequency | What it does |
+| --- | --- | --- | --- |
+| `cancelOverdueStays` | `0 * * * *` | Every hour | Cancels stays stuck in `WAITING_FOR_PAYMENT` whose pending invoices have passed their `dueDate` by a 1-hour grace period. For each affected stay it cancels all pending invoices, marks the stay `CANCELLED`, and marks the linked application `EXPIRED` — all in a single transaction. |
+| `deleteUnverifiedUsers` | `0 */2 * * *` | Every 2 hours | Deletes users who registered but never verified their email. Only users with `emailVerified = false` and status `PENDING_APPROVAL` who were created more than 2 hours ago are removed. |
+| `verifyPendingPayments` | `0 */12 * * *` | Every 12 hours | Re-checks payments that are still `PENDING` after an 8-hour threshold (and have a `transactionReference`) against the SSLCommerz gateway via `PaymentService.checkPayment`. If the gateway reports a non-pending status, the payment record is updated accordingly. |
+
+**Notes:**
+
+- Grace periods / thresholds are defined at the top of `src/lib/cronJob.ts`: overdue stays 1 hour, unverified users 2 hours, pending payments 8 hours.
+- Each job logs start/end and a summary count to the console, and failures are caught and logged without crashing the server.
+
 ## Notes
 
 - This is an early-stage project; some routes/middleware structure may still change.
