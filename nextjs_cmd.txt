@@ -72,6 +72,15 @@ npm i @tanstack/react-form
 
 
 ==============================
+Shad CN: Component
+
+
+pnpm dlx shadcn@latest add field
+
+pnpm dlx shadcn@latest add input
+
+
+==============================
 git init
 git add .
 git commit -m "First commit"

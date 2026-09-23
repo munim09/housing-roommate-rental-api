@@ -5,6 +5,7 @@ import httpStatus from "http-status";
 import config from "./config";
 import { globalErrorHandler } from "./middlewares/globalErrorHandler";
 import { notFound } from "./middlewares/notFound";
+import { globalRateLimiter } from "./middlewares/rateLimiter";
 import { AdminRoutes } from "./module/admin/admin.route";
 import { AdvertisementRoutes } from "./module/advertisement/advertisement.route";
 import { AuthRoutes } from "./module/auth/auth.route";
@@ -30,6 +31,22 @@ app.use(
         credentials: true,
     }),
 );
+
+app.use("/api", globalRateLimiter);
+
+// import helmet from "helmet";
+
+// app.use(
+//     helmet({
+//         contentSecurityPolicy: true,
+//         frameguard: {
+//             action: "deny",
+//         },
+//         referrerPolicy: {
+//             policy: "no-referrer",
+//         },
+//     }),
+// );
 
 // app.use(
 //     cors({
