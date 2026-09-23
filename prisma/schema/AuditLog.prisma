@@ -1,0 +1,14 @@
+model AuditLog {
+  id          String   @id @default(uuid()) @db.Uuid
+  userId      String   @db.Uuid
+  tableName   String
+  action      String
+  description String
+  api String
+  json String
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([tableName])
+  @@index([action])
+}

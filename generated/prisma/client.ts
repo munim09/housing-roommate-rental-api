@@ -62,6 +62,11 @@ export type Application = Prisma.ApplicationModel
  */
 export type Area = Prisma.AreaModel
 /**
+ * Model AuditLog
+ * 
+ */
+export type AuditLog = Prisma.AuditLogModel
+/**
  * Model City
  * 
  */

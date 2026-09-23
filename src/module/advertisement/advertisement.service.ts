@@ -12,6 +12,7 @@ import { AppError } from "../../utils/AppError";
 import type {
     ICreateAdvertisement,
     IUpdateAdvertisement,
+    IUpdateAdvertisementStatus,
 } from "./advertisement.interface";
 
 const AD_CONFLICT_STATUSES = [
@@ -307,8 +308,10 @@ const updateAdvertisementStatus = async (
     userId: string,
     role: string,
     advertisementId: string,
-    status: AdvertisementStatus,
+    payload: IUpdateAdvertisementStatus,
 ) => {
+    const { status, details } = payload;
+
     const advertisement = await fetchAdvertisementWithFlat(advertisementId);
 
     if (!advertisement) {
@@ -359,15 +362,35 @@ const updateAdvertisementStatus = async (
         }
     }
 
-    return prisma.advertisement.update({
-        where: { id: advertisementId },
-        data: {
-            status,
-            publishedAt:
-                status === AdvertisementStatus.PUBLISHED
-                    ? new Date()
-                    : advertisement.publishedAt,
-        },
+    return prisma.$transaction(async (tx) => {
+        const updated = await tx.advertisement.update({
+            where: { id: advertisementId },
+            data: {
+                status,
+                publishedAt:
+                    status === AdvertisementStatus.PUBLISHED
+                        ? new Date()
+                        : advertisement.publishedAt,
+            },
+        });
+
+        await tx.auditLog.create({
+            data: {
+                userId,
+                tableName: "Advertisement",
+                action: status,
+                description: `Advertisement ${status.toLowerCase()} by ${role.toLowerCase()}`,
+                api: "PATCH /api/v1/advertisements/:advertisementId/status",
+                json: JSON.stringify({
+                    advertisementId,
+                    from: advertisement.status,
+                    to: status,
+                    details,
+                }),
+            },
+        });
+
+        return updated;
     });
 };
 
@@ -414,15 +437,43 @@ const updateAdvertisement = async (
         });
     }
 
-    return prisma.advertisement.update({
-        where: { id: advertisementId },
-        data: {
-            title: payload.title,
-            description: payload.description,
-            monthlyRent: payload.monthlyRent,
-            availableFrom: payload.availableFrom,
-            availableTo: payload.availableTo,
-        },
+    const { details, ...data } = payload;
+
+    return prisma.$transaction(async (tx) => {
+        const updated = await tx.advertisement.update({
+            where: { id: advertisementId },
+            data: {
+                title: data.title,
+                description: data.description,
+                monthlyRent: data.monthlyRent,
+                availableFrom: data.availableFrom,
+                availableTo: data.availableTo,
+            },
+        });
+
+        await tx.auditLog.create({
+            data: {
+                userId,
+                tableName: "Advertisement",
+                action: "UPDATE",
+                description: `Advertisement updated by ${role.toLowerCase()}`,
+                api: "PATCH /api/v1/advertisements/:advertisementId",
+                json: JSON.stringify({
+                    advertisementId,
+                    previous: {
+                        title: advertisement.title,
+                        description: advertisement.description,
+                        monthlyRent: advertisement.monthlyRent,
+                        availableFrom: advertisement.availableFrom,
+                        availableTo: advertisement.availableTo,
+                    },
+                    changes: data,
+                    details,
+                }),
+            },
+        });
+
+        return updated;
     });
 };
 

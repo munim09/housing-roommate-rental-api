@@ -19,10 +19,12 @@ const updateAdvertisementValidation = z.object({
         .optional(),
     availableFrom: z.coerce.date("Available from date is required").optional(),
     availableTo: z.coerce.date("Available to date is required").optional(),
+    details: z.record(z.string(), z.unknown()).optional(),
 });
 
 const updateAdvertisementStatusValidation = z.object({
     status: z.enum(["PUBLISHED", "UNPUBLISHED", "ARCHIVED"]),
+    details: z.record(z.string(), z.unknown()).optional(),
 });
 
 export const AdvertisementValidation = {

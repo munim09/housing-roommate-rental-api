@@ -40,7 +40,7 @@ const updateAdvertisementStatus = async (req: Request, res: Response) => {
         req.user!.userId,
         req.user!.role,
         req.params.advertisementId as string,
-        req.body.status,
+        req.body,
     );
 
     sendResponse(res, {

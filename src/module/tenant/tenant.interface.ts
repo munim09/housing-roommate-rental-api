@@ -35,6 +35,11 @@ export interface IApplicationQuery {
     limit?: number;
 }
 
+export interface IUpdateApplication {
+    status: "APPROVED" | "REJECTED" | "WITHDRAWN";
+    details?: Record<string, unknown>;
+}
+
 export interface IInvoiceQuery {
     status?: BillStatus;
     page?: number;

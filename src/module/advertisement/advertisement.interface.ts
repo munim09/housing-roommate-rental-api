@@ -12,4 +12,10 @@ export interface IUpdateAdvertisement {
     monthlyRent?: number;
     availableFrom?: Date;
     availableTo?: Date;
+    details?: Record<string, unknown>;
+}
+
+export interface IUpdateAdvertisementStatus {
+    status: "PUBLISHED" | "UNPUBLISHED" | "ARCHIVED";
+    details?: Record<string, unknown>;
 }

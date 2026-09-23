@@ -130,7 +130,7 @@ const updateApplication = async (req: Request, res: Response) => {
         req.user!.userId,
         req.user!.role,
         req.params.id as string,
-        req.body.status,
+        req.body,
     );
 
     sendResponse(res, {

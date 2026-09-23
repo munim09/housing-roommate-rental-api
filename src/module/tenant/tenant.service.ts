@@ -23,6 +23,7 @@ import {
     IInvoiceQuery,
     IMaintenanceRequestQuery,
     IStayInvoiceQuery,
+    IUpdateApplication,
     IUpdateViewingRequest,
     IViewingRequestQuery,
 } from "./tenant.interface";
@@ -1089,8 +1090,10 @@ const updateApplication = async (
     userId: string,
     role: Role,
     applicationId: string,
-    status: ApplicationStatus,
+    payload: IUpdateApplication,
 ) => {
+    const { status, details } = payload;
+
     if (role === Role.TENANT) {
         if (status !== ApplicationStatus.WITHDRAWN) {
             throw new AppError(
@@ -1144,18 +1147,38 @@ const updateApplication = async (
             );
         }
 
-        return prisma.application.update({
-            where: { id: applicationId },
-            data: { status: ApplicationStatus.WITHDRAWN },
-            select: {
-                id: true,
-                rentalType: true,
-                status: true,
-                requestedStartDate: true,
-                requestedEndDate: true,
-                note: true,
-                updatedAt: true,
-            },
+        return prisma.$transaction(async (tx) => {
+            const updated = await tx.application.update({
+                where: { id: applicationId },
+                data: { status: ApplicationStatus.WITHDRAWN },
+                select: {
+                    id: true,
+                    rentalType: true,
+                    status: true,
+                    requestedStartDate: true,
+                    requestedEndDate: true,
+                    note: true,
+                    updatedAt: true,
+                },
+            });
+
+            await tx.auditLog.create({
+                data: {
+                    userId,
+                    tableName: "Application",
+                    action: ApplicationStatus.WITHDRAWN,
+                    description: "Tenant withdrew the application",
+                    api: "PATCH /api/v1/tenant/applications/:id",
+                    json: JSON.stringify({
+                        applicationId,
+                        from: application.status,
+                        to: ApplicationStatus.WITHDRAWN,
+                        details,
+                    }),
+                },
+            });
+
+            return updated;
         });
     }
 
@@ -1199,6 +1222,22 @@ const updateApplication = async (
                 note: true,
                 reviewedById: true,
                 reviewedAt: true,
+            },
+        });
+
+        await tx.auditLog.create({
+            data: {
+                userId,
+                tableName: "Application",
+                action: status,
+                description: `Application ${status.toLowerCase()} by ${role.toLowerCase()}`,
+                api: "PATCH /api/v1/tenant/applications/:id",
+                json: JSON.stringify({
+                    applicationId,
+                    from: application.status,
+                    to: status,
+                    details,
+                }),
             },
         });
 

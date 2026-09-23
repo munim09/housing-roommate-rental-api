@@ -55,6 +55,7 @@ export const ModelName = {
   Advertisement: 'Advertisement',
   Application: 'Application',
   Area: 'Area',
+  AuditLog: 'AuditLog',
   City: 'City',
   Flat: 'Flat',
   Invoice: 'Invoice',
@@ -152,6 +153,20 @@ export const AreaScalarFieldEnum = {
 } as const
 
 export type AreaScalarFieldEnum = (typeof AreaScalarFieldEnum)[keyof typeof AreaScalarFieldEnum]
+
+
+export const AuditLogScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  tableName: 'tableName',
+  action: 'action',
+  description: 'description',
+  api: 'api',
+  json: 'json',
+  createdAt: 'createdAt'
+} as const
+
+export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
 
 
 export const CityScalarFieldEnum = {

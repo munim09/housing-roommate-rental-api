@@ -81,6 +81,7 @@ const updateApplicationValidation = z.object({
     status: z.enum(["APPROVED", "REJECTED", "WITHDRAWN"], {
         message: "Status must be APPROVED, REJECTED, or WITHDRAWN",
     }),
+    details: z.record(z.string(), z.unknown()).optional(),
 });
 
 const getInvoicesValidation = z.object({
