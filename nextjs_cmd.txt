@@ -79,7 +79,13 @@ pnpm dlx shadcn@latest add field
 
 pnpm dlx shadcn@latest add input
 
+pnpm dlx shadcn@latest add input-otp
 
+pnpm dlx shadcn@latest add card
+
+pnpm dlx shadcn@latest add sidebar
+
+sheet tabs table pagination
 ==============================
 git init
 git add .

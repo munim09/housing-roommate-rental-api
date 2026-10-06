@@ -24,19 +24,19 @@ const confirmPayment = async (req: Request, res: Response) => {
         req.body as Record<string, any>,
     );
 
-    sendResponse(res, {
-        statusCode: httpStatus.OK,
-        success: true,
-        message: "Payment confirmed successfully",
-        data: result,
-    });
+    // sendResponse(res, {
+    //     statusCode: httpStatus.OK,
+    //     success: true,
+    //     message: "Payment confirmed successfully",
+    //     data: result,
+    // });
 
-    // if (result)
-    //     return res.redirect(
-    //         `${process.env.FRONT_END_URL}/payment/success/${result?.rentalOrderId}`,
-    //     );
+    if (result)
+        return res.redirect(
+            `${process.env.FRONT_END_URL}/payment/success/${result.transactionReference}`,
+        );
 
-    // return res.redirect(`${process.env.FRONT_END_URL}/payment/cancel/failed`);
+    return res.redirect(`${process.env.FRONT_END_URL}/payment/cancel/failed`);
 };
 
 const checkPayment = async (req: Request, res: Response) => {

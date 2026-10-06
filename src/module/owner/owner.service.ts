@@ -893,6 +893,9 @@ const getMyAdvertisements = async (userId: string, role: Role) => {
 
     const advertisements = await prisma.advertisement.findMany({
         where: {
+            rentalType: {
+                in: ["PRIMARY_ROOM", "PRIMARY_ENTIRE_FLAT"],
+            },
             OR: [
                 { flatId: { in: bindingFlatIds } },
                 { room: { flatId: { in: bindingFlatIds } } },
@@ -986,11 +989,7 @@ const getDashboardStats = async (
 
     const now = new Date();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-    const startOfNextMonth = new Date(
-        now.getFullYear(),
-        now.getMonth() + 1,
-        1,
-    );
+    const startOfNextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
 
     const [
         properties,

@@ -21,13 +21,14 @@ import { sendResponse } from "./utils/sendResponse";
 const app: Application = express();
 
 // app.use("/api/subscription/webhook", express.raw({ type: 'application/json' }))
+const allowedOrigins = ["http://localhost:3000", config.APP_URL];
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
     cors({
-        origin: `${config.APP_URL}`,
+        origin: "http://localhost:3000",
         credentials: true,
     }),
 );
