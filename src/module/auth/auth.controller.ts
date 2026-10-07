@@ -26,6 +26,17 @@ const verify = async (req: Request, res: Response) => {
     });
 };
 
+const getMe = async (req: Request, res: Response) => {
+    const result = await AuthService.getMe(req.user!.userId);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Profile retrieved successfully",
+        data: result,
+    });
+};
+
 const updateProfile = async (req: Request, res: Response) => {
     const result = await AuthService.updateProfile(req.user!.userId, req.body);
 
@@ -155,6 +166,7 @@ export const AuthController = {
     login,
     register,
     verify,
+    getMe,
     updateProfile,
     refreshToken,
     googleLogin,

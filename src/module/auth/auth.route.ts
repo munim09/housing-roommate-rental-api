@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { Role } from "../../../generated/prisma/enums";
-import { authUpdateProfile } from "../../middlewares/checkAuth";
+import { auth, authUpdateProfile } from "../../middlewares/checkAuth";
 import { validateRequest } from "../../middlewares/validateRequest";
 import { catchAsync } from "../../utils/catchAsync";
 import { AuthController } from "./auth.controller";
@@ -32,6 +32,8 @@ router.patch(
     validateRequest(AuthValidation.updateProfile),
     catchAsync(AuthController.updateProfile),
 );
+
+router.get("/me", auth(), catchAsync(AuthController.getMe));
 
 router.post("/refresh-token", catchAsync(AuthController.refreshToken));
 router.post("/google", catchAsync(AuthController.googleLogin));

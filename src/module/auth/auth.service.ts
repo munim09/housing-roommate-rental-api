@@ -268,6 +268,34 @@ const updateProfile = async (
     return { message: "Profile updated successfully" };
 };
 
+const getMe = async (userId: string) => {
+    const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+            id: true,
+            name: true,
+            email: true,
+            phone: true,
+            role: true,
+            status: true,
+            emailVerified: true,
+            googleId: true,
+            authProvider: true,
+            createdAt: true,
+            updatedAt: true,
+            ownerProfile: true,
+            managerProfile: true,
+            tenantProfile: true,
+        },
+    });
+
+    if (!user) {
+        throw new AppError(httpStatus.NOT_FOUND, "User not found");
+    }
+
+    return user;
+};
+
 const refreshToken = async (token: string) => {
     const verifiedRefreshToken = jwtUtils.verifyToken(
         token,
@@ -633,6 +661,7 @@ export const AuthService = {
     login,
     register,
     verify,
+    getMe,
     updateProfile,
     refreshToken,
     googleLogin,
