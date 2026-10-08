@@ -21,14 +21,42 @@ import { sendResponse } from "./utils/sendResponse";
 const app: Application = express();
 
 // app.use("/api/subscription/webhook", express.raw({ type: 'application/json' }))
-const allowedOrigins = ["http://localhost:3000", config.APP_URL];
+const allowedOrigins = ["http://localhost:3000", config.FRONT_END_URL];
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+// app.use(
+//     cors({
+//         origin: "http://localhost:3000",
+//         credentials: true,
+//     }),
+// );
+
 app.use(
     cors({
-        origin: "http://localhost:3000",
+        origin: function (origin, callback) {
+            // Allow requests with no origin (like mobile apps, curl, Postman)
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error("Not allowed by CORS"));
+            }
+        },
+        credentials: true,
+    }),
+);
+
+app.use(
+    cors({
+        origin: function (origin, callback) {
+            // Allow requests with no origin (like mobile apps, curl, Postman)
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error("Not allowed by CORS"));
+            }
+        },
         credentials: true,
     }),
 );
