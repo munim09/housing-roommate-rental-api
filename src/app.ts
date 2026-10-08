@@ -21,7 +21,11 @@ import { sendResponse } from "./utils/sendResponse";
 const app: Application = express();
 
 // app.use("/api/subscription/webhook", express.raw({ type: 'application/json' }))
-const allowedOrigins = ["http://localhost:3000", config.FRONT_END_URL];
+const allowedOrigins = [
+    "http://localhost:3000",
+    config.FRONT_END_URL,
+    "https://sandbox.sslcommerz.com",
+];
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

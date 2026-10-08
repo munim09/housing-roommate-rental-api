@@ -383,7 +383,8 @@ const confirmPayment = async (
     });
 
     if (!payment) {
-        throw new AppError(httpStatus.NOT_FOUND, "Payment not found");
+        return null;
+        // throw new AppError(httpStatus.NOT_FOUND, "Payment not found");
     }
 
     if (payment.status === PaymentStatus.SUCCESS) {
