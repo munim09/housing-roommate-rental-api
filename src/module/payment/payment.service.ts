@@ -100,135 +100,148 @@ const buildRemainingRentInvoices = (
 
 const markPaymentSuccess = async (paymentId: string, gatewayResponse: any) => {
     return prisma.$transaction(async (tx) => {
-        const current = await tx.payment.findUnique({
-            where: { id: paymentId },
-        });
-
-        if (!current) {
-            throw new AppError(httpStatus.NOT_FOUND, "Payment not found");
-        }
-
-        if (current.status === PaymentStatus.SUCCESS) {
-            return current;
-        }
-
-        const updated = await tx.payment.update({
-            where: { id: paymentId },
-            data: {
-                status: PaymentStatus.SUCCESS,
-                paidAt: new Date(),
-                gatewayResponse: gatewayResponse as Prisma.InputJsonValue,
-                failureReason: null,
-            },
-        });
-
-        if (current.invoiceId) {
-            const invoice = await tx.invoice.findUnique({
-                where: { id: current.invoiceId },
+        try {
+            const current = await tx.payment.findUnique({
+                where: { id: paymentId },
             });
 
-            await prisma.$transaction(async (tx) => {
-                if (invoice && invoice.status !== BillStatus.PAID) {
-                    await tx.invoice.update({
-                        where: { id: invoice.id },
-                        data: { status: BillStatus.PAID },
-                    });
+            if (!current) {
+                return null;
+                // throw new AppError(httpStatus.NOT_FOUND, "Payment not found");
+            }
 
-                    if (invoice.type === InvoiceType.RENT && invoice.stayId) {
-                        const stay = await tx.stay.findFirst({
-                            where: {
-                                id: invoice.stayId,
-                                status: StayStatus.WAITING_FOR_PAYMENT,
-                            },
-                            include: {
-                                flat: true,
+            if (current.status === PaymentStatus.SUCCESS) {
+                return current;
+            }
 
-                                application: {
-                                    include: {
-                                        advertisement: true,
-                                    },
-                                },
-                            },
+            const updated = await tx.payment.update({
+                where: { id: paymentId },
+                data: {
+                    status: PaymentStatus.SUCCESS,
+                    paidAt: new Date(),
+                    gatewayResponse: gatewayResponse as Prisma.InputJsonValue,
+                    failureReason: null,
+                },
+            });
+
+            if (current.invoiceId) {
+                const invoice = await tx.invoice.findUnique({
+                    where: { id: current.invoiceId },
+                });
+
+                await prisma.$transaction(async (tx) => {
+                    if (invoice && invoice.status !== BillStatus.PAID) {
+                        await tx.invoice.update({
+                            where: { id: invoice.id },
+                            data: { status: BillStatus.PAID },
                         });
 
-                        if (stay) {
-                            await tx.stay.update({
-                                where: { id: stay.id },
-                                data: { status: StayStatus.CONFIRMED },
-                            });
-
-                            const existingInvoices = await tx.invoice.findMany({
+                        if (
+                            invoice.type === InvoiceType.RENT &&
+                            invoice.stayId
+                        ) {
+                            const stay = await tx.stay.findFirst({
                                 where: {
-                                    stayId: stay.id,
-                                    type: "RENT",
-                                    status: {
-                                        in: ["PAID", "PENDING"],
-                                    },
+                                    id: invoice.stayId,
+                                    status: StayStatus.WAITING_FOR_PAYMENT,
                                 },
-                                select: {
-                                    billingPeriodStart: true,
+                                include: {
+                                    flat: true,
+
+                                    application: {
+                                        include: {
+                                            advertisement: true,
+                                        },
+                                    },
                                 },
                             });
 
-                            const existingBillingStarts = new Set(
-                                existingInvoices.map((existing) =>
-                                    existing.billingPeriodStart.toISOString(),
-                                ),
-                            );
-
-                            const rentInvoices = buildRemainingRentInvoices(
-                                stay,
-                                existingBillingStarts,
-                            );
-
-                            const ownership =
-                                await prisma.propertyOwnership.findFirst({
-                                    where: {
-                                        flatId: stay.flatId,
-                                        status: "ACTIVE",
-                                    },
+                            if (stay) {
+                                await tx.stay.update({
+                                    where: { id: stay.id },
+                                    data: { status: StayStatus.CONFIRMED },
                                 });
 
-                            let receiverId;
-                            if (
-                                stay.rentalType ===
-                                    RentalType.PRIMARY_ENTIRE_FLAT ||
-                                stay.rentalType === RentalType.PRIMARY_ROOM
-                            ) {
-                                receiverId =
-                                    ownership?.ownerId || invoice.receiverId;
-                            } else {
-                                receiverId =
-                                    stay.application.advertisement.createdById;
-                            }
+                                const existingInvoices =
+                                    await tx.invoice.findMany({
+                                        where: {
+                                            stayId: stay.id,
+                                            type: "RENT",
+                                            status: {
+                                                in: ["PAID", "PENDING"],
+                                            },
+                                        },
+                                        select: {
+                                            billingPeriodStart: true,
+                                        },
+                                    });
 
-                            if (rentInvoices.length > 0) {
-                                await tx.invoice.createMany({
-                                    data: rentInvoices.map((rentInvoice) => ({
-                                        stayId: stay.id,
-                                        payerId: stay.occupantId,
-                                        receiverId: receiverId,
-                                        type: InvoiceType.RENT,
-                                        amount: new Prisma.Decimal(
-                                            rentInvoice.amount,
+                                const existingBillingStarts = new Set(
+                                    existingInvoices.map((existing) =>
+                                        existing.billingPeriodStart.toISOString(),
+                                    ),
+                                );
+
+                                const rentInvoices = buildRemainingRentInvoices(
+                                    stay,
+                                    existingBillingStarts,
+                                );
+
+                                const ownership =
+                                    await prisma.propertyOwnership.findFirst({
+                                        where: {
+                                            flatId: stay.flatId,
+                                            status: "ACTIVE",
+                                        },
+                                    });
+
+                                let receiverId;
+                                if (
+                                    stay.rentalType ===
+                                        RentalType.PRIMARY_ENTIRE_FLAT ||
+                                    stay.rentalType === RentalType.PRIMARY_ROOM
+                                ) {
+                                    receiverId =
+                                        ownership?.ownerId ||
+                                        invoice.receiverId;
+                                } else {
+                                    receiverId =
+                                        stay.application.advertisement
+                                            .createdById;
+                                }
+
+                                if (rentInvoices.length > 0) {
+                                    await tx.invoice.createMany({
+                                        data: rentInvoices.map(
+                                            (rentInvoice) => ({
+                                                stayId: stay.id,
+                                                payerId: stay.occupantId,
+                                                receiverId: receiverId,
+                                                type: InvoiceType.RENT,
+                                                amount: new Prisma.Decimal(
+                                                    rentInvoice.amount,
+                                                ),
+                                                billingPeriodStart:
+                                                    rentInvoice.billingPeriodStart,
+                                                billingPeriodEnd:
+                                                    rentInvoice.billingPeriodEnd,
+                                                dueDate: rentInvoice.dueDate,
+                                                status: BillStatus.PENDING,
+                                                description: "Rent installment",
+                                            }),
                                         ),
-                                        billingPeriodStart:
-                                            rentInvoice.billingPeriodStart,
-                                        billingPeriodEnd:
-                                            rentInvoice.billingPeriodEnd,
-                                        dueDate: rentInvoice.dueDate,
-                                        status: BillStatus.PENDING,
-                                        description: "Rent installment",
-                                    })),
-                                });
+                                    });
+                                }
                             }
                         }
                     }
-                }
-            });
-        }
+                });
+            }
 
-        return updated;
+            return updated;
+        } catch (error) {
+            return null;
+        }
     });
 };
 
@@ -398,25 +411,28 @@ const confirmPayment = async (
             `Payment ${status} by gateway`,
         );
     }
+    try {
+        const response = await axios.get(SSL_VALIDATION_API, {
+            params: {
+                val_id: payload.val_id,
+                store_id: config.SSL_STORE_ID,
+                store_passwd: config.SSL_STORE_PASSWD,
+                format: "json",
+            },
+        });
 
-    const response = await axios.get(SSL_VALIDATION_API, {
-        params: {
-            val_id: payload.val_id,
-            store_id: config.SSL_STORE_ID,
-            store_passwd: config.SSL_STORE_PASSWD,
-            format: "json",
-        },
-    });
+        if (response.data.status !== "VALID") {
+            return markPaymentFailed(
+                payment.id,
+                response.data,
+                "Payment validation failed",
+            );
+        }
 
-    if (response.data.status !== "VALID") {
-        return markPaymentFailed(
-            payment.id,
-            response.data,
-            "Payment validation failed",
-        );
+        return markPaymentSuccess(payment.id, response.data);
+    } catch (error) {
+        return null;
     }
-
-    return markPaymentSuccess(payment.id, response.data);
 };
 
 const checkPayment = async (tranId: string) => {

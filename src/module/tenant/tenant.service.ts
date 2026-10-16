@@ -1895,8 +1895,8 @@ const createMaintenanceRequest = async (
             rentalType: {
                 in: [RentalType.PRIMARY_ENTIRE_FLAT, RentalType.PRIMARY_ROOM],
             },
-            startDate: { lte: new Date() },
-            endDate: { gte: new Date() },
+            // startDate: { lte: new Date() },
+            // endDate: { gte: new Date() },
         },
         select: { id: true, status: true },
     });
